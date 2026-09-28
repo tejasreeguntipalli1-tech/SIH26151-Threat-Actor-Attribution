@@ -142,23 +142,123 @@ export interface EntityResolutionDimension {
   keyObservation: string;
 }
 
-// Stage 2: Candidate Entity
+// Stage 2: Source Reliability & Analytical Status
+export type SourceReliabilityRating = 'A' | 'B' | 'C' | 'D' | 'E';
+export type AnalyticalStatus = 'UNREVIEWED' | 'SYSTEM-SUGGESTED' | 'INVESTIGATOR-VERIFIED' | 'DISPUTED' | 'REJECTED';
+export type CaseLifecycleState = 
+  | 'STAGE 1 ANALYSIS'
+  | 'STAGE 1 REVIEW'
+  | 'STAGE 2 AUTHORIZATION'
+  | 'IDENTITY RESOLUTION'
+  | 'CANDIDATE ANALYSIS'
+  | 'ATTRIBUTION CHALLENGE'
+  | 'INVESTIGATOR REVIEW'
+  | 'INVESTIGATIVE LEAD'
+  | 'MORE EVIDENCE REQUIRED'
+  | 'INCONCLUSIVE'
+  | 'CANDIDATE REJECTED';
+
+// Stage 2: Candidate Entity with Fictional Demonstration Flags
 export interface CandidateEntity {
   id: string; // e.g., CANDIDATE-A
-  name: string; // e.g., Candidate Entity A
+  name: string; // e.g., Arun Mehta (FICTIONAL DEMO ENTITY)
+  rawName: string; // Arun Mehta
   entityType: 'Individual' | 'Organization' | 'Infrastructure Owner';
-  attributionStrength: number; // e.g., 82%
+  organization: string;
+  possibleLocation: string;
+  attributionStrength: number; // e.g., 74%
   status: 'ATTRIBUTION LEAD' | 'REQUIRES ADDITIONAL EVIDENCE' | 'REJECTED' | 'VALIDATED LEAD';
-  humanValidation: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'NEED_MORE_EVIDENCE';
+  humanValidation: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'NEED_MORE_EVIDENCE' | 'INCONCLUSIVE';
   evidenceLinksTotal: number;
   supportingCount: number;
   conflictingCount: number;
   unknownCount: number;
   jurisdiction: string;
   summary: string;
+  sourceReliability: SourceReliabilityRating;
+  isFictionalDemo: boolean;
+  relatedIdentities: string[];
+  infrastructureRels: string[];
+  pgpRels: string[];
+  domainRels: string[];
+  walletRels: string[];
+  temporalRels: string[];
+  supportingEvidence: string[];
+  contradictoryEvidence: string[];
+  unknownEvidence: string[];
+  evidenceGaps: string[];
   whyAppeared: string[];
   whatCouldStrengthen: string[];
   whatCouldWeaken: string[];
+}
+
+export interface EvidenceProvenance {
+  evidenceId: string;
+  source: string;
+  sourceType: string;
+  originalIndicator: string;
+  discoveryTimestamp: string;
+  collectionMethod: string;
+  reliability: SourceReliabilityRating;
+  confidence: number;
+  relatedEntity: string;
+  relationshipType: string;
+  verificationStatus: 'Cross-source verified' | 'Single-source unconfirmed' | 'Disputed' | 'Invalidated';
+}
+
+export interface TemporalConflictItem {
+  id: string;
+  title: string;
+  candidateActivity: string;
+  actorActivity: string;
+  conflictExplanation: string;
+  detectedAt: string;
+  impactOnConfidence: string;
+}
+
+export interface ContextualConsistencyItem {
+  id: string;
+  factor: string;
+  actorObservation: string;
+  candidateObservation: string;
+  status: 'CONSISTENT' | 'CONFLICT' | 'INCONCLUSIVE';
+  explanation: string;
+}
+
+export interface AlternativeExplanation {
+  id: string;
+  hypothesis: string;
+  probability: 'High' | 'Moderate' | 'Low';
+  evidenceFor: string[];
+  evidenceAgainst: string[];
+  missingEvidence: string[];
+  alternativeRebuttal: string;
+}
+
+export interface EvidenceLineage {
+  lineageId: string;
+  rootEvidence: string;
+  independentSource: string;
+  derivedReports: string[];
+  duplicatedCount: number;
+}
+
+export interface AttributionSnapshot {
+  id: string;
+  timestamp: string;
+  confidence: number;
+  triggerEvent: string;
+  evidenceAddedOrChanged: string[];
+  stage: string;
+}
+
+export interface InvestigatorNote {
+  id: string;
+  targetType: 'Candidate' | 'Evidence' | 'Relationship' | 'Timeline' | 'Cluster';
+  targetId: string;
+  author: string;
+  text: string;
+  timestamp: string;
 }
 
 // Stage 2: Traceable Evidence Relationship

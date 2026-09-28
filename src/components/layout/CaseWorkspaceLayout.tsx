@@ -22,8 +22,12 @@ export const CaseWorkspaceLayout: React.FC = () => {
     setModalCluster(cluster);
   };
 
-  const handleConfirmStage2 = (clusterId: string) => {
-    confirmStage2(clusterId, 'Investigator approved Stage 2 entity resolution transition.', 'Senior Investigator INV-017');
+  const handleConfirmStage2 = (clusterId: string, reason?: string) => {
+    confirmStage2(
+      clusterId, 
+      reason || 'Investigator approved Stage 2 entity resolution transition.', 
+      'Senior Investigator INV-017'
+    );
     setModalCluster(null);
   };
 

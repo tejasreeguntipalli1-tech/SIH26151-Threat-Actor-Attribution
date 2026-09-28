@@ -12,7 +12,17 @@ import {
   ConfidenceEvolutionPoint, 
   MatrixEvidenceRow, 
   PairwiseRelationship, 
-  PairwiseSignalDetail 
+  PairwiseSignalDetail,
+  SourceReliabilityRating,
+  AnalyticalStatus,
+  CaseLifecycleState,
+  EvidenceProvenance,
+  TemporalConflictItem,
+  ContextualConsistencyItem,
+  AlternativeExplanation,
+  EvidenceLineage,
+  AttributionSnapshot,
+  InvestigatorNote
 } from '../types/investigation';
 
 export const initialConfig: InvestigationConfig = {
@@ -328,10 +338,10 @@ export const syntheticIdentities: DigitalIdentity[] = [
 export const initialActorClusters: ActorCluster[] = [
   {
     id: 'Actor Cluster A',
-    codename: 'PROBABLE DIGITAL ACTOR CLUSTER A (TA-001)',
+    codename: 'DarkWolf Cluster (TA-001)',
     identityIds: ['id-01', 'id-02', 'id-03', 'id-04'],
     identities: [syntheticIdentities[0], syntheticIdentities[1], syntheticIdentities[2], syntheticIdentities[3]],
-    actorCorrelationScore: 92,
+    actorCorrelationScore: 91,
     classification: 'VERY STRONG EVIDENCE',
     stage2Status: 'ELIGIBLE FOR INVESTIGATOR REVIEW',
     stage2Initiated: false,
@@ -341,10 +351,10 @@ export const initialActorClusters: ActorCluster[] = [
       behaviouralPattern: 87,
       temporalPattern: 89,
       technicalIndicators: 92,
-      overallConfidence: 92,
-      supportingCount: 11,
-      conflictingCount: 1,
-      unknownCount: 2
+      overallConfidence: 91,
+      supportingCount: 12,
+      conflictingCount: 2,
+      unknownCount: 3
     },
     supportingReasons: [
       'Identical shared PGP Key ID (0x7E4A8F2C91B4) verified across Forum-X, Market-Y, Chat-Z, and Exploit.in',
@@ -692,94 +702,948 @@ export const initialMatchingDimensions: EntityResolutionDimension[] = [
   }
 ];
 
-// Module 4: Candidate Entities Table & Hypotheses
+// Module 4: Candidate Entities Table & Hypotheses (Stage 2 Synthetic Data)
 export const initialCandidateEntities: CandidateEntity[] = [
   {
     id: 'CANDIDATE-A',
-    name: 'Candidate Entity A',
-    entityType: 'Organization',
-    attributionStrength: 82,
+    name: 'Arun Mehta (FICTIONAL DEMO ENTITY)',
+    rawName: 'Arun Mehta',
+    entityType: 'Individual',
+    organization: 'Vector Systems Ltd. (Former Senior Infrastructure Consultant) / Meridian Analytics S.R.O.',
+    possibleLocation: 'Bengaluru, Karnataka, India / Tallinn, Estonia (Contextual Registered Address)',
+    attributionStrength: 74,
     status: 'ATTRIBUTION LEAD',
     humanValidation: 'PENDING',
-    evidenceLinksTotal: 9,
-    supportingCount: 7,
-    conflictingCount: 1,
-    unknownCount: 1,
-    jurisdiction: 'Eastern European Hosting / EU Commercial Registration',
-    summary: 'Meridian Analytics S.R.O. (Subject A. K.) — commercial entity linked to the registration of mirror domain darkx17-vault.is and Git staging author alex-k-sec.',
+    evidenceLinksTotal: 14,
+    supportingCount: 14,
+    conflictingCount: 3,
+    unknownCount: 4,
+    jurisdiction: 'IN / EU Cross-Border Hosting & Domain Registrar Jurisdiction',
+    summary: 'Arun Mehta (FICTIONAL DEMO ENTITY) — linked via PGP subkey cross-signing (0x7E4A8F2C91B4), historical developer Git commits for moniker "x17_dev", and commercial registrar account for mirror darkx17-vault.is.',
+    sourceReliability: 'A',
+    isFictionalDemo: true,
+    relatedIdentities: ['shadow_x17', 'x_shadow', 'darkx17', 'shadow17', 'x17_dev'],
+    infrastructureRels: [
+      '185.220.101.45 (Njalla/FlokiNET Reverse-Proxy Node 17 co-hosted with staging gateway)',
+      '194.26.29.112 (Git Staging Node with matching SSH host key SHA256: 8f3c...71ab)'
+    ],
+    pgpRels: [
+      '0x7E4A8F2C91B4 (RSA-4096 Key ID cross-signed by legacy developer key on public SKS keyserver)',
+      'Fingerprint 9B2E 7E4A 8F2C 91B4 55F0 3341 A1C9 8021 6F5D E017 verified on leak releases'
+    ],
+    domainRels: [
+      'darkx17-vault.is (Clear-web Mirror Domain registered via corporate commercial account)',
+      'x17-security.dev (Historical Technical Portfolio Blog containing kernel exploit writeup)'
+    ],
+    walletRels: [
+      'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh (BTC Native SegWit deposit address linked via cluster co-spend in block 842109)'
+    ],
+    temporalRels: [
+      'Primary activity window 20:00 - 03:30 UTC overlaps with nocturnal developer commits (21:00 - 02:00 UTC)',
+      'One daylight conflict recorded at 14:32 UTC (candidate logged in India ISP vs actor terminal session in Frankfurt at 14:33 UTC)'
+    ],
+    supportingEvidence: [
+      'Cryptographic PGP subkey 0x7E4A8F2C91B4 matches public key published on Dread leak announcements',
+      'Historical commit author moniker "x17_dev" on GitHub staging repository corresponds to shadow_x17 legacy alias',
+      'Mirror domain darkx17-vault.is registrar account traces to corporate billing profile associated with Subject',
+      'SSH host public key reuse between candidate test VPS and DarkWolf backend relay node',
+      'Diurnal activity curve (20:00 - 04:00 UTC) matches nocturnal hacking active hours across 18-month observation',
+      'Stylometric match on technical documentation: consistent double-hyphen delimiters (--) and lowercase openers',
+      'Co-spend transaction inputs in Bitcoin block 842109 connect deposit wallet to consulting escrow wallet',
+      'Public corporate filings for Vector Systems Ltd. list Arun Mehta as Director of Network Architecture',
+      'Reverse proxy 185.220.101.45 SSL certificate SAN extension references darkx17-vault.is and dev staging portal',
+      'Historical ICANN registrar contact unmasked via subpoenaed MLAT billing records',
+      'Kernel exploitation writeups authored on x17-security.dev correspond to zero-day payloads traded by actor',
+      'Cross-platform handle morphology: shadow_x17 ↔ x17_dev ↔ darkx17 semantic unity',
+      'Coordinated holiday dormancy observed during last two weeks of December matching personal travel logs',
+      'Automated deployment scripts in Git repository mirror Nginx reverse-proxy configuration on DarkWolf node'
+    ],
+    contradictoryEvidence: [
+      'Temporal conflict detected: Candidate logged session via Bengaluru ISP at 14:32 UTC; DarkWolf terminal session verified in Frankfurt at 14:33 UTC (impossible physical travel; potential proxy/split cell)',
+      'Candidate public LinkedIn and GitHub use British English spelling conventions ("optimise", "behavioural"), whereas certain forum posts show American colloquialisms',
+      'Secondary Tor exit relay routes through German cloud provider with zero observed corporate IP overlap'
+    ],
+    unknownEvidence: [
+      'Wasabi CoinJoin hop 3 wallet peel outputs remain unconfirmed due to cryptographic mixer obfuscation',
+      'Encrypted Jabber/OTR chat server connection logs unavailable without foreign warrant execution',
+      'Government civil registry / passport verification not accessible in synthetic test environment',
+      'Whether the 14:32 UTC session was executed by an automated CI/CD cron runner or a secondary individual'
+    ],
+    evidenceGaps: [
+      'Need subpoenaed VPN provider subscriber session logs for Bengaluru IP timestamp 14:32 UTC',
+      'Corroborate Wasabi CoinJoin peel chain outputs with licensed OTC cryptocurrency off-ramp records',
+      'Examine mutual legal assistance response regarding Estonia corporate registry shareholding structure'
+    ],
     whyAppeared: [
-      'Infrastructure-17 (185.220.101.45) connects to the actor previously observed technical indicators.',
-      'Domain-X (darkx17-vault.is) appears in two independent synthetic intelligence records.',
-      'Temporal activity overlaps with the actor established activity window (20:00 - 04:00 UTC).',
-      'Historical indicator data (Git author "alex-k-sec") matches staging deployment script.',
-      'One conflicting activity record was detected from daytime EU business hours.',
-      'Independent identity verification (passport/civil registry) is unavailable.'
+      'Cryptographic anchor: PGP Fingerprint 9B2E...E017 verified across darknet marketplace and clearweb developer key',
+      'Infrastructure nexus: Reverse proxy 185.220.101.45 connects darknet leak portal to corporate staging gateway',
+      'Domain nexus: darkx17-vault.is was registered through account associated with Vector Systems Ltd.',
+      'Stylometric NLP: 91% vocabulary and punctuation overlap on technical kernel exploit discourse'
     ],
     whatCouldStrengthen: [
-      'Independent corroborating infrastructure ownership record via MLAT registrar subpoena',
-      'Additional historical developer commit telemetry from clear-net repositories',
-      'Direct bank settlement corroboration from regulated payment processor',
-      'Subpoenaed server memory dump or access logs from transit provider'
+      'Lawful MLAT subpoena unmasking commercial VPN exit logs during the 14:32 UTC temporal conflict window',
+      'Bank settlement corroboration connecting consulting fee deposits to darknet escrow withdrawals',
+      'Independent witness or co-conspirator testimony in authorized judicial proceedings',
+      'Forensic disk image confirmation of private PGP key 0x7E4A8F2C91B4 on target hardware'
     ],
     whatCouldWeaken: [
-      'Verified conflicting infrastructure ownership lease proving multi-tenant shared proxy',
-      'Contradictory timeline or solid alibi for corporate account creation',
-      'Demonstrated unrelated third-party entity operating the payment gateway',
-      'Invalid indicator relationship or proof of spoofed Git commit headers'
+      'Proof that PGP private key was compromised or shared in a public dump prior to 2024',
+      'Verification that 185.220.101.45 operates as an open public proxy used by hundreds of unrelated subscribers',
+      'Confirmed alibi demonstrating physical unavailability during darknet leak negotiation windows',
+      'Forensic demonstration that developer commits were retroactively backdated or spoofed'
     ]
   },
   {
     id: 'CANDIDATE-B',
-    name: 'Candidate Entity B',
-    entityType: 'Infrastructure Owner',
-    attributionStrength: 67,
+    name: 'Rohan Verma (FICTIONAL DEMO ENTITY)',
+    rawName: 'Rohan Verma',
+    entityType: 'Individual',
+    organization: 'Vortex Cloud Hosting Solutions Ltd. / NetGrid Systems',
+    possibleLocation: 'Pune, Maharashtra, India / Frankfurt, Germany (Cloud Colo Facility)',
+    attributionStrength: 58,
     status: 'REQUIRES ADDITIONAL EVIDENCE',
     humanValidation: 'PENDING',
-    evidenceLinksTotal: 6,
-    supportingCount: 4,
-    conflictingCount: 1,
-    unknownCount: 1,
-    jurisdiction: 'Western European Cloud Colo (Frankfurt / Amsterdam)',
-    summary: 'Vortex Cloud Hosting Ltd. — upstream bulletproof hosting leaseholder for reverse-proxy nodes.',
+    evidenceLinksTotal: 8,
+    supportingCount: 5,
+    conflictingCount: 4,
+    unknownCount: 3,
+    jurisdiction: 'Western European Cloud Colo / IN Transit Subnet',
+    summary: 'Rohan Verma (FICTIONAL DEMO ENTITY) — systems administrator listed on upstream autonomous system announcement (AS49210) through which DarkWolf proxy node 185.220.101.45 temporarily announced transit routes.',
+    sourceReliability: 'B',
+    isFictionalDemo: true,
+    relatedIdentities: ['darkx17', 'x_shadow'],
+    infrastructureRels: [
+      'AS49210 (Vortex Transit Subnet announcing upstream routes for 185.220.101.0/24)',
+      'Frankfurt DC-02 Colo rack allocation contract matching customer ticket #VORTEX-8812'
+    ],
+    pgpRels: [
+      'PGP Key 0x4B9921EFA082 (Listed in NetGrid security contact, no cryptographic cross-signing with DarkWolf key)'
+    ],
+    domainRels: [
+      'vortex-cloud-net.eu (Corporate ISP domain hosting customer portal for reverse-proxy leases)'
+    ],
+    walletRels: [
+      'No direct wallet linkages discovered; downstream merchant invoices paid via regulated SEPA transfer'
+    ],
+    temporalRels: [
+      'Business hours activity (09:00 - 18:00 UTC) diverges substantially from actor primary window (20:00 - 04:00 UTC)'
+    ],
+    supportingEvidence: [
+      'BGP autonomous system route announcement overlap: AS49210 announced IP range containing 185.220.101.45',
+      'Customer support ticket correspondence references emergency maintenance on darkx17 mirror server port 8443',
+      'Shared payment processor merchant gateway on upstream hosting bills',
+      'Historical administrative SSH key present on initial base installation template',
+      'Technical familiarity with hardened Nginx reverse proxies and wireguard tunnel meshes'
+    ],
+    contradictoryEvidence: [
+      'Activity schedule (09:00 - 18:00 UTC) strictly conflicts with actor established nocturnal rhythm (20:00 - 04:00 UTC)',
+      'Zero stylometric similarity to actor baseline posts; formal commercial business writing style',
+      'No PGP cryptographic cross-signing with actor master keyring 0x7E4A8F2C91B4',
+      'Hosting provider operates as an unmanaged public transit ISP serving over 1,400 multi-tenant clients'
+    ],
+    unknownEvidence: [
+      'Whether the admin support ticket was opened by an external client or internal staff',
+      'Upstream transit logs older than 90 days have been rotated / purged',
+      'End-user customer identity behind ticket #VORTEX-8812 requires German court order'
+    ],
+    evidenceGaps: [
+      'Need unmanaged VPS customer lease agreement unmasking actual tenant of node 185.220.101.45',
+      'Cross-reference bank settlement records for customer ticket #VORTEX-8812'
+    ],
     whyAppeared: [
-      'BGP autonomous system announcement overlaps with the subnet hosting infra-node-17.',
-      'Shared payment processor merchant account observed on hosting invoices.',
-      'Secondary candidate hypothesis retained pending verification of lease agreement.'
+      'Appeared due to upstream BGP Autonomous System routing proximity to target proxy node',
+      'Corporate entity signed maintenance ticket acknowledging server IP 185.220.101.45'
     ],
     whatCouldStrengthen: [
-      'Server access logs demonstrating direct root SSH login from target actor subnet',
-      'Matching customer support ticket correspondence referencing leak archives'
+      'Server access logs demonstrating direct root SSH login from target actor subnet into candidate terminal',
+      'Corroborating cryptocurrency payment from actor deposit wallet into candidate personal accounts'
     ],
     whatCouldWeaken: [
-      'Confirmation that hosting provider operates as a public transit unmanaged ISP',
-      'Absence of administrator control over hosted dark web content'
+      'Formal ISP statement confirming candidate only provided unmanaged upstream network transit',
+      'Identification of unrelated third-party tenant leasing the specific virtual private server'
     ]
   },
   {
     id: 'CANDIDATE-C',
-    name: 'Candidate Entity C',
-    entityType: 'Individual',
-    attributionStrength: 41,
+    name: 'Vector Systems Ltd. (FICTIONAL DEMO ORGANIZATION)',
+    rawName: 'Vector Systems Ltd.',
+    entityType: 'Organization',
+    organization: 'Vector Systems Ltd. (Incorporation #REG-99104)',
+    possibleLocation: 'London, United Kingdom / Singapore (Regional Branch)',
+    attributionStrength: 62,
     status: 'REQUIRES ADDITIONAL EVIDENCE',
     humanValidation: 'PENDING',
-    evidenceLinksTotal: 3,
-    supportingCount: 2,
-    conflictingCount: 0,
-    unknownCount: 1,
-    jurisdiction: 'Offshore Jurisdiction (Panama / Seychelles)',
-    summary: 'Anonymous Domain Privacy Moniker "VaultRegistrar88" registered on 1337 Services.',
+    evidenceLinksTotal: 7,
+    supportingCount: 6,
+    conflictingCount: 2,
+    unknownCount: 3,
+    jurisdiction: 'UK Companies House / Offshore Commercial Registry',
+    summary: 'Vector Systems Ltd. (FICTIONAL DEMO ORGANIZATION) — corporate registrar umbrella under which commercial reverse-proxy leases and staging domain infrastructure were legally procured and billed.',
+    sourceReliability: 'A',
+    isFictionalDemo: true,
+    relatedIdentities: ['shadow_x17', 'darkx17', 'x17_dev'],
+    infrastructureRels: [
+      '185.220.101.45 leased under corporate consulting enterprise account #VEC-ENT-410',
+      'Internal Gitlab server staging instance resolved to 194.26.29.112'
+    ],
+    pgpRels: [
+      'Corporate GPG Release Key 0x2210FA9931BC used to sign enterprise software builds'
+    ],
+    domainRels: [
+      'vectorsystems-tech.co.uk (Primary corporate domain)',
+      'darkx17-vault.is registered using corporate administrative email relay'
+    ],
+    walletRels: [
+      'Corporate tax accounting reports declare cryptocurrency consulting revenue receipts'
+    ],
+    temporalRels: [
+      'Corporate server deployment pipeline automated via cron runs continuously 24/7'
+    ],
+    supportingEvidence: [
+      'Corporate account #VEC-ENT-410 directly billed for reverse-proxy node 185.220.101.45',
+      'Mirror domain darkx17-vault.is DNS nameservers registered under corporate registrar profile',
+      'Candidate A (Arun Mehta) was employed as Principal Security Architect during infrastructure setup',
+      'Staging server SSL cert SAN matches both corporate internal gateway and darknet mirror',
+      'Corporate Git repository contains commit hashes matching exploit proof-of-concept code',
+      'Cryptocurrency consulting revenue reported in synthetic regulatory tax disclosures'
+    ],
+    contradictoryEvidence: [
+      'Corporate organization employs 35+ engineers; infrastructure could be rogue insider activity rather than organizational conspiracy',
+      'No executive board approval or enterprise software product connected to illicit darknet leak sales'
+    ],
+    unknownEvidence: [
+      'Internal corporate access logs for GitLab server require judicial subpoena',
+      'Whether server lease was an authorized commercial project or unauthorized employee abuse',
+      'Offshore Singapore branch banking records require Mutual Legal Assistance Treaty (MLAT)'
+    ],
+    evidenceGaps: [
+      'Subpoena internal employee audit logs for corporate account #VEC-ENT-410',
+      'Obtain bank statements for cryptocurrency consulting receipt declared in 2025 filing'
+    ],
     whyAppeared: [
-      'WHOIS privacy proxy contact used on initial registration of darkx17 mirror domain.',
-      'Weak peripheral indicator with zero corroborated financial links.'
+      'Legal entity listed as billing registrant for darkx17 mirror domain and proxy servers',
+      'Organizational nexus connecting Candidate A developer commits with operational hosting'
     ],
     whatCouldStrengthen: [
-      'Unmasking of WHOIS privacy proxy via court order in jurisdiction of registry'
+      'Subpoenaed internal company communications demonstrating knowledge of darknet operations',
+      'Direct transfer of illicit marketplace proceeds into corporate treasury accounts'
     ],
     whatCouldWeaken: [
-      'Demonstrated public WHOIS privacy proxy used by tens of thousands of unrelated domains'
+      'Corporate forensic audit proving unauthorized compromised employee credentials',
+      'Proof that billing account was opened using stolen corporate credit card data'
     ]
   }
 ];
+
+// Module 4B: Evidence Provenance Master Records (Stage 2 Required Feature)
+export const syntheticEvidenceProvenance: EvidenceProvenance[] = [
+  {
+    evidenceId: 'EV-2047-18',
+    source: 'Synthetic Public-Key Directory & OpenPGP Keyserver',
+    sourceType: 'Public Keyserver',
+    originalIndicator: '0x7E4A8F2C91B4 (PGP Master Key ID)',
+    discoveryTimestamp: '2026-08-22 14:16 UTC',
+    collectionMethod: 'Automated Keyserver SKS/VKS Mirror Ingestion',
+    reliability: 'A',
+    confidence: 94,
+    relatedEntity: 'Candidate Entity A (Arun Mehta)',
+    relationshipType: 'PGP → Public Identity & Developer Signature',
+    verificationStatus: 'Cross-source verified'
+  },
+  {
+    evidenceId: 'EV-2047-19',
+    source: 'Passive DNS Archive & Autonomous System Scanner',
+    sourceType: 'Network Infrastructure Telemetry',
+    originalIndicator: '185.220.101.45 (Reverse-Proxy Node 17)',
+    discoveryTimestamp: '2026-08-22 14:31 UTC',
+    collectionMethod: 'Historical DNS A-Record & BGP Route Graph Crawler',
+    reliability: 'A',
+    confidence: 91,
+    relatedEntity: 'Vector Systems Ltd. / Candidate A',
+    relationshipType: 'Infrastructure → Corporate Staging Host',
+    verificationStatus: 'Cross-source verified'
+  },
+  {
+    evidenceId: 'EV-2047-20',
+    source: 'Synthetic ICANN / WHOIS Historical Registrar Database',
+    sourceType: 'Commercial Registrar Records',
+    originalIndicator: 'darkx17-vault.is (Clear-web Mirror Domain)',
+    discoveryTimestamp: '2026-08-22 14:35 UTC',
+    collectionMethod: 'Authorized Registrar API & Historical WHOIS Query',
+    reliability: 'B',
+    confidence: 88,
+    relatedEntity: 'Candidate Entity A (Arun Mehta)',
+    relationshipType: 'Domain → Corporate Billing Profile',
+    verificationStatus: 'Cross-source verified'
+  },
+  {
+    evidenceId: 'EV-2047-21',
+    source: 'Public Developer Repository Metadata & Commit Logs',
+    sourceType: 'Public Code Archive',
+    originalIndicator: 'x17_dev (Git Commit Author Moniker)',
+    discoveryTimestamp: '2026-08-23 09:12 UTC',
+    collectionMethod: 'Automated Git Commit Hash & PGP Signature Extraction',
+    reliability: 'B',
+    confidence: 86,
+    relatedEntity: 'Candidate Entity A (Arun Mehta)',
+    relationshipType: 'Alias → Real-World Technical Portfolio',
+    verificationStatus: 'Single-source unconfirmed'
+  },
+  {
+    evidenceId: 'EV-2047-22',
+    source: 'Synthetic On-Chain Blockchain Intelligence RPC',
+    sourceType: 'Blockchain Ledger',
+    originalIndicator: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh (BTC Wallet)',
+    discoveryTimestamp: '2026-08-23 15:40 UTC',
+    collectionMethod: 'UTXO Graph Analysis & Multi-Input Co-spend Clustering',
+    reliability: 'A',
+    confidence: 89,
+    relatedEntity: 'Candidate Entity A / Escrow Intermediary',
+    relationshipType: 'Wallet → Corporate Consulting Settlement',
+    verificationStatus: 'Cross-source verified'
+  },
+  {
+    evidenceId: 'EV-2047-23',
+    source: 'Stylometric NLP Feature Extraction Engine',
+    sourceType: 'Linguistic Analysis',
+    originalIndicator: 'Double-hyphen syntax (--) & Lowercase Openers',
+    discoveryTimestamp: '2026-08-24 10:20 UTC',
+    collectionMethod: 'Corpus Bag-of-Characters & Syntactic Delimiter Parsing',
+    reliability: 'C',
+    confidence: 82,
+    relatedEntity: 'Candidate Entity A (Arun Mehta)',
+    relationshipType: 'Writing Style → Technical Whitepaper Lexicon',
+    verificationStatus: 'Single-source unconfirmed'
+  },
+  {
+    evidenceId: 'EV-2047-24',
+    source: 'Corporate Filing & Regulated Financial Records (Demo)',
+    sourceType: 'Public Companies Registry',
+    originalIndicator: 'Vector Systems Ltd. (Incorporation #REG-99104)',
+    discoveryTimestamp: '2026-08-24 12:15 UTC',
+    collectionMethod: 'Companies House Public Open Data API',
+    reliability: 'A',
+    confidence: 90,
+    relatedEntity: 'Vector Systems Ltd. / Arun Mehta',
+    relationshipType: 'Organization → Officer & Directorship',
+    verificationStatus: 'Cross-source verified'
+  },
+  {
+    evidenceId: 'EV-2047-25',
+    source: 'Synthetic Residential ISP Session Logs (Controlled Lab)',
+    sourceType: 'Session Telemetry',
+    originalIndicator: 'Daylight Session Telemetry (14:32 UTC)',
+    discoveryTimestamp: '2026-08-26 14:37 UTC',
+    collectionMethod: 'Synthetic ISP NetFlow Simulation',
+    reliability: 'B',
+    confidence: 61,
+    relatedEntity: 'Candidate Entity A (Arun Mehta)',
+    relationshipType: 'Temporal Telemetry → Suspected Contradiction',
+    verificationStatus: 'Disputed'
+  }
+];
+
+// Module 4C: Temporal Conflicts (Stage 2 Required Feature)
+export const syntheticTemporalConflicts: TemporalConflictItem[] = [
+  {
+    id: 'TC-01',
+    title: 'Cross-Continental Session Concurrency Conflict',
+    candidateActivity: 'Candidate logged active terminal session via Bengaluru residential ISP at 14:32 UTC',
+    actorActivity: 'DarkWolf operator executed verified exploit release command on Frankfurt backend server at 14:33 UTC',
+    conflictExplanation: '60-second time gap between physical locations (Bengaluru vs Frankfurt) is physically impossible without automated script relay or a multi-operator criminal cell.',
+    detectedAt: '2026-08-26 14:37 UTC',
+    impactOnConfidence: 'Attribution confidence reduced from 74% to 61% (pending forensic review of VPN/cron logs)'
+  },
+  {
+    id: 'TC-02',
+    title: 'Pre-Deployment Domain Registration Window',
+    candidateActivity: 'Domain darkx17-vault.is registered through Vector Systems profile on 2024-02-10',
+    actorActivity: 'First public darknet leak mirror announcement published on Dread on 2024-03-12',
+    conflictExplanation: '30-day preparation window between domain acquisition and public exploit sales is consistent with planned operational staging; non-conflicting corroboration.',
+    detectedAt: '2026-08-22 14:39 UTC',
+    impactOnConfidence: '+6% Corroborative Timeline Precedence'
+  }
+];
+
+// Module 4D: Geographic & Contextual Consistency (Stage 2 Required Feature)
+export const syntheticContextualConsistencies: ContextualConsistencyItem[] = [
+  {
+    id: 'CC-01',
+    factor: 'Timezone & Diurnal Pattern',
+    actorObservation: 'DarkWolf nocturnal activity window: 20:00 - 03:30 UTC',
+    candidateObservation: 'Candidate GitHub commits and staging deployments peak between 21:00 - 02:00 UTC',
+    status: 'CONSISTENT',
+    explanation: 'Substantial nocturnal overlap consistent with late-night software engineering habits.'
+  },
+  {
+    id: 'CC-02',
+    factor: 'Linguistic & Lexical Conventions',
+    actorObservation: 'Strict lowercase sentence starts, double-hyphen delimiters (--), British spelling ("optimise")',
+    candidateObservation: 'Candidate published technical whitepapers show British English spelling and identical delimiter habits',
+    status: 'CONSISTENT',
+    explanation: 'Stylometric analysis confirms 91% concordance across syntactic and punctuation markers.'
+  },
+  {
+    id: 'CC-03',
+    factor: 'Infrastructure Hosting Footprint',
+    actorObservation: 'Tor relays and reverse proxies routed through Germany, Romania, and Iceland nodes',
+    candidateObservation: 'Vector Systems Ltd. operates corporate colocation contracts in Frankfurt and Amsterdam',
+    status: 'CONSISTENT',
+    explanation: 'Candidate corporate colocation points overlap with upstream Autonomous Systems used by actor nodes.'
+  },
+  {
+    id: 'CC-04',
+    factor: 'Physical Location vs IP Geolocation',
+    actorObservation: 'DarkWolf exit nodes resolve geographically to Germany / Romania',
+    candidateObservation: 'Candidate primary residence recorded in Bengaluru, Karnataka, India',
+    status: 'CONFLICT',
+    explanation: 'Contextual geolocation conflict detected. Geolocation indicates cross-border VPN usage or distributed team.'
+  }
+];
+
+// Module 4E: Attribution Challenge Engine (10 Required Alternative Explanations)
+export const syntheticAlternativeExplanations: AlternativeExplanation[] = [
+  {
+    id: 'HYP-01',
+    hypothesis: 'Shared Infrastructure / Multi-Tenant Bulletproof Hosting',
+    probability: 'Moderate',
+    evidenceFor: [
+      'Node 185.220.101.45 is hosted in a commercial data center known to service multiple external clients',
+      'Autonomous system AS49210 carries traffic for thousands of unmanaged IP leases'
+    ],
+    evidenceAgainst: [
+      'The SSL certificate on port 8443 explicitly includes darkx17-vault.is and staging.vectorsystems-tech.co.uk in its Subject Alternative Names (SAN)',
+      'SSH host public key matches candidate private staging server directly'
+    ],
+    missingEvidence: [
+      'Subpoenaed multi-tenant hypervisor container logs from hosting provider'
+    ],
+    alternativeRebuttal: 'Multi-tenancy cannot account for the shared custom SSL certificate SAN and SSH host key pairing across both domains.'
+  },
+  {
+    id: 'HYP-02',
+    hypothesis: 'Reused Hosting / Ephemeral IP Reallocation',
+    probability: 'Low',
+    evidenceFor: [
+      'Cloud providers routinely reassign IPv4 addresses to new customers upon contract termination'
+    ],
+    evidenceAgainst: [
+      'DNS records for darkx17-vault.is pointed continuously to 185.220.101.45 over an unbroken 14-month observation window',
+      'Domain registration date and IP allocation date are synchronized within 48 hours'
+    ],
+    missingEvidence: [
+      'Provider IP lease churn history for subnet 185.220.101.0/24'
+    ],
+    alternativeRebuttal: 'Unbroken 14-month continuous DNS resolution refutes transient ephemeral IP recycling.'
+  },
+  {
+    id: 'HYP-03',
+    hypothesis: 'Leaked or Compromised PGP Private Key',
+    probability: 'Low',
+    evidenceFor: [
+      'PGP keys have historically been extracted by malware or stolen during law enforcement server seizures'
+    ],
+    evidenceAgainst: [
+      'PGP key 0x7E4A8F2C91B4 was actively used to sign releases across 4 separate forums spanning 2.5 years without revocation',
+      'No key revocation certificate was ever pushed to public SKS keyservers'
+    ],
+    missingEvidence: [
+      'Candidate testimony or breach disclosure indicating compromised cryptographic keyrings'
+    ],
+    alternativeRebuttal: 'Key persistence over 30 months across multiple distinct platforms without revocation makes unannounced compromise improbable.'
+  },
+  {
+    id: 'HYP-04',
+    hypothesis: 'Shared Cryptocurrency Wallet / Exchange Hot-Wallet Pool',
+    probability: 'Moderate',
+    evidenceFor: [
+      'Exchange deposit addresses can appear linked in naive heuristic clustering due to omnibus pooling'
+    ],
+    evidenceAgainst: [
+      'Wallet bc1qxy... is an HD Native SegWit self-custody wallet, not an exchange hot-wallet',
+      'Transaction in block 842109 represents a private multi-input co-spend, not a centralized withdrawal batch'
+    ],
+    missingEvidence: [
+      'Cryptocurrency exchange internal UID logs for deposit transactions'
+    ],
+    alternativeRebuttal: 'Co-spend transaction architecture confirms cryptographic private key possession of all inputs simultaneously.'
+  },
+  {
+    id: 'HYP-05',
+    hypothesis: 'Copied Writing Style / Deliberate False-Flag Stylometry',
+    probability: 'Low',
+    evidenceFor: [
+      'Sophisticated actors sometimes mimic rival grammar to confuse attribution analysts'
+    ],
+    evidenceAgainst: [
+      'Subtle subconscious syntactical habits (double-hyphen delimiter frequency, lowercase sentence starts) persist across 200+ casual chat posts',
+      'Earliest observed usage dates back to 2023 on legitimate developer forums prior to any known public threat actor persona'
+    ],
+    missingEvidence: [
+      'Secondary writing samples authored in private unmonitored communication channels'
+    ],
+    alternativeRebuttal: 'Longitudinal linguistic analysis demonstrates habit existed in private developer notes long before public threat campaigns.'
+  },
+  {
+    id: 'HYP-06',
+    hypothesis: 'Common / Generic Username Collision',
+    probability: 'Low',
+    evidenceFor: [
+      'Handles incorporating "shadow" or "dark" are common in security and gaming communities'
+    ],
+    evidenceAgainst: [
+      'The specific alphanumeric stem "x17" is idiosyncratic and linked directly to "shadow_x17", "darkx17", and "x17_dev"',
+      'Cross-platform handle registrations share identical PGP key fingerprint in bio metadata'
+    ],
+    missingEvidence: [
+      'Global database of all registered handles incorporating "x17"'
+    ],
+    alternativeRebuttal: 'Simultaneous sharing of unique suffix "x17" paired with verified identical PGP key eliminates random naming coincidence.'
+  },
+  {
+    id: 'HYP-07',
+    hypothesis: 'Commercial VPN / Public Proxy IP Overlap',
+    probability: 'High',
+    evidenceFor: [
+      'Bengaluru session at 14:32 UTC could represent commercial VPN exit node used by unrelated party',
+      'Candidate may have used corporate VPN routing through Europe while traveling'
+    ],
+    evidenceAgainst: [
+      'ISP WHOIS for Bengaluru IP confirms residential DSL subscriber range, not commercial VPN datacenter',
+      'Frankfurt session was authenticated directly into actor staging daemon with pre-shared SSH key'
+    ],
+    missingEvidence: [
+      'Subpoenaed ISP subscriber connection session logs for IP range 49.207.x.x at 14:32 UTC'
+    ],
+    alternativeRebuttal: 'Residential IP allocation makes VPN datacenter pooling less likely, but possibility of split-operator cell remains open.'
+  },
+  {
+    id: 'HYP-08',
+    hypothesis: 'Timeline Conflict / Incompatible Concurrent Activity',
+    probability: 'High',
+    evidenceFor: [
+      'Logged session in Bengaluru at 14:32 UTC contradicts Frankfurt command session at 14:33 UTC'
+    ],
+    evidenceAgainst: [
+      'Automated cron job or pre-scheduled exploit distribution script could fire in Frankfurt while candidate is online elsewhere',
+      'Actor cluster may consist of 2 collaborating individuals operating under shared credentials'
+    ],
+    missingEvidence: [
+      'Server process tree and crontab logs for Frankfurt server during 14:33 UTC execution'
+    ],
+    alternativeRebuttal: 'This timeline conflict is the strongest contradictory finding and justifies capping attribution confidence at 74%.'
+  },
+  {
+    id: 'HYP-09',
+    hypothesis: 'Unrelated Infrastructure / Malicious Domain Redirect',
+    probability: 'Low',
+    evidenceFor: [
+      'Anyone can configure a DNS A-record pointing to an arbitrary public IP address'
+    ],
+    evidenceAgainst: [
+      'Target server answered HTTPS handshakes using a certificate containing the exact private key matched to Candidate A staging server',
+      'Port 8443 accepted reciprocal SSH authentication from the domain administrator'
+    ],
+    missingEvidence: [
+      'Packet captures of TLS handshake during initial certificate exchange'
+    ],
+    alternativeRebuttal: 'Two-way TLS handshake validation refutes unauthenticated spoofed DNS pointer.'
+  },
+  {
+    id: 'HYP-10',
+    hypothesis: 'Coincidental Behavioral & Diurnal Similarity',
+    probability: 'Moderate',
+    evidenceFor: [
+      'Millions of software engineers work nocturnal hours between 20:00 and 04:00 UTC'
+    ],
+    evidenceAgainst: [
+      'Synchronized 3-week silence observed across both candidate personal accounts and actor darknet profiles in December 2024 and 2025',
+      'Matching technical specialization in Linux kernel heap grooming and memory corruption'
+    ],
+    missingEvidence: [
+      'Detailed employer badge access logs during the seasonal hiatus periods'
+    ],
+    alternativeRebuttal: 'Correlated multi-week holiday dormancy across multiple consecutive years substantially exceeds random diurnal coincidence.'
+  }
+];
+
+// Module 4F: Evidence Lineage & Independence Tracking (Stage 2 Required Feature)
+export const syntheticEvidenceLineages: EvidenceLineage[] = [
+  {
+    lineageId: 'LIN-01',
+    rootEvidence: 'Clear-web Mirror Domain Registration (darkx17-vault.is)',
+    independentSource: 'ICANN / WhoisXML Primary Registrar Feed',
+    derivedReports: [
+      'Passive DNS Aggregate Report (Feed Alpha)',
+      'DomainTools Historic Archive Snapshot',
+      'SecurityTrails Subdomain Enumeration Feed'
+    ],
+    duplicatedCount: 3
+  },
+  {
+    lineageId: 'LIN-02',
+    rootEvidence: 'PGP Public Key Certificate (0x7E4A8F2C91B4)',
+    independentSource: 'OpenPGP SKS Keyserver Federation',
+    derivedReports: [
+      'VKS Mirror Pool Telemetry',
+      'GitHub Developer Key Export Scraping',
+      'Dread Marketplace PGP Signature Cache'
+    ],
+    duplicatedCount: 3
+  },
+  {
+    lineageId: 'LIN-03',
+    rootEvidence: 'Reverse-Proxy Hosting Node (185.220.101.45)',
+    independentSource: 'BGP Routing Table & Global Traceroute Graph',
+    derivedReports: [
+      'Shodan Network Scan Snapshot',
+      'Censys IPv4 Telemetry Alert',
+      'AlienVault OTX Pulse #44901',
+      'ShadowServer Infrastructure Feed'
+    ],
+    duplicatedCount: 4
+  },
+  {
+    lineageId: 'LIN-04',
+    rootEvidence: 'Bitcoin HD Wallet Multi-Input Co-spend',
+    independentSource: 'Bitcoin Core Node Mempool & Raw Block 842109',
+    derivedReports: [
+      'Synthetic On-Chain Commercial AML Feed'
+    ],
+    duplicatedCount: 1
+  }
+];
+
+// Module 4G: Attribution Evolution Snapshots (Stage 2 Required Feature)
+export const syntheticAttributionSnapshots: AttributionSnapshot[] = [
+  {
+    id: 'SNAP-01',
+    timestamp: '2026-08-22 11:00 UTC',
+    confidence: 52,
+    triggerEvent: 'Stage 2 Authorized by Lead Investigator (Gate Cleared)',
+    evidenceAddedOrChanged: [
+      'Imported Stage 1 Actor Cluster TA-001 (91% Correlation Confidence)',
+      'Ingested reverse-proxy node 185.220.101.45 into entity resolution pipeline',
+      'Generated initial Candidate Entity A hypothesis'
+    ],
+    stage: 'IDENTITY RESOLUTION'
+  },
+  {
+    id: 'SNAP-02',
+    timestamp: '2026-08-24 16:30 UTC',
+    confidence: 74,
+    triggerEvent: 'PGP Cross-Signing & Corporate Registrar Records Corroborated',
+    evidenceAddedOrChanged: [
+      'Verified PGP Key ID 0x7E4A8F2C91B4 matches public developer commit signatures',
+      'Corporate registration records for Vector Systems Ltd. confirmed Subject directorship',
+      'SSL cert SAN match between mirror domain and developer staging node (+22%)'
+    ],
+    stage: 'CANDIDATE ANALYSIS'
+  },
+  {
+    id: 'SNAP-03',
+    timestamp: '2026-08-26 14:40 UTC',
+    confidence: 61,
+    triggerEvent: 'Temporal Conflict Detected: 14:32 UTC (India) vs 14:33 UTC (Frankfurt)',
+    evidenceAddedOrChanged: [
+      'Ingested synthetic residential ISP NetFlow session at 14:32 UTC',
+      'Detected concurrent session conflict with Frankfurt exploit release terminal session',
+      'Applied contradiction penalty: confidence decreased from 74% → 61% (-13%)'
+    ],
+    stage: 'ATTRIBUTION CHALLENGE'
+  },
+  {
+    id: 'SNAP-04',
+    timestamp: '2026-08-27 10:15 UTC',
+    confidence: 74,
+    triggerEvent: 'Investigator Review: Cron Relay Identified; Baseline Re-established',
+    evidenceAddedOrChanged: [
+      'Investigator identified scheduled systemd timer on Frankfurt host explaining 14:33 session',
+      'Contradiction impact recalibrated from fatal conflict to suspicious proxy artifact',
+      'Attribution confidence restored to 74% (PROBABLE CANDIDATE)'
+    ],
+    stage: 'INVESTIGATOR REVIEW'
+  }
+];
+
+// Module 4H: Investigator Notes Master Repository (Stage 2 Required Feature)
+export const syntheticInvestigatorNotes: InvestigatorNote[] = [
+  {
+    id: 'NOTE-01',
+    targetType: 'Candidate',
+    targetId: 'CANDIDATE-A',
+    author: 'Senior Investigator INV-017',
+    text: 'Candidate A exhibits strongest cryptographic linkage via PGP subkey cross-signing. Must verify whether the 14:32 UTC session originated from a commercial VPN proxy or automated CI/CD cron task.',
+    timestamp: '2026-08-26 15:10 UTC'
+  },
+  {
+    id: 'NOTE-02',
+    targetType: 'Evidence',
+    targetId: 'EV-2047-18',
+    author: 'Senior Investigator INV-017',
+    text: 'PGP public key matched historical open-source repository from 2023. Key signature verified locally with GnuPG 2.4. Cross-reference with GPG keyring archive confirms zero revocation certificates issued.',
+    timestamp: '2026-08-23 09:45 UTC'
+  },
+  {
+    id: 'NOTE-03',
+    targetType: 'Cluster',
+    targetId: 'Actor Cluster A',
+    author: 'Supervisor SUP-004',
+    text: 'Stage 2 authorization granted based on 91% Stage 1 correlation confidence. Restrict attribution scope strictly to investigative lead status. No judicial action permitted prior to independent MLAT response.',
+    timestamp: '2026-08-22 11:02 UTC'
+  }
+];
+
+// Module 4I: Stage 2 AI Investigator Seeded Structured Responses (10 Prompt Chips)
+export const syntheticStage2AiResponses: Record<string, {
+  conclusion: string;
+  evidenceFor: string[];
+  evidenceAgainst: string[];
+  missingEvidence: string[];
+  sourceReliability: string;
+  confidence: string;
+  alternativeExplanation: string;
+  evidenceChain: string[];
+}> = {
+  'why-candidate-a': {
+    conclusion: 'Candidate Entity A (Arun Mehta - FICTIONAL DEMO ENTITY) was identified through a convergent 6-link evidence chain spanning cryptographic PGP subkeys, corporate domain registrations, and shared staging server infrastructure.',
+    evidenceFor: [
+      'RSA-4096 PGP subkey 0x7E4A8F2C91B4 cross-signed by Subject clear-net developer keyring',
+      'Clear-web mirror domain darkx17-vault.is registered under corporate billing profile associated with Vector Systems Ltd.',
+      'Reverse-proxy IP 185.220.101.45 SSL certificate SAN extension matches staging server portal',
+      'Stylometric match on technical documentation: consistent double-hyphen delimiters (--) and lowercase openers',
+      'Matching nocturnal activity schedule (20:00 - 04:00 UTC) across 18-month longitudinal crawl'
+    ],
+    evidenceAgainst: [
+      'Temporal conflict detected: Bengaluru session logged at 14:32 UTC vs Frankfurt terminal session at 14:33 UTC',
+      'Candidate public LinkedIn uses British English spelling conventions, whereas certain forum posts show American colloquialisms'
+    ],
+    missingEvidence: [
+      'Subpoenaed ISP subscriber connection logs for Bengaluru IP at timestamp 14:32 UTC',
+      'Wasabi CoinJoin hop 3 wallet peel outputs remain unconfirmed due to cryptographic mixer obfuscation',
+      'Verified government civil registry / passport documentation is currently unavailable'
+    ],
+    sourceReliability: 'A (High Reliability - Cryptographic Keyserver & BGP Network Telemetry)',
+    confidence: '74% (PROBABLE CANDIDATE — Investigator Verification Required)',
+    alternativeExplanation: 'Candidate could be an unwitting system administrator whose staging credentials were hijacked by DarkWolf, or the 14:32 UTC event represents a split-operator criminal cell.',
+    evidenceChain: [
+      'DarkWolf Cluster (TA-001)',
+      'Digital Persona: @shadow_x17',
+      'Cryptographic Key ID: 0x7E4A8F2C91B4',
+      'Clear-web Domain: darkx17-vault.is',
+      'Corporate Entity: Vector Systems Ltd.',
+      'Candidate Entity A: Arun Mehta'
+    ]
+  },
+  'contradictory-evidence': {
+    conclusion: 'Three specific contradictory findings have been detected that prevent definitive attribution and maintain Candidate A at an investigative lead status (74%).',
+    evidenceFor: [
+      'Multi-signal convergence remains strong across infrastructure, PGP, and domain registrations'
+    ],
+    evidenceAgainst: [
+      'CONTRADICTION 1: Temporal Conflict — Session logged via Bengaluru ISP at 14:32 UTC while DarkWolf executed a live terminal command in Frankfurt at 14:33 UTC (60-second cross-continental impossibility).',
+      'CONTRADICTION 2: Stylometric Discrepancy — Candidate professional portfolio features rigorous British English conventions ("optimised"), whereas forum posts show mixed American slang.',
+      'CONTRADICTION 3: Infrastructure Disconnect — Secondary Tor exit relay routes through a German cloud provider with zero observed corporate IP tenancy.'
+    ],
+    missingEvidence: [
+      'Automated process logs proving whether the Frankfurt 14:33 UTC execution was an unattended cron task',
+      'Commercial VPN subscriber records verifying whether the Bengaluru session was a VPN exit node'
+    ],
+    sourceReliability: 'B (Reliable Session Telemetry)',
+    confidence: 'Reduces raw attribution strength from 87% to 74%',
+    alternativeExplanation: 'Possible multi-member criminal conspiracy where Candidate A handles infrastructure preparation while a second operator handles darknet marketplace distribution.',
+    evidenceChain: [
+      'Bengaluru ISP Session (14:32 UTC)',
+      '≠ Frankfurt Server Command (14:33 UTC)',
+      'Result: TEMPORAL CONFLICT DETECTED (-13% Confidence Impact)'
+    ]
+  },
+  'independent-evidence': {
+    conclusion: 'Out of 17 total intelligence reports ingested, SPECTRA identified 6 truly independent root evidence sources. 11 reports were identified as duplicate or derived feeds and deduplicated to prevent confidence inflation.',
+    evidenceFor: [
+      'Independent Root 1: ICANN / WhoisXML Primary Registrar Feed for darkx17-vault.is (3 derived feeds deduplicated)',
+      'Independent Root 2: OpenPGP SKS Keyserver Federation for 0x7E4A8F2C91B4 (3 derived mirror feeds deduplicated)',
+      'Independent Root 3: BGP Routing Table & Global Traceroute Graph for 185.220.101.45 (4 scanner feeds deduplicated)',
+      'Independent Root 4: Bitcoin Core Node Mempool raw block 842109 for wallet co-spend (1 AML alert feed deduplicated)',
+      'Independent Root 5: UK Companies House Public Open Data API for corporate directorship',
+      'Independent Root 6: Synthetic Residential ISP NetFlow Session Telemetry'
+    ],
+    evidenceAgainst: [
+      'Derived threat intelligence feeds repeatedly citing the same passive DNS record cannot be treated as separate corroborating witnesses'
+    ],
+    missingEvidence: [
+      'Direct foreign registrar mutual legal assistance disclosure'
+    ],
+    sourceReliability: 'A (Deduplicated Primary Evidence Lineage)',
+    confidence: 'Prevents synthetic score inflation; establishes legitimate 74% baseline',
+    alternativeExplanation: 'Relying on raw report count (17) without lineage deduplication would have falsely inflated confidence to 94%.',
+    evidenceChain: [
+      '17 Ingested Threat Feeds',
+      'Evidence Lineage Filter Applied',
+      '6 Independent Root Sources Isolated',
+      '11 Duplicate/Derived Reports Grouped'
+    ]
+  },
+  'missing-evidence': {
+    conclusion: 'Four critical evidence categories remain unverified and must be obtained through authorized judicial channels before attribution can advance beyond investigative lead status.',
+    evidenceFor: [
+      'Digital infrastructure and public cryptographic linkage established'
+    ],
+    evidenceAgainst: [
+      'Attribution cannot be accepted in court without independent corroboration of missing links'
+    ],
+    missingEvidence: [
+      'GAP 1: Subpoenaed VPN subscriber session logs for Bengaluru IP timestamp 14:32 UTC',
+      'GAP 2: Corroboration of Wasabi CoinJoin mixer peel outputs with regulated cryptocurrency off-ramp KYC records',
+      'GAP 3: Mutual Legal Assistance Treaty (MLAT) response verifying Estonia corporate registry shareholding structure',
+      'GAP 4: Forensic memory capture or physical hard drive imaging proving private PGP key possession'
+    ],
+    sourceReliability: 'N/A (Identified Evidence Deficits)',
+    confidence: 'Limits confidence ceiling to 74% (PROBABLE)',
+    alternativeExplanation: 'If missing VPN logs reveal the Bengaluru IP belonged to an unrelated third party, Candidate A attribution confidence will drop below 40%.',
+    evidenceChain: [
+      'Candidate Attribution Lead (74%)',
+      'Evidence Gap Barrier',
+      'Next Best Action: Lawful MLAT Subpoena & KYC Verification'
+    ]
+  },
+  'evidence-chain': {
+    conclusion: 'The complete digital-to-real-world resolution pipeline transitions seamlessly through 6 verified evidentiary milestones.',
+    evidenceFor: [
+      'Step 1: DarkWolf Cluster (TA-001) correlated across 4 darknet handles with 91% Stage 1 confidence',
+      'Step 2: Primary operational handle @shadow_x17 published PGP Key ID 0x7E4A8F2C91B4 on Dread forum',
+      'Step 3: PGP Key ID matched historical developer commit signatures authored under moniker "x17_dev"',
+      'Step 4: x17_dev development blog hosted on domain darkx17-vault.is',
+      'Step 5: darkx17-vault.is registrar account billed to corporate profile of Vector Systems Ltd.',
+      'Step 6: Vector Systems Ltd. commercial registry filing identifies Arun Mehta as Director of Architecture'
+    ],
+    evidenceAgainst: [
+      'Temporal anomaly at Step 6 requires confirmation of whether Subject acted individually or on corporate behalf'
+    ],
+    missingEvidence: [
+      'Employee access log for Vector Systems registrar account'
+    ],
+    sourceReliability: 'A (Chain of Custody Preserved)',
+    confidence: '74% Attribution Confidence across 6 Hops',
+    alternativeExplanation: 'An insider at Vector Systems Ltd. may have used the company infrastructure without Candidate A direct authorization.',
+    evidenceChain: [
+      'DarkWolf Cluster',
+      '→ @shadow_x17',
+      '→ PGP 0x7E4A8F2C91B4',
+      '→ darkx17-vault.is',
+      '→ Vector Systems Ltd.',
+      '→ Arun Mehta (Candidate A)'
+    ]
+  },
+  'duplicate-sources': {
+    conclusion: 'SPECTRA actively grouped 11 derived reports under 4 root evidence lineages. For instance, Shodan, Censys, AlienVault, and ShadowServer all reported reverse-proxy IP 185.220.101.45, but trace back to the same underlying BGP announcement.',
+    evidenceFor: [
+      'BGP Autonomous System announcement AS49210 is the single physical point of origin'
+    ],
+    evidenceAgainst: [
+      'Commercial feeds marketed as independent intelligence frequently re-package the same open scanning data'
+    ],
+    missingEvidence: [
+      'Proprietary non-public transit router NetFlow records'
+    ],
+    sourceReliability: 'A (Lineage Deduplication Verified)',
+    confidence: 'Maintains evidentiary integrity by rejecting pseudo-corroboration',
+    alternativeExplanation: 'Analysts using uncalibrated platforms often count 4 vendor alerts as 4 separate confirmations, leading to dangerous confirmation bias.',
+    evidenceChain: [
+      'Single BGP Announcement',
+      'Scanned by Shodan + Censys + OTX + ShadowServer',
+      'Deduplicated to 1 Root Source'
+    ]
+  },
+  'confidence-decrease': {
+    conclusion: 'Candidate A confidence experienced a deliberate 13% reduction (74% → 61%) upon ingestion of synthetic ISP session logs indicating a 14:32 UTC connection in India, conflicting with Frankfurt terminal operations at 14:33 UTC.',
+    evidenceFor: [
+      'Automated conflict detection engine actively searched for contradictory timeline events'
+    ],
+    evidenceAgainst: [
+      'Simultaneous presence in two continents within 60 seconds is physically impossible'
+    ],
+    missingEvidence: [
+      'Terminal daemon process execution logs on Frankfurt server'
+    ],
+    sourceReliability: 'B (Reliable Session Telemetry)',
+    confidence: 'Adjusted: 74% → 61% (Later restored to 74% following systemd cron timer verification)',
+    alternativeExplanation: 'The execution was triggered by an automated cron runner configured by Candidate A prior to traveling.',
+    evidenceChain: [
+      'Initial High Confidence (74%)',
+      'New Ingest: Bengaluru Session (14:32 UTC)',
+      'Conflict Flagged: Frankfurt Session (14:33 UTC)',
+      'Confidence Dropped to 61%',
+      'Systemd Timer Verified → Restored to 74%'
+    ]
+  },
+  'compare-candidates': {
+    conclusion: 'Candidate A (Arun Mehta - 74%) has direct cryptographic and domain registrar links, whereas Candidate B (Rohan Verma - 58%) has only peripheral upstream BGP transit proximity, and Candidate C (Vector Systems Ltd. - 62%) represents the corporate organizational umbrella.',
+    evidenceFor: [
+      'Candidate A possesses verified PGP key alignment, commit authorship, and registrar ownership',
+      'Candidate B lacks PGP link, shows daytime business hours conflict, and represents an unmanaged transit ISP staff member',
+      'Candidate C connects Candidate A to operational hosting but lacks individual intent indicators'
+    ],
+    evidenceAgainst: [
+      'Candidate A has a major temporal conflict at 14:32 UTC; Candidate B has complete diurnal mismatch'
+    ],
+    missingEvidence: [
+      'Individual terminal access logs distinguishing Candidate A from other Vector Systems personnel'
+    ],
+    sourceReliability: 'A for Candidate A; B for Candidate B; A for Candidate C',
+    confidence: 'Candidate A (74%) > Candidate C (62%) > Candidate B (58%)',
+    alternativeExplanation: 'Candidate B may have merely provisioned a routine upstream BGP peering route without knowledge of darknet activity.',
+    evidenceChain: [
+      'Candidate A: Direct PGP + Domain + Commits (74%)',
+      'Candidate C: Corporate Billing Umbrella (62%)',
+      'Candidate B: Upstream Transit ISP Proximity (58%)'
+    ]
+  },
+  'alternative-explanations': {
+    conclusion: 'The Attribution Challenge Engine evaluated 10 distinct alternative explanations. The highest-risk competing hypothesis is Shared Infrastructure / Multi-Tenant Bulletproof Hosting (Moderate Probability), followed by Commercial VPN IP Overlap (Moderate Probability).',
+    evidenceFor: [
+      'Node 185.220.101.45 resides in a hosting environment known to service multiple tenants'
+    ],
+    evidenceAgainst: [
+      'SSL certificate SAN explicitly pairs the darknet mirror domain with the candidate private staging subdomain',
+      'SSH public key reuse across staging and operational backend'
+    ],
+    missingEvidence: [
+      'Hypervisor tenant isolation logs from hosting provider'
+    ],
+    sourceReliability: 'A (Cryptographic & Network Telemetry)',
+    confidence: 'Challenged Confidence: 74% (PROBABLE)',
+    alternativeExplanation: 'The hypothesis of a compromised developer machine cannot be entirely dismissed until endpoint forensic images are obtained.',
+    evidenceChain: [
+      'Primary Hypothesis: Arun Mehta is DarkWolf (74%)',
+      'Competing Hypothesis 1: Multi-tenant shared proxy (Rebutted by SSL SAN)',
+      'Competing Hypothesis 2: Compromised developer credentials (Unresolved)'
+    ]
+  },
+  'strongest-pgp': {
+    conclusion: 'Candidate A (Arun Mehta) has the only verified cryptographic PGP linkage. Candidate B has zero cryptographic cross-signing, and Candidate C holds only an enterprise build-signing key.',
+    evidenceFor: [
+      'PGP Key ID 0x7E4A8F2C91B4 was used to cryptographically sign DarkWolf database leaks on Dread forum',
+      'Identical key ID was published on Candidate A developer website and key server records dating back to 2023',
+      'Subkey cross-certification signatures verified valid using RSA-4096 primitives'
+    ],
+    evidenceAgainst: [
+      'Zero evidence that private key was revoked or reported compromised'
+    ],
+    missingEvidence: [
+      'Physical access to target laptop containing private key ring'
+    ],
+    sourceReliability: 'A (Cryptographically Deterministic)',
+    confidence: '94% Cryptographic Linkage Score',
+    alternativeExplanation: 'The PGP private key could have been exfiltrated by an advanced adversary, though no key revocation was ever published.',
+    evidenceChain: [
+      'Dread Forum Database Leak Signature',
+      '→ PGP Key ID 0x7E4A8F2C91B4',
+      '→ OpenPGP SKS Keyserver Match',
+      '→ Candidate A Developer Profile'
+    ]
+  }
+};
 
 // Interactive Feature: Confidence Evolution Points
 export const initialConfidenceEvolution: ConfidenceEvolutionPoint[] = [
@@ -933,58 +1797,66 @@ export const initialStage2Leads: Record<string, RealWorldAttributionLead> = {
   'Actor Cluster A': {
     id: 'LEAD-TA001-A',
     clusterId: 'Actor Cluster A',
-    candidateEntity: 'Candidate Entity A (Subject A. K. / Meridian Analytics Front)',
-    entityType: 'Organization',
-    jurisdictionEstimate: 'Eastern European Hosting / EU Commercial Registration',
-    attributionConfidence: 82,
+    candidateEntity: 'Arun Mehta (FICTIONAL DEMO ENTITY)',
+    entityType: 'Individual',
+    jurisdictionEstimate: 'IN / EU Cross-Border Hosting & Domain Registration',
+    attributionConfidence: 74,
     status: 'ATTRIBUTION LEAD - HUMAN VALIDATION REQUIRED',
-    evidenceConnectionsTotal: 9,
-    supportingConnections: 7,
-    conflictingConnections: 1,
-    unknownConnections: 1,
+    evidenceConnectionsTotal: 14,
+    supportingConnections: 14,
+    conflictingConnections: 3,
+    unknownConnections: 4,
     resolutionChain: [
       {
         step: 1,
-        from: 'Probable Digital Actor Cluster A',
-        to: 'Mirror Domain: darkx17-vault.is',
-        relationship: 'Publicly announced mirror by darkx17 with signed PGP proof',
-        evidenceSource: 'Dread Forum Post #44912 / PGP Sig 0x7E4A8F2C91B4',
+        from: 'DarkWolf Cluster (TA-001)',
+        to: 'Operational Alias: @shadow_x17',
+        relationship: 'Primary access broker handle verified across Dread and Exploit.in',
+        evidenceSource: 'Stage 1 Multi-Signal Correlation (91% Confidence)',
         status: 'VERIFIED'
       },
       {
         step: 2,
-        from: 'Mirror Domain: darkx17-vault.is',
-        to: 'Infrastructure Node 17 (185.220.101.45)',
-        relationship: 'DNS A-Record historical resolution (FlokiNET / Njalla proxy)',
-        evidenceSource: 'Passive DNS Archive & BGP Route History',
+        from: 'Operational Alias: @shadow_x17',
+        to: 'PGP Key ID: 0x7E4A8F2C91B4',
+        relationship: 'RSA-4096 public key published on official database leak announcements',
+        evidenceSource: 'Dread Forum Post #44912 & Keyserver SKS Pool',
         status: 'VERIFIED'
       },
       {
         step: 3,
-        from: 'Infrastructure: 185.220.101.45',
-        to: 'Clear-net SSL Cert SHA256: 3c8e...9f21',
-        relationship: 'Exposed port 8443 SSL certificate reuse on staging server',
-        evidenceSource: 'Shodan / Censys Historical Scan 2025-11',
-        status: 'PROBABLE'
+        from: 'PGP Key ID: 0x7E4A8F2C91B4',
+        to: 'Developer Moniker: x17_dev (darkx17-vault.is)',
+        relationship: 'Subkey cross-signing verified against legacy developer repository',
+        evidenceSource: 'OpenPGP Keyserver & Public Git Commit Signatures',
+        status: 'VERIFIED'
       },
       {
         step: 4,
-        from: 'SSL Certificate & Domain Whois Privacy',
-        to: 'Developer Moniker: "alex-k-sec"',
-        relationship: 'Matching SSH public key comments and Git commit author in leaked staging repo',
-        evidenceSource: 'GitHub / GitLab Public Archive & Pastebin Scrapes',
-        status: 'PROBABLE'
+        from: 'Clear-web Domain: darkx17-vault.is',
+        to: 'Reverse-Proxy Node: 185.220.101.45',
+        relationship: 'DNS A-Record and SSL Certificate SAN match on port 8443',
+        evidenceSource: 'Passive DNS Archive & Shodan SSL Scans',
+        status: 'VERIFIED'
       },
       {
         step: 5,
-        from: 'Developer Moniker "alex-k-sec"',
-        to: 'Candidate Entity A (Meridian Analytics S.R.O. / Subject A. K.)',
-        relationship: 'Corporate registration of domain registrar account & crypto corporate tax filing',
-        evidenceSource: 'Commercial Registry & Financial Intelligence Exchange Lead',
-        status: 'UNCONFIRMED'
+        from: 'Infrastructure Node: 185.220.101.45',
+        to: 'Organization: Vector Systems Ltd.',
+        relationship: 'Commercial server lease billed to corporate account #VEC-ENT-410',
+        evidenceSource: 'Registrar Billing Records & Subpoenaed Invoicing Telemetry',
+        status: 'PROBABLE'
+      },
+      {
+        step: 6,
+        from: 'Organization: Vector Systems Ltd.',
+        to: 'Candidate Entity A: Arun Mehta (FICTIONAL DEMO ENTITY)',
+        relationship: 'Corporate officer directorship & Git commit author linkage',
+        evidenceSource: 'Companies House Registry & Developer Identity Cross-Reference',
+        status: 'PROBABLE'
       }
     ],
-    investigatorNotes: 'Lead generated strictly as an investigative lead. Requires mutual legal assistance treaty (MLAT) requests or authorized court orders before formal attribution.'
+    investigatorNotes: 'Lead Investigator INV-017: Strong cryptographic and domain registrar nexus. Flagged temporal conflict at 14:32 UTC requires further VPN/cron verification before judicial referral.'
   }
 };
 
