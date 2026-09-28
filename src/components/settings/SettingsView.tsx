@@ -13,19 +13,21 @@ import {
 } from 'lucide-react';
 import { ConfidenceBadge } from '../common/ConfidenceBadge';
 
+import { useCase } from '../../context/CaseContext';
+
 interface SettingsViewProps {
-  config: InvestigationConfig;
-  onUpdateConfig: (newConfig: InvestigationConfig) => void;
-  auditLogs: AuditLogItem[];
-  onResetData: () => void;
+  config?: InvestigationConfig;
+  onUpdateConfig?: (newConfig: InvestigationConfig) => void;
+  auditLogs?: AuditLogItem[];
+  onResetData?: () => void;
 }
 
-export const SettingsView: React.FC<SettingsViewProps> = ({
-  config,
-  onUpdateConfig,
-  auditLogs,
-  onResetData
-}) => {
+export const SettingsView: React.FC<SettingsViewProps> = (props) => {
+  const caseContext = useCase();
+  const config = props.config || caseContext.config;
+  const onUpdateConfig = props.onUpdateConfig || caseContext.updateConfig;
+  const auditLogs = props.auditLogs || caseContext.auditLogs;
+  const onResetData = props.onResetData || caseContext.resetToDefault;
   const handleThresholdChange = (newVal: number) => {
     onUpdateConfig({
       ...config,

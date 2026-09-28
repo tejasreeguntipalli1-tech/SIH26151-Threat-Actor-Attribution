@@ -47,25 +47,52 @@ import {
   Sparkles,
   Compass,
   ArrowUpRight,
-  RefreshCw,
   ExternalLink
 } from 'lucide-react';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useCase } from '../../context/CaseContext';
 import { ConfidenceBadge } from '../common/ConfidenceBadge';
 import { evidenceService } from '../../services/attributionEngine';
 
 interface Stage2AttributionViewProps {
-  cluster: ActorCluster;
-  config: InvestigationConfig;
-  onNavigate: (tabId: string) => void;
-  onOpenStage2Modal: (cluster: ActorCluster) => void;
+  cluster?: ActorCluster;
+  config?: InvestigationConfig;
+  onNavigate?: (tabId: string) => void;
+  onOpenStage2Modal?: (cluster: ActorCluster) => void;
 }
 
-export const Stage2AttributionView: React.FC<Stage2AttributionViewProps> = ({
-  cluster,
-  config,
-  onNavigate,
-  onOpenStage2Modal
-}) => {
+export const Stage2AttributionView: React.FC<Stage2AttributionViewProps> = (props) => {
+  const caseContext = useCase();
+  const navigate = useNavigate();
+  const outletCtx = useOutletContext<{ onOpenStage2Modal?: (c: ActorCluster) => void }>();
+
+  const cluster = props.cluster || caseContext.activeCluster;
+  const config = props.config || caseContext.config;
+  const activeCase = caseContext.activeCase;
+
+  const onOpenStage2Modal = props.onOpenStage2Modal || outletCtx?.onOpenStage2Modal || ((_c: ActorCluster) => {});
+
+  const onNavigate = (tabId: string) => {
+    if (props.onNavigate) {
+      props.onNavigate(tabId);
+      return;
+    }
+    const tabMap: Record<string, string> = {
+      'case-builder': `/cases/${activeCase.id}`,
+      'identities': `/cases/${activeCase.id}/identities`,
+      'correlation': `/cases/${activeCase.id}/correlation`,
+      'graph': `/cases/${activeCase.id}/graph`,
+      'clusters': `/cases/${activeCase.id}/clusters`,
+      'evidence': `/cases/${activeCase.id}/evidence`,
+      'timeline': `/cases/${activeCase.id}/timeline`,
+      'stage2': `/cases/${activeCase.id}/attribution`,
+      'candidates': `/cases/${activeCase.id}/candidates`,
+      'reports': `/cases/${activeCase.id}/report`,
+      'sources': '/sources',
+      'settings': '/settings',
+    };
+    navigate(tabMap[tabId] || `/cases/${activeCase.id}`);
+  };
   // Candidate Entity State
   const [candidates, setCandidates] = useState<CandidateEntity[]>(initialCandidateEntities);
   const [selectedCandidateId, setSelectedCandidateId] = useState<string>('CANDIDATE-A');

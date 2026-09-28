@@ -28,19 +28,49 @@ import {
   TrendingUp,
   Scale
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useCase } from '../../context/CaseContext';
 import { ConfidenceBadge } from '../common/ConfidenceBadge';
 
 interface CandidateEntitiesViewProps {
-  config: InvestigationConfig;
-  onNavigate: (tabId: string) => void;
+  config?: InvestigationConfig;
+  onNavigate?: (tabId: string) => void;
   onTraceGraphPath?: (candidateId: string) => void;
 }
 
-export const CandidateEntitiesView: React.FC<CandidateEntitiesViewProps> = ({
-  config,
-  onNavigate,
-  onTraceGraphPath
-}) => {
+export const CandidateEntitiesView: React.FC<CandidateEntitiesViewProps> = (props) => {
+  const caseContext = useCase();
+  const navigate = useNavigate();
+
+  const config = props.config || caseContext.config;
+  const activeCase = caseContext.activeCase;
+
+  const onNavigate = (tabId: string) => {
+    if (props.onNavigate) {
+      props.onNavigate(tabId);
+      return;
+    }
+    const tabMap: Record<string, string> = {
+      'case-builder': `/cases/${activeCase.id}`,
+      'identities': `/cases/${activeCase.id}/identities`,
+      'correlation': `/cases/${activeCase.id}/correlation`,
+      'graph': `/cases/${activeCase.id}/graph`,
+      'clusters': `/cases/${activeCase.id}/clusters`,
+      'evidence': `/cases/${activeCase.id}/evidence`,
+      'timeline': `/cases/${activeCase.id}/timeline`,
+      'stage2': `/cases/${activeCase.id}/attribution`,
+      'candidates': `/cases/${activeCase.id}/candidates`,
+      'attribution-graph': `/cases/${activeCase.id}/attribution-graph`,
+      'reports': `/cases/${activeCase.id}/report`,
+      'sources': '/sources',
+      'settings': '/settings',
+    };
+    navigate(tabMap[tabId] || `/cases/${activeCase.id}`);
+  };
+
+  const onTraceGraphPath = props.onTraceGraphPath || ((_id: string) => {
+    navigate(`/cases/${activeCase.id}/attribution-graph`);
+  });
   const [candidates, setCandidates] = useState<CandidateEntity[]>(initialCandidateEntities);
   const [selectedCandidateId, setSelectedCandidateId] = useState<string>('CANDIDATE-A');
   const [decisionNotes, setDecisionNotes] = useState<string>('');

@@ -681,7 +681,14 @@ export const RelationshipGraphView: React.FC<RelationshipGraphViewProps> = ({
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      cy.destroy();
+      try {
+        cy.stop();
+        cy.elements().stop();
+        cy.destroy();
+      } catch (e) {
+        // Gracefully ignore unmount frame errors
+      }
+      cyRef.current = null;
     };
   }, [filteredElements, activeLayout, isPathTraceActive, pathNodeIds, pathEdgeIds, investigationPathSteps]);
 

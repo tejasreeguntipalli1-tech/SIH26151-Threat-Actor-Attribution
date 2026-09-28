@@ -1,4 +1,6 @@
 import React from 'react';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useCase } from '../../context/CaseContext';
 import { ActorCluster, InvestigationConfig } from '../../types/investigation';
 import { ConfidenceBadge } from '../common/ConfidenceBadge';
 import { EvidenceCounter } from '../common/EvidenceCounter';
@@ -18,20 +20,47 @@ import {
 } from 'lucide-react';
 
 interface ActorClustersViewProps {
-  clusters: ActorCluster[];
-  config: InvestigationConfig;
-  onOpenStage2Modal: (cluster: ActorCluster) => void;
-  onNavigate: (tabId: string) => void;
-  onSelectCluster: (clusterId: string) => void;
+  clusters?: ActorCluster[];
+  config?: InvestigationConfig;
+  onOpenStage2Modal?: (cluster: ActorCluster) => void;
+  onNavigate?: (tabId: string) => void;
+  onSelectCluster?: (clusterId: string) => void;
 }
 
-export const ActorClustersView: React.FC<ActorClustersViewProps> = ({
-  clusters,
-  config,
-  onOpenStage2Modal,
-  onNavigate,
-  onSelectCluster
-}) => {
+export const ActorClustersView: React.FC<ActorClustersViewProps> = (props) => {
+  const caseContext = useCase();
+  const navigate = useNavigate();
+  const outletCtx = useOutletContext<{ onOpenStage2Modal?: (c: ActorCluster) => void }>();
+
+  const clusters = props.clusters || caseContext.clusters;
+  const config = props.config || caseContext.config;
+  const activeCase = caseContext.activeCase;
+
+  const onOpenStage2Modal = props.onOpenStage2Modal || outletCtx?.onOpenStage2Modal || ((_c: ActorCluster) => {});
+  const onSelectCluster = props.onSelectCluster || caseContext.setSelectedClusterId;
+
+  const onNavigate = (tabId: string) => {
+    if (props.onNavigate) {
+      props.onNavigate(tabId);
+      return;
+    }
+    const tabMap: Record<string, string> = {
+      'case-builder': `/cases/${activeCase.id}`,
+      'identities': `/cases/${activeCase.id}/identities`,
+      'correlation': `/cases/${activeCase.id}/correlation`,
+      'graph': `/cases/${activeCase.id}/graph`,
+      'clusters': `/cases/${activeCase.id}/clusters`,
+      'evidence': `/cases/${activeCase.id}/evidence`,
+      'timeline': `/cases/${activeCase.id}/timeline`,
+      'stage2': `/cases/${activeCase.id}/attribution`,
+      'candidates': `/cases/${activeCase.id}/candidates`,
+      'reports': `/cases/${activeCase.id}/report`,
+      'sources': '/sources',
+      'settings': '/settings',
+    };
+    navigate(tabMap[tabId] || `/cases/${activeCase.id}`);
+  };
+
   const eligibleCluster = clusters.find(c => c.actorCorrelationScore >= config.stage2Threshold);
 
   return (

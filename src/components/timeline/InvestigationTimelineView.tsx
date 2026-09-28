@@ -14,16 +14,17 @@ import {
   Activity,
   ArrowRight
 } from 'lucide-react';
+import { useCase } from '../../context/CaseContext';
 
 interface InvestigationTimelineViewProps {
-  events: TimelineEvent[];
+  events?: TimelineEvent[];
   selectedClusterId?: string;
 }
 
-export const InvestigationTimelineView: React.FC<InvestigationTimelineViewProps> = ({
-  events,
-  selectedClusterId
-}) => {
+export const InvestigationTimelineView: React.FC<InvestigationTimelineViewProps> = (props) => {
+  const caseContext = useCase();
+  const events = props.events || caseContext.events;
+  const selectedClusterId = props.selectedClusterId || caseContext.selectedClusterId;
   const [filterCluster, setFilterCluster] = useState<string>(selectedClusterId || 'ALL');
   const [filterCategory, setFilterCategory] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');

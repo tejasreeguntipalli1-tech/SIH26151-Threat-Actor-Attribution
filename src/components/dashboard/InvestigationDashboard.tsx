@@ -6,6 +6,8 @@ import {
   AuditLogItem 
 } from '../../types/investigation';
 import { ConfidenceBadge } from '../common/ConfidenceBadge';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useCase } from '../../context/CaseContext';
 import { 
   Users, 
   Boxes, 
@@ -27,24 +29,52 @@ import {
 } from 'lucide-react';
 
 interface InvestigationDashboardProps {
-  clusters: ActorCluster[];
-  config: InvestigationConfig;
-  events: TimelineEvent[];
-  auditLogs: AuditLogItem[];
-  onOpenStage2Modal: (cluster: ActorCluster) => void;
-  onNavigate: (tabId: string) => void;
-  onSelectCluster: (clusterId: string) => void;
+  clusters?: ActorCluster[];
+  config?: InvestigationConfig;
+  events?: TimelineEvent[];
+  auditLogs?: AuditLogItem[];
+  onOpenStage2Modal?: (cluster: ActorCluster) => void;
+  onNavigate?: (tabId: string) => void;
+  onSelectCluster?: (clusterId: string) => void;
 }
 
-export const InvestigationDashboard: React.FC<InvestigationDashboardProps> = ({
-  clusters,
-  config,
-  events,
-  auditLogs,
-  onOpenStage2Modal,
-  onNavigate,
-  onSelectCluster
-}) => {
+export const InvestigationDashboard: React.FC<InvestigationDashboardProps> = (props) => {
+  const caseContext = useCase();
+  const navigate = useNavigate();
+  const outletCtx = useOutletContext<{ onOpenStage2Modal?: (c: ActorCluster) => void }>();
+
+  const clusters = props.clusters || caseContext.clusters;
+  const config = props.config || caseContext.config;
+  const events = props.events || caseContext.events;
+  const auditLogs = props.auditLogs || caseContext.auditLogs;
+  const activeCase = caseContext.activeCase;
+
+  const onOpenStage2Modal = props.onOpenStage2Modal || outletCtx?.onOpenStage2Modal || ((_c: ActorCluster) => {});
+  const onSelectCluster = props.onSelectCluster || caseContext.setSelectedClusterId;
+
+  const onNavigate = (tabId: string) => {
+    if (props.onNavigate) {
+      props.onNavigate(tabId);
+      return;
+    }
+    const tabMap: Record<string, string> = {
+      'case-builder': `/cases/${activeCase.id}`,
+      'identities': `/cases/${activeCase.id}/identities`,
+      'correlation': `/cases/${activeCase.id}/correlation`,
+      'graph': `/cases/${activeCase.id}/graph`,
+      'clusters': `/cases/${activeCase.id}/clusters`,
+      'evidence': `/cases/${activeCase.id}/evidence`,
+      'timeline': `/cases/${activeCase.id}/timeline`,
+      'stage2': `/cases/${activeCase.id}/attribution`,
+      'candidates': `/cases/${activeCase.id}/candidates`,
+      'attribution-graph': `/cases/${activeCase.id}/attribution-graph`,
+      'reports': `/cases/${activeCase.id}/report`,
+      'sources': '/sources',
+      'settings': '/settings',
+    };
+    navigate(tabMap[tabId] || `/cases/${activeCase.id}`);
+  };
+
   const clusterA = clusters.find(c => c.id === 'Actor Cluster A') || clusters[0];
   const clusterB = clusters.find(c => c.id === 'Actor Cluster B') || clusters[1];
 
