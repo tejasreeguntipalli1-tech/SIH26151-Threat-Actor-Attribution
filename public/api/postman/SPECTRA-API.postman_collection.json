@@ -1,0 +1,233 @@
+{
+  "info": {
+    "_postman_id": "7f2a1b3c-5d8e-4a6f-9c0b-1e2d3f4a5b6c",
+    "name": "SPECTRA API",
+    "description": "Comprehensive Postman Collection for the SPECTRA Threat Actor Attribution Platform REST API.\nEncompasses Authentication, Case Management, Stage 1 Digital Actor Correlation, and Stage 2 Real-World Attribution.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5173/api",
+      "type": "string"
+    },
+    {
+      "key": "caseId",
+      "value": "CASE-2026-001",
+      "type": "string"
+    },
+    {
+      "key": "identityId",
+      "value": "shadow_x17",
+      "type": "string"
+    },
+    {
+      "key": "relationshipId",
+      "value": "rel-01-02",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"investigator@spectra.gov\",\n  \"password\": \"Spectra2026!\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Current User",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/auth/me", "host": ["{{baseUrl}}"], "path": ["auth", "me"] }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/auth/logout", "host": ["{{baseUrl}}"], "path": ["auth", "logout"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cases",
+      "item": [
+        {
+          "name": "List Cases",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/cases", "host": ["{{baseUrl}}"], "path": ["cases"] }
+          }
+        },
+        {
+          "name": "Create Case",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Operation CobaltHydra\",\n  \"codename\": \"CobaltHydra\",\n  \"targetActor\": \"FIN-7 Sub-cluster\",\n  \"priority\": \"HIGH\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/cases", "host": ["{{baseUrl}}"], "path": ["cases"] }
+          }
+        },
+        {
+          "name": "Get Case",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/cases/{{caseId}}", "host": ["{{baseUrl}}"], "path": ["cases", "{{caseId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Digital Identities",
+      "item": [
+        {
+          "name": "List Identities",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/cases/{{caseId}}/identities", "host": ["{{baseUrl}}"], "path": ["cases", "{{caseId}}", "identities"] }
+          }
+        },
+        {
+          "name": "Get Identity",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/identities/{{identityId}}", "host": ["{{baseUrl}}"], "path": ["identities", "{{identityId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Correlation",
+      "item": [
+        {
+          "name": "Get Correlation",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/cases/{{caseId}}/correlation", "host": ["{{baseUrl}}"], "path": ["cases", "{{caseId}}", "correlation"] }
+          }
+        },
+        {
+          "name": "Run Correlation",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"weights\": { \"technical\": 30, \"stylometry\": 20, \"behaviour\": 20, \"infrastructure\": 15, \"temporal\": 15 },\n  \"recompute\": true\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/cases/{{caseId}}/correlation/analyze", "host": ["{{baseUrl}}"], "path": ["cases", "{{caseId}}", "correlation", "analyze"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Relationships",
+      "item": [
+        {
+          "name": "Get Relationships",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/cases/{{caseId}}/relationships", "host": ["{{baseUrl}}"], "path": ["cases", "{{caseId}}", "relationships"] }
+          }
+        },
+        {
+          "name": "Get Relationship",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/relationships/{{relationshipId}}", "host": ["{{baseUrl}}"], "path": ["relationships", "{{relationshipId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Evidence",
+      "item": [
+        {
+          "name": "Get Evidence",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/cases/{{caseId}}/evidence", "host": ["{{baseUrl}}"], "path": ["cases", "{{caseId}}", "evidence"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Attribution",
+      "item": [
+        {
+          "name": "Get Attribution",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/cases/{{caseId}}/attribution", "host": ["{{baseUrl}}"], "path": ["cases", "{{caseId}}", "attribution"] }
+          }
+        },
+        {
+          "name": "Initiate Attribution",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"justification\": \"Stage 1 correlation reached 92%, firmly clearing the 80% statutory evidentiary standard.\",\n  \"authorizedBy\": \"Senior Inspector INV-017\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/cases/{{caseId}}/attribution/initiate", "host": ["{{baseUrl}}"], "path": ["cases", "{{caseId}}", "attribution", "initiate"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Timeline",
+      "item": [
+        {
+          "name": "Get Timeline",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/cases/{{caseId}}/timeline", "host": ["{{baseUrl}}"], "path": ["cases", "{{caseId}}", "timeline"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Get Report",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/cases/{{caseId}}/report", "host": ["{{baseUrl}}"], "path": ["cases", "{{caseId}}", "report"] }
+          }
+        },
+        {
+          "name": "Generate Report",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"format\": \"json\",\n  \"includeStage2\": true\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/cases/{{caseId}}/report/generate", "host": ["{{baseUrl}}"], "path": ["cases", "{{caseId}}", "report", "generate"] }
+          }
+        }
+      ]
+    }
+  ]
+}

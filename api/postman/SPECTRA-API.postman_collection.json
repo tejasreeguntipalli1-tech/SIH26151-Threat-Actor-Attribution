@@ -1,0 +1,371 @@
+{
+  "info": {
+    "_postman_id": "7f2a1b3c-5d8e-4a6f-9c0b-1e2d3f4a5b6c",
+    "name": "SPECTRA API",
+    "description": "Comprehensive Postman Collection for the SPECTRA Threat Actor Attribution Platform REST API.\nEncompasses Authentication, Case Management, Stage 1 Digital Actor Correlation, and Stage 2 Real-World Attribution.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5173/api",
+      "type": "string"
+    },
+    {
+      "key": "caseId",
+      "value": "CASE-2026-001",
+      "type": "string"
+    },
+    {
+      "key": "identityId",
+      "value": "shadow_x17",
+      "type": "string"
+    },
+    {
+      "key": "relationshipId",
+      "value": "rel-01-02",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"investigator@spectra.gov\",\n  \"password\": \"Spectra2026!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Authenticate an investigator and receive a bearer token."
+          }
+        },
+        {
+          "name": "Current User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "Retrieve profile and statutory credentials of currently logged-in officer."
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "logout"]
+            },
+            "description": "Invalidate current session token."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cases",
+      "item": [
+        {
+          "name": "List Cases",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cases",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases"]
+            },
+            "description": "List all active, pending, and archived investigation cases."
+          }
+        },
+        {
+          "name": "Create Case",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Operation CobaltHydra\",\n  \"codename\": \"CobaltHydra\",\n  \"targetActor\": \"FIN-7 Sub-cluster\",\n  \"priority\": \"HIGH\",\n  \"summary\": \"Forensic ingestion of POS memory-scraping campaign handles.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cases",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases"]
+            },
+            "description": "Instantiate a new investigation case workspace."
+          }
+        },
+        {
+          "name": "Get Case",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cases/{{caseId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "{{caseId}}"]
+            },
+            "description": "Retrieve detailed metadata and current stage of the active case."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Digital Identities",
+      "item": [
+        {
+          "name": "List Identities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cases/{{caseId}}/identities",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "{{caseId}}", "identities"]
+            },
+            "description": "List all darknet handles and digital personas under investigation."
+          }
+        },
+        {
+          "name": "Get Identity",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/identities/{{identityId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["identities", "{{identityId}}"]
+            },
+            "description": "Retrieve forensic breakdown (stylometry, PGP, wallets, diurnal hours) for a persona."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Correlation",
+      "item": [
+        {
+          "name": "Get Correlation",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cases/{{caseId}}/correlation",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "{{caseId}}", "correlation"]
+            },
+            "description": "Retrieve multi-signal Stage 1 actor clusters and correlation confidence."
+          }
+        },
+        {
+          "name": "Run Correlation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"weights\": {\n    \"technical\": 30,\n    \"stylometry\": 20,\n    \"behaviour\": 20,\n    \"infrastructure\": 15,\n    \"temporal\": 15\n  },\n  \"recompute\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cases/{{caseId}}/correlation/analyze",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "{{caseId}}", "correlation", "analyze"]
+            },
+            "description": "Trigger recomputation of actor correlation across the multi-dimensional dataset."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Relationships",
+      "item": [
+        {
+          "name": "Get Relationships",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cases/{{caseId}}/relationships",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "{{caseId}}", "relationships"]
+            },
+            "description": "Retrieve network graph edge definitions and pairwise scores."
+          }
+        },
+        {
+          "name": "Get Relationship",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/relationships/{{relationshipId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["relationships", "{{relationshipId}}"]
+            },
+            "description": "Retrieve 6-dimensional pairwise breakdown between two specific personas."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Evidence",
+      "item": [
+        {
+          "name": "Get Evidence",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cases/{{caseId}}/evidence",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "{{caseId}}", "evidence"]
+            },
+            "description": "Retrieve forensic indicator inventory with supporting, conflicting, and unknown classifications."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Attribution",
+      "item": [
+        {
+          "name": "Get Attribution",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cases/{{caseId}}/attribution",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "{{caseId}}", "attribution"]
+            },
+            "description": "Retrieve Stage 2 candidate entities and attribution leads."
+          }
+        },
+        {
+          "name": "Initiate Attribution",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"justification\": \"Stage 1 correlation reached 92%, firmly clearing the 80% statutory evidentiary standard.\",\n  \"authorizedBy\": \"Senior Inspector INV-017\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cases/{{caseId}}/attribution/initiate",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "{{caseId}}", "attribution", "initiate"]
+            },
+            "description": "Authorize transition from Stage 1 digital cluster to Stage 2 real-world entity resolution."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Timeline",
+      "item": [
+        {
+          "name": "Get Timeline",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cases/{{caseId}}/timeline",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "{{caseId}}", "timeline"]
+            },
+            "description": "Retrieve chronological log of observed events and investigator decisions."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Get Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cases/{{caseId}}/report",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "{{caseId}}", "report"]
+            },
+            "description": "Retrieve compiled 16-section structured case report payload."
+          }
+        },
+        {
+          "name": "Generate Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"format\": \"json\",\n  \"includeStage2\": true,\n  \"investigatorNotes\": \"Endorse formal MLAT preservation orders for subnet 185.220.101.0/24.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cases/{{caseId}}/report/generate",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "{{caseId}}", "report", "generate"]
+            },
+            "description": "Generate an updated analytical case dossier."
+          }
+        }
+      ]
+    }
+  ]
+}

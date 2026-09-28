@@ -72,7 +72,7 @@ interface CaseContextType {
   resetToDefault: () => void;
 }
 
-const DEFAULT_CASES: InvestigationCase[] = [
+export const initialCases: InvestigationCase[] = [
   {
     id: 'CASE-2026-001',
     name: 'Operation DarkEcho // Shadow Network Attribution',
@@ -120,6 +120,7 @@ const DEFAULT_CASES: InvestigationCase[] = [
     primaryAttributionLead: 'No Candidate Entity (Threshold Not Met)'
   }
 ];
+export const DEFAULT_CASES = initialCases;
 
 const CaseContext = createContext<CaseContextType | undefined>(undefined);
 
