@@ -34,8 +34,8 @@ import { Stage2ConfirmModal } from './components/modals/Stage2ConfirmModal';
 import { Info, X, CheckCircle2 } from 'lucide-react';
 
 export function App() {
-  // Case Builder is the new primary landing page
-  const [activeTab, setActiveTab] = useState<string>('case-builder');
+  // Investigation Command Center is the primary landing page
+  const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [config, setConfig] = useState<InvestigationConfig>(initialConfig);
   const [identities, setIdentities] = useState<DigitalIdentity[]>(syntheticIdentities.slice(0, 4));
   const [clusters, setClusters] = useState<ActorCluster[]>(initialActorClusters);
@@ -279,7 +279,7 @@ export function App() {
   const stage2Count = clusters.filter(c => c.stage2Initiated).length;
 
   return (
-    <div className="min-h-screen bg-[#080c14] text-slate-100 flex flex-col font-sans selection:bg-cyan-500/20 selection:text-cyan-300">
+    <div className="min-h-screen bg-[#0A0D12] text-slate-100 flex flex-col font-sans selection:bg-orange-500/20 selection:text-orange-300">
       {/* Top Header with Shared Context & 5-Step Pipeline */}
       <Header
         config={config}

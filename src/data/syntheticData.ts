@@ -3,14 +3,16 @@ import {
   ActorCluster, 
   RealWorldAttributionLead, 
   TimelineEvent, 
-  AuditLogItem,
-  InvestigationConfig,
-  DigitalIndicatorItem,
-  EntityResolutionDimension,
-  CandidateEntity,
-  RelationshipEvidenceItem,
-  ConfidenceEvolutionPoint,
-  MatrixEvidenceRow
+  AuditLogItem, 
+  InvestigationConfig, 
+  DigitalIndicatorItem, 
+  EntityResolutionDimension, 
+  CandidateEntity, 
+  RelationshipEvidenceItem, 
+  ConfidenceEvolutionPoint, 
+  MatrixEvidenceRow, 
+  PairwiseRelationship, 
+  PairwiseSignalDetail 
 } from '../types/investigation';
 
 export const initialConfig: InvestigationConfig = {
@@ -156,6 +158,48 @@ export const syntheticIdentities: DigitalIdentity[] = [
   },
   {
     id: 'id-04',
+    username: 'x17_dev',
+    aliases: ['dev_x17', 'x17-ops'],
+    platform: 'Exploit.in & Dev Git Mirror',
+    firstSeen: '2024-11-05 16:30 UTC',
+    lastSeen: '2026-08-26 23:50 UTC',
+    avatarLetter: 'D',
+    status: 'ACTIVE',
+    riskRating: 'HIGH',
+    clusterId: 'Actor Cluster A',
+    stylometry: {
+      avgSentenceLength: 14.5,
+      vocabularyRichnessTTR: 0.69,
+      punctuationHabit: 'Double hyphen delimiters (--), lowercase code comments, strict technical syntax',
+      casingHabit: 'lowercase commit messages, exact hex addresses in uppercase',
+      sampleText: 'reverse proxy automation scripts updated -- tested against 185.220.101.45 nginx gateway. check pgp signature before deployment.',
+      distinctivePhrases: ['escrow mandatory', 'check pgp signature', 'reverse proxy updated', 'clean build']
+    },
+    behavioural: {
+      primaryRole: 'Exploit Developer & Mirror Infrastructure Scripting',
+      tradingMethod: 'Multi-sig Escrow & PGP-verified contracts',
+      opsecDiscipline: 'STRICT',
+      forumSections: ['0day Exploits', 'Infrastructure Automation', 'Security Audits'],
+      antiForensicHabits: ['Tor daemon routing on development VMs', 'Metadata stripping on all commits']
+    },
+    temporal: {
+      activeHoursUtc: '20:30 - 03:00 UTC',
+      peakDay: 'Thursday & Friday',
+      timezoneEstimate: 'UTC+03:00 (Direct overlap with shadow_x17)',
+      burstFrequency: 'Evening git push bursts and exploit release threads'
+    },
+    technical: {
+      pgpKeyId: '0x7E4A8F2C91B4',
+      pgpFingerprint: '9B2E 7E4A 8F2C 91B4 55F0 3341 A1C9 8021 6F5D E017',
+      cryptoWallets: ['bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh'],
+      walletType: 'BTC Native SegWit Deposit Wallet',
+      onionAddresses: ['devx17repo...onion', 'leaksvault404...onion'],
+      infrastructureIps: ['185.220.101.45'],
+      userAgents: ['git/2.42.0 (Tor SOCKS5 proxy)', 'Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101 Firefox/102.0']
+    }
+  },
+  {
+    id: 'id-05',
     username: 'night_market',
     aliases: ['nm_cards', 'night_express'],
     platform: 'CryptBB & Club2CR',
@@ -197,7 +241,7 @@ export const syntheticIdentities: DigitalIdentity[] = [
     }
   },
   {
-    id: 'id-05',
+    id: 'id-06',
     username: 'ghost_404',
     aliases: ['g_404', 'ghostmarket_supp'],
     platform: 'Hydra Legacy & Bohemia Market Clone',
@@ -238,7 +282,7 @@ export const syntheticIdentities: DigitalIdentity[] = [
     }
   },
   {
-    id: 'id-06',
+    id: 'id-07',
     username: 'silentnode',
     aliases: ['s_node_ops'],
     platform: 'Ramp Market & Private Jabber Server',
@@ -285,8 +329,8 @@ export const initialActorClusters: ActorCluster[] = [
   {
     id: 'Actor Cluster A',
     codename: 'PROBABLE DIGITAL ACTOR CLUSTER A (TA-001)',
-    identityIds: ['id-01', 'id-02', 'id-03'],
-    identities: [syntheticIdentities[0], syntheticIdentities[1], syntheticIdentities[2]],
+    identityIds: ['id-01', 'id-02', 'id-03', 'id-04'],
+    identities: [syntheticIdentities[0], syntheticIdentities[1], syntheticIdentities[2], syntheticIdentities[3]],
     actorCorrelationScore: 92,
     classification: 'VERY STRONG EVIDENCE',
     stage2Status: 'ELIGIBLE FOR INVESTIGATOR REVIEW',
@@ -303,13 +347,17 @@ export const initialActorClusters: ActorCluster[] = [
       unknownCount: 2
     },
     supportingReasons: [
-      'Identical shared PGP Key ID (0x7E4A8F2C91B4) verified across Forum-X, Market-Y, and Chat-Z',
+      'Identical shared PGP Key ID (0x7E4A8F2C91B4) verified across Forum-X, Market-Y, Chat-Z, and Exploit.in',
       'Exact shared BTC Deposit Wallet (bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh)',
-      'Shared reverse-proxy hosting IP (185.220.101.45) across onion gateway redirects',
+      'Shared reverse-proxy hosting IP (185.220.101.45) across onion gateway redirects and clear-web SSL cert',
       'High stylometric overlap: persistent double hyphen delimiters (--) and strictly lowercased openers',
       'Overlapping peak UTC activity window (20:00 - 04:00 UTC) with matching diurnal curve',
-      'Username morphological derivation: shadow_x17 ↔ x_shadow ↔ darkx17 (17-suffix and shadow stem)',
-      'Identical off-chain escrow requirement phrasing ("escrow mandatory or no deal")'
+      'Username morphological derivation: shadow_x17 ↔ x_shadow ↔ darkx17 ↔ x17_dev (17-suffix and shadow stem)',
+      'Identical off-chain escrow requirement phrasing ("escrow mandatory or no deal")',
+      'Automation deployment scripts published by x17_dev configuring darkx17 mirror server proxy',
+      'Co-spend transaction inputs confirmed in Bitcoin block 842109',
+      'Cryptographic commit signatures on Git mirror repository matching cluster public keyring',
+      'Diurnal quiet period (04:00 - 12:00 UTC) consistently observed across all four handles'
     ],
     conflictingReasons: [
       'Different platform operational role: BreachForums mirror publisher vs XSS access broker'
@@ -326,13 +374,13 @@ export const initialActorClusters: ActorCluster[] = [
     ],
     createdAt: '2026-08-20 10:14 UTC',
     lastUpdated: '2026-08-27 09:30 UTC',
-    notes: 'Primary focus cluster for operation. Correlated with high confidence across 3 major forums.'
+    notes: 'Primary focus cluster for operation. Correlated with high confidence across 4 major forums.'
   },
   {
     id: 'Actor Cluster B',
     codename: 'PROBABLE DIGITAL ACTOR CLUSTER B (TA-002)',
-    identityIds: ['id-04', 'id-05'],
-    identities: [syntheticIdentities[3], syntheticIdentities[4]],
+    identityIds: ['id-05', 'id-06'],
+    identities: [syntheticIdentities[4], syntheticIdentities[5]],
     actorCorrelationScore: 84,
     classification: 'STRONG EVIDENCE',
     stage2Status: 'ELIGIBLE FOR INVESTIGATOR REVIEW',
@@ -1123,3 +1171,315 @@ export const dataSourcesList = [
     health: '99%'
   }
 ];
+
+export const initialPairwiseRelationships: PairwiseRelationship[] = [
+  {
+    id: 'rel-01-02',
+    sourceIdentityId: 'id-01',
+    sourceUsername: 'shadow_x17',
+    targetIdentityId: 'id-02',
+    targetUsername: 'x_shadow',
+    relationshipType: 'High-Probability Same-Actor Correlation',
+    overallScore: 94,
+    classification: 'VERY STRONG EVIDENCE',
+    signals: {
+      username: {
+        dimension: 'Username',
+        score: 94,
+        strength: 'Strong',
+        observedPattern: "Transposed token root: 'shadow' + 'x' suffix/prefix inversion",
+        explanation: "Levenshtein distance of 3 with 100% lexical root overlap ('shadow' + 'x'). Represents standard threat actor handle variation across primary and secondary forum accounts."
+      },
+      stylometry: {
+        dimension: 'Stylometry',
+        score: 92,
+        strength: 'Strong',
+        observedPattern: "Double-hyphen (--) delimiter, lowercase punctuation conventions, Oxford comma omission (100%)",
+        explanation: "Jaccard syntactic similarity index of 0.89 across 42 extracted darknet forum posts. Idiosyncratic use of '--' delimiter in lieu of standard dashes occurs across 100% of analyzed samples."
+      },
+      behaviour: {
+        dimension: 'Behaviour',
+        score: 88,
+        strength: 'Strong',
+        observedPattern: "Vulnerability research and database monetisation patterns; 45-minute cross-forum escalation",
+        explanation: "Threat actor announces database leaks on Forum-X (Dread) under shadow_x17, followed within 45 minutes by sales escrow listings posted by x_shadow on Market-Y (XSS)."
+      },
+      temporal: {
+        dimension: 'Temporal',
+        score: 91,
+        strength: 'Strong',
+        observedPattern: "Diurnal posting window: 20:00–03:00 UTC (Peak: 22:30 UTC)",
+        explanation: "Pearson activity correlation coefficient r = 0.88 across 180 monitored days. Complementary active hours indicate identical operational timezone (UTC+03:00) with zero temporal conflict."
+      },
+      technical: {
+        dimension: 'Technical',
+        score: 96,
+        strength: 'Strong',
+        observedPattern: "Direct PGP key collision (0x7E4A8F2C91B4) & outbound reverse proxy (185.220.101.45)",
+        explanation: "Hard technical anchor: Identical RSA-4096 PGP key fingerprint referenced in profile signatures of both identities. Both endpoints resolved via shared hosting relay 185.220.101.45."
+      }
+    },
+    supportingEvidence: [
+      'Shared cryptographic anchor: PGP fingerprint 0x7E4A8F2C91B4 referenced in both accounts',
+      'Shared reverse-proxy hosting node: IP 185.220.101.45 (Njalla/FlokiNET ASN)',
+      'Idiosyncratic double-hyphen (--) punctuation habit present across 100% of post samples',
+      'Synchronized diurnal activity window (20:00–03:00 UTC), r = 0.88',
+      'Monetization escrow coordination: Leak publication followed within 45 min by marketplace listing'
+    ],
+    conflictingEvidence: [
+      'Distinct darknet browser TLS JA3 fingerprints (771,4865-4866... vs 771,4867...) indicating possible dual-workstation or multiple virtual machine profiles'
+    ],
+    unknownEvidence: [
+      'Exact physical MAC address unknown (obscured by virtualized host layer)',
+      'ISP subscriber identity unknown (shielded by multi-hop Tor onion routing)'
+    ],
+    analystSummary: 'Extremely high multi-vector correlation (94%). The presence of a hard cryptographic collision (PGP 0x7E4A8F2C91B4) corroborated by identical stylometric punctuation quirks and synchronized diurnal timelines provides conclusive evidence that both identities operate under unified actor control.'
+  },
+  {
+    id: 'rel-02-03',
+    sourceIdentityId: 'id-02',
+    sourceUsername: 'x_shadow',
+    targetIdentityId: 'id-03',
+    targetUsername: 'darkx17',
+    relationshipType: 'Infrastructure & Operational Linkage',
+    overallScore: 89,
+    classification: 'STRONG EVIDENCE',
+    signals: {
+      username: {
+        dimension: 'Username',
+        score: 78,
+        strength: 'Moderate',
+        observedPattern: "Shared numeric token '17' combined with dark/shadow semantic nomenclature",
+        explanation: "Semantic vector similarity score of 0.78. Consistent adoption of dark-themed anonymity motifs paired with persistent numeric identifier '17'."
+      },
+      stylometry: {
+        dimension: 'Stylometry',
+        score: 86,
+        strength: 'Strong',
+        observedPattern: "Two-space code block indentations and idiosyncratic technical sentence structures",
+        explanation: "Analyzed code snippets and release notes demonstrate matching 2-space tab conventions, lowercase shell syntax, and identical error-handling commentary."
+      },
+      behaviour: {
+        dimension: 'Behaviour',
+        score: 90,
+        strength: 'Strong',
+        observedPattern: "Direct publishing sequence: mirror staging within 12 minutes of thread announcement",
+        explanation: "Operational synchronization: darkx17 pushes live mirror links to darkx17-vault.is within 12 minutes of x_shadow advertising newly dumped credentials on forums."
+      },
+      temporal: {
+        dimension: 'Temporal',
+        score: 93,
+        strength: 'Strong',
+        observedPattern: "Coordinated operational schedule: 21:00–04:00 UTC",
+        explanation: "Near-identical session timings across both identities with zero overlapping post conflicts. Darkx17 activity surges immediately during active x_shadow dump campaigns."
+      },
+      technical: {
+        dimension: 'Technical',
+        score: 94,
+        strength: 'Strong',
+        observedPattern: "Shared staging infrastructure: darkx17-vault.is hosted behind IP 185.220.101.45",
+        explanation: "Clear-web mirror domain darkx17-vault.is shares SSL certificate serial and IP 185.220.101.45 with staging infrastructure previously linked to x_shadow."
+      }
+    },
+    supportingEvidence: [
+      'Shared reverse proxy IP 185.220.101.45 hosting darkx17-vault.is mirror gateway',
+      'Operational handoff: Mirror deployment occurs within 12 minutes of exploit thread postings',
+      'Shared numeric token 17 and thematic naming convention',
+      'Matching code indentation (2-space) and lowercase bash command habits'
+    ],
+    conflictingEvidence: [
+      'Divergent marketplace roles: darkx17 operates primarily as infrastructure/filehost provider, while x_shadow conducts commercial escrow brokering'
+    ],
+    unknownEvidence: [
+      'Secondary escrow wallet UTXO keys not yet correlated due to CoinJoin mixing'
+    ],
+    analystSummary: 'Strong technical and operational linkage (89%). Infrastructure overlap on reverse-proxy 185.220.101.45 combined with rapid sequential publication within 12 minutes demonstrates direct operational coupling.'
+  },
+  {
+    id: 'rel-03-04',
+    sourceIdentityId: 'id-03',
+    sourceUsername: 'darkx17',
+    targetIdentityId: 'id-04',
+    targetUsername: 'x17_dev',
+    relationshipType: 'Codebase & Development Origin Linkage',
+    overallScore: 86,
+    classification: 'STRONG EVIDENCE',
+    signals: {
+      username: {
+        dimension: 'Username',
+        score: 88,
+        strength: 'Strong',
+        observedPattern: "Common 'x17' stem token with developer-oriented suffix variation",
+        explanation: "Handle continuity: 'x17_dev' preserves the exact alphanumeric stem 'x17' utilized across darknet personas."
+      },
+      stylometry: {
+        dimension: 'Stylometry',
+        score: 84,
+        strength: 'Strong',
+        observedPattern: "Git commit syntax 'fix(core): --update' matching forum paste headers",
+        explanation: "Commit message structure on public repository mirrors the double-hyphen notation and lowercase format observed in darknet leak descriptions."
+      },
+      behaviour: {
+        dimension: 'Behaviour',
+        score: 85,
+        strength: 'Strong',
+        observedPattern: "Repository commits precede darknet exploit drop releases by an average of 4.2 hours",
+        explanation: "Clear causal sequence: source code adjustments committed by x17_dev to private repository branches precede weaponized release drops by darkx17 by 4–6 hours."
+      },
+      temporal: {
+        dimension: 'Temporal',
+        score: 89,
+        strength: 'Strong',
+        observedPattern: "Late-night UTC commits (22:00–02:00 UTC) matching forum activity windows",
+        explanation: "Active development windows coincide precisely with operational darknet server maintenance windows observed on darkx17-vault.is."
+      },
+      technical: {
+        dimension: 'Technical',
+        score: 87,
+        strength: 'Strong',
+        observedPattern: "PGP subkey cross-signed by 0x7E4A8F2C91B4; embedded hardened Go proxy binaries",
+        explanation: "Codebase analysis of toolchain published by x17_dev contains compiled Go binaries sharing unique cryptographic hashing routines with darkx17 distribution packages."
+      }
+    },
+    supportingEvidence: [
+      'Repository commit timeline consistently precedes darknet exploit announcements by 4.2 hours',
+      'Shared hardened Go binary compiler flags and unique hashing routines',
+      'Handle continuity around the distinctive "x17" identifier stem',
+      'Consistent Git commit message syntax utilizing double-hyphen delimiters'
+    ],
+    conflictingEvidence: [
+      'Developer repository profile uses UK English spelling conventions ("optimise"), whereas forum posts feature mixed US/UK terminology'
+    ],
+    unknownEvidence: [
+      'Clearweb Git account registered via anonymous protonmail relay; subscriber details obscured'
+    ],
+    analystSummary: 'Strong developmental correlation (86%). Temporal precedence of repository commits relative to darknet exploit releases, combined with cross-signed PGP subkeys, provides a verified technical bridge between development and operational deployment.'
+  },
+  {
+    id: 'rel-04-01',
+    sourceIdentityId: 'id-04',
+    sourceUsername: 'x17_dev',
+    targetIdentityId: 'id-01',
+    targetUsername: 'shadow_x17',
+    relationshipType: 'Historical Persona & Cryptographic Heritage',
+    overallScore: 91,
+    classification: 'VERY STRONG EVIDENCE',
+    signals: {
+      username: {
+        dimension: 'Username',
+        score: 90,
+        strength: 'Strong',
+        observedPattern: "Direct alias reference: 'x17_dev' explicitly cited in shadow_x17 profile metadata archives",
+        explanation: "Historical web archive crawls from 2024 reveal shadow_x17 originally referenced 'x17_dev' as primary contact alias on legacy hacking forums."
+      },
+      stylometry: {
+        dimension: 'Stylometry',
+        score: 90,
+        strength: 'Strong',
+        observedPattern: "Matching technical lexicon, kernel exploitation writeup vocabulary, identical formatting",
+        explanation: "NLP feature extraction reveals 90% vocabulary overlap in technical discourse regarding Linux kernel heap grooming and memory corruption mechanics."
+      },
+      behaviour: {
+        dimension: 'Behaviour',
+        score: 89,
+        strength: 'Strong',
+        observedPattern: "White-hat disclosure on clearweb mirror weaponized 14 days later on Dread forum",
+        explanation: "Proof-of-concept vulnerability research authored by x17_dev surfaced in weaponized zero-day exploit packages sold by shadow_x17 two weeks later."
+      },
+      temporal: {
+        dimension: 'Temporal',
+        score: 92,
+        strength: 'Strong',
+        observedPattern: "Synchronized dormancy periods: concurrent 3-week absence during December holidays",
+        explanation: "Longitudinal temporal analysis reveals identical multi-week hiatuses across both personas, corroborating shared personal lifecycle events."
+      },
+      technical: {
+        dimension: 'Technical',
+        score: 94,
+        strength: 'Strong',
+        observedPattern: "Matching PGP master key / subkey relationship; SSH host key reuse",
+        explanation: "SSH host public key (SHA256: 8f3c...71ab) observed on x17_dev development staging server was subsequently identified on shadow_x17 Tor hidden service backend."
+      }
+    },
+    supportingEvidence: [
+      'Historical forum archives explicitly corroborate "x17_dev" as early alias of shadow_x17',
+      'SSH host key reuse across clearweb development node and darknet onion backend',
+      'Identical multi-week dormancy periods across both profiles during holiday intervals',
+      '90% stylometric vocabulary overlap on kernel exploit analysis'
+    ],
+    conflictingEvidence: [
+      'x17_dev operates through commercial VPN provider exit, whereas shadow_x17 routes strictly through Tor bridge circuits'
+    ],
+    unknownEvidence: [
+      'Commercial VPN subscriber account logs require formal MLAT subpoena to unmask payment records'
+    ],
+    analystSummary: 'Very strong longitudinal correlation (91%). Archive historical linkages, SSH host key reuse, and coordinated seasonal dormancy confirm that x17_dev represents the earlier clearweb development identity of threat actor shadow_x17.'
+  },
+  {
+    id: 'rel-01-03',
+    sourceIdentityId: 'id-01',
+    sourceUsername: 'shadow_x17',
+    targetIdentityId: 'id-03',
+    targetUsername: 'darkx17',
+    relationshipType: 'Syndicated Distribution & Infrastructure Clustering',
+    overallScore: 88,
+    classification: 'STRONG EVIDENCE',
+    signals: {
+      username: {
+        dimension: 'Username',
+        score: 82,
+        strength: 'Strong',
+        observedPattern: "Shared 'x17' numeric identifier; semantic duality ('shadow' vs 'dark')",
+        explanation: "Complementary semantic tokens reflecting identical persona naming logic."
+      },
+      stylometry: {
+        dimension: 'Stylometry',
+        score: 87,
+        strength: 'Strong',
+        observedPattern: "Double-hyphen delimiters, lowercase hex notation, concise announcement format",
+        explanation: "Punctuation and formatting styles match the established actor baseline across both platforms."
+      },
+      behaviour: {
+        dimension: 'Behaviour',
+        score: 86,
+        strength: 'Strong',
+        observedPattern: "Syndicated distribution: darkx17 acts as failover mirror provider for shadow_x17 releases",
+        explanation: "Whenever shadow_x17 pastebin mirrors are taken down, darkx17 issues fresh download mirrors within 30 minutes."
+      },
+      temporal: {
+        dimension: 'Temporal',
+        score: 90,
+        strength: 'Strong',
+        observedPattern: "Correlated diurnal timeline (20:00–03:00 UTC) with zero conflicting timestamps",
+        explanation: "Activity peaks coincide across all active campaign intervals."
+      },
+      technical: {
+        dimension: 'Technical',
+        score: 93,
+        strength: 'Strong',
+        observedPattern: "Both identities route through shared Njalla/FlokiNET reverse-proxy (185.220.101.45)",
+        explanation: "Network topology confirms co-location of staging and distribution infrastructure behind unified proxy."
+      }
+    },
+    supportingEvidence: [
+      'Shared reverse-proxy hosting node 185.220.101.45',
+      'Automated failover mirror deployment during takedown events',
+      'Shared numeric token "x17" and thematic naming taxonomy'
+    ],
+    conflictingEvidence: [
+      'Different primary Jabber/XMPP server domains registered for out-of-band communication'
+    ],
+    unknownEvidence: [
+      'Tor guard relay fingerprints cannot be inspected without Tor directory authority logs'
+    ],
+    analystSummary: 'Strong infrastructure and operational linkage (88%). The unified hosting topology and synchronized failover response confirm darkx17 as a secondary infrastructure identity of the primary threat actor.'
+  }
+];
+
+export function getPairwiseRelationship(sourceId: string, targetId: string): PairwiseRelationship | undefined {
+  return initialPairwiseRelationships.find(
+    rel => (rel.sourceIdentityId === sourceId && rel.targetIdentityId === targetId) ||
+           (rel.sourceIdentityId === targetId && rel.targetIdentityId === sourceId)
+  );
+}
+

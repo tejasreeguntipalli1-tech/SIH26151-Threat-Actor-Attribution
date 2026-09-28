@@ -266,3 +266,34 @@ export interface InvestigationConfig {
   leadInvestigator: string;
   agency: string;
 }
+
+export interface PairwiseSignalDetail {
+  dimension: 'Username' | 'Stylometry' | 'Behaviour' | 'Temporal' | 'Technical';
+  score: number; // 0 - 100
+  strength: 'Strong' | 'Moderate' | 'Weak' | 'Insufficient';
+  observedPattern: string;
+  explanation: string;
+}
+
+export interface PairwiseRelationship {
+  id: string; // e.g. "rel-ab"
+  sourceIdentityId: string; // e.g. "id-01"
+  sourceUsername: string; // "shadow_x17"
+  targetIdentityId: string; // e.g. "id-02"
+  targetUsername: string; // "x_shadow"
+  relationshipType: string; // "Potential Same-Actor Relationship"
+  overallScore: number; // e.g. 94
+  classification: ConfidenceBand;
+  signals: {
+    username: PairwiseSignalDetail;
+    stylometry: PairwiseSignalDetail;
+    behaviour: PairwiseSignalDetail;
+    temporal: PairwiseSignalDetail;
+    technical: PairwiseSignalDetail;
+  };
+  supportingEvidence: string[];
+  conflictingEvidence: string[];
+  unknownEvidence: string[];
+  analystSummary: string;
+}
+

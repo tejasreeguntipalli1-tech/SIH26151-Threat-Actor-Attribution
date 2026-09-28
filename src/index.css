@@ -1,28 +1,104 @@
 @import "tailwindcss";
 
 @layer base {
+  :root {
+    --bg-primary: #0D0F12;
+    --bg-surface: #12161F;
+    --bg-card: #151921;
+    --bg-card-alt: #1C222D;
+    --border-subtle: #242B38;
+    --border-accent: #333F52;
+    --accent-orange: #EA580C;
+    --accent-amber: #F59E0B;
+    --accent-copper: #C2410C;
+    --text-white: #F8FAFC;
+    --text-muted: #94A3B8;
+  }
+
   body {
-    background-color: #080c14;
-    color: #e2e8f0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #0D0F12;
+    color: #F8FAFC;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
   }
 
-  /* Custom scrollbar for dark mode terminal/table feels */
+  /* Typography Scale */
+  h1 {
+    font-size: 1.875rem; /* 30px */
+    line-height: 2.25rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  h2 {
+    font-size: 1.375rem; /* 22px */
+    line-height: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  h3 {
+    font-size: 1.125rem; /* 18px */
+    line-height: 1.5rem;
+    font-weight: 600;
+  }
+
+  /* Custom scrollbar for dark forensics workstation */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #0d131f;
+    background: #0D0F12;
   }
   ::-webkit-scrollbar-thumb {
-    background: #222f46;
+    background: #242B38;
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #334466;
+    background: #333F52;
+  }
+}
+
+/* Print Styles for Court-Admissible Paper Dossier Report */
+@media print {
+  body {
+    background-color: #FFFFFF !important;
+    color: #0F172A !important;
+    font-family: 'Inter', Georgia, serif !important;
+  }
+
+  header, aside, nav, button, .no-print {
+    display: none !important;
+  }
+
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .print-page {
+    background: #FFFFFF !important;
+    color: #0F172A !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    page-break-after: always;
+  }
+
+  .print-header {
+    border-bottom: 2px solid #EA580C !important;
+    color: #0F172A !important;
+  }
+
+  .print-text-dark {
+    color: #0F172A !important;
+  }
+
+  .print-border {
+    border-color: #CBD5E1 !important;
   }
 }
