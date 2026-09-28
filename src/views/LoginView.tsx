@@ -23,8 +23,8 @@ export const LoginView: React.FC = () => {
 
   const from = (location.state as any)?.from?.pathname || '/dashboard';
 
-  const [email, setEmail] = useState('investigator@argus.gov');
-  const [password, setPassword] = useState('Argus2026!');
+  const [email, setEmail] = useState('investigator@spectra.gov');
+  const [password, setPassword] = useState('Spectra2026!');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -57,8 +57,8 @@ export const LoginView: React.FC = () => {
   };
 
   const handleQuickDemo = () => {
-    setEmail('investigator@argus.gov');
-    setPassword('Argus2026!');
+    setEmail('investigator@spectra.gov');
+    setPassword('Spectra2026!');
     setErrorMessage(null);
   };
 
@@ -85,7 +85,7 @@ export const LoginView: React.FC = () => {
             </div>
             
             <div className="inline-block px-2.5 py-0.5 rounded bg-[#181D26] border border-[#262F3E] text-[10px] font-mono text-orange-400 font-semibold tracking-wider uppercase mb-1">
-              Argus Attribution Platform
+              SPECTRA Threat Actor Attribution Platform
             </div>
 
             <h1 className="text-2xl font-bold text-white tracking-tight">
@@ -121,7 +121,7 @@ export const LoginView: React.FC = () => {
                   type="text"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="investigator@argus.gov"
+                  placeholder="investigator@spectra.gov"
                   className="w-full bg-[#0A0D14] border border-[#232A36] focus:border-orange-500 rounded-xl pl-9 pr-3.5 py-2.5 text-xs text-white placeholder-slate-600 font-mono focus:outline-none transition-colors"
                 />
               </div>
@@ -211,8 +211,8 @@ export const LoginView: React.FC = () => {
               </button>
             </div>
             <div className="text-[11px] font-mono text-slate-400 bg-[#12161E] p-2 rounded border border-[#202632] space-y-0.5">
-              <div>User: <code className="text-slate-200">investigator@argus.gov</code></div>
-              <div>Pass: <code className="text-slate-200">Argus2026!</code></div>
+              <div>User: <code className="text-slate-200">investigator@spectra.gov</code></div>
+              <div>Pass: <code className="text-slate-200">Spectra2026!</code></div>
             </div>
           </div>
         </div>
@@ -236,11 +236,11 @@ export const LoginView: React.FC = () => {
             </div>
 
             <p className="text-xs text-slate-300 font-sans leading-relaxed">
-              Investigative cryptographic keys and session passphrases are managed under federal warrant protocol. To reset credentials, contact your designated Cyber Attribution Cell Administrator with Sworn Badge ID <code>#IN-7492</code>.
+              Investigative cryptographic keys and session passphrases are managed under federal warrant protocol. To reset credentials, contact your designated SPECTRA Cyber Attribution Cell Administrator with Sworn Badge ID <code>#SP-7492</code>.
             </p>
 
             <div className="bg-[#0A0D14] p-3 rounded-lg border border-[#1E232B] text-[11px] font-mono text-slate-400">
-              Admin Gateway: <span className="text-orange-400">secops@attribution.internal</span>
+              Admin Gateway: <span className="text-orange-400">secops@spectra.internal</span>
             </div>
 
             <div className="flex justify-end pt-2">
@@ -257,7 +257,7 @@ export const LoginView: React.FC = () => {
 
       {/* Legal & Statutory Footer */}
       <footer className="bg-[#0A0D12] border-t border-[#1E232B] px-6 py-3 text-center text-[10px] font-mono text-slate-500">
-        ARGUS DE-ANONYMIZATION PLATFORM &bull; STATUTORY STANDARD: CORRELATION &ne; IDENTIFICATION &bull; ATTRIBUTION LEAD &ne; CONFIRMED IDENTITY
+        SPECTRA THREAT ACTOR ATTRIBUTION PLATFORM &bull; STATUTORY STANDARD: CORRELATION &ne; IDENTIFICATION &bull; ATTRIBUTION LEAD &ne; CONFIRMED IDENTITY
       </footer>
     </div>
   );

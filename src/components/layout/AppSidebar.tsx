@@ -101,15 +101,15 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ onCloseMobile }) => {
   ];
 
   return (
-    <aside className="w-64 bg-[#0D0F12] border-r border-[#1E232B] flex flex-col justify-between flex-shrink-0 min-h-screen select-none font-mono">
+    <aside className="w-64 h-full bg-[#0D0F12] flex flex-col justify-between flex-shrink-0 select-none font-mono overflow-hidden">
       {/* Brand Header */}
-      <div>
+      <div className="flex-shrink-0">
         <div className="p-4 border-b border-[#1E232B]">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(234,88,12,0.6)]" />
               <span className="text-xs font-bold tracking-wider text-slate-100">
-                ARGUS ATTRIBUTION
+                SPECTRA ATTRIBUTION
               </span>
             </div>
             <span className="text-[10px] text-orange-400 bg-orange-500/10 border border-orange-500/30 px-1.5 py-0.5 rounded font-semibold">
@@ -122,12 +122,13 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ onCloseMobile }) => {
             <span className="text-orange-400 font-bold">{caseId}</span>
           </div>
         </div>
+      </div>
 
-        {/* Grouped Navigation Sections */}
-        <div className="p-3 space-y-4 overflow-y-auto max-h-[calc(100vh-210px)]">
-          {navSections.map((section) => (
-            <div key={section.title} className="space-y-1">
-              <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+      {/* Grouped Navigation Sections - Independent Smooth Scroll */}
+      <div className="p-3 space-y-4 overflow-y-auto flex-1 min-h-0">
+        {navSections.map((section) => (
+          <div key={section.title} className="space-y-1">
+            <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">
                 {section.title}
               </div>
               <nav className="space-y-0.5">
@@ -172,9 +173,8 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ onCloseMobile }) => {
                   );
                 })}
               </nav>
-            </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
 
       {/* Operational Standard & Warrant Footer */}

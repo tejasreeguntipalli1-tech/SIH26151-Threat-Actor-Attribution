@@ -28,36 +28,38 @@ export const CaseWorkspaceLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0D12] text-slate-100 flex flex-col font-sans selection:bg-orange-500/20 selection:text-orange-300">
-      {/* Top Navbar with Global Case Context & Investigator Profile */}
-      <AppNavbar 
-        onToggleSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)} 
-        isSidebarOpen={isMobileSidebarOpen}
-      />
+    <div className="h-screen w-screen overflow-hidden flex bg-[#0A0D12] text-slate-100 font-sans selection:bg-orange-500/20 selection:text-orange-300">
+      {/* 1. FIXED PERMANENT SIDEBAR: Full viewport height, never participates in page scrolling */}
+      <div className="hidden lg:flex w-64 h-screen flex-shrink-0 flex-col bg-[#0D0F12] border-r border-[#1E232B] z-30">
+        <AppSidebar />
+      </div>
 
-      {/* Main Container: Sidebar + Active Route Content */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Desktop Sidebar */}
-        <div className="hidden lg:block">
-          <AppSidebar />
-        </div>
-
-        {/* Mobile / Tablet Drawer Sidebar */}
-        {isMobileSidebarOpen && (
-          <div className="fixed inset-0 z-40 lg:hidden flex">
-            <div 
-              className="fixed inset-0 bg-black/70 backdrop-blur-sm"
-              onClick={() => setIsMobileSidebarOpen(false)}
-            />
-            <div className="relative z-50">
-              <AppSidebar onCloseMobile={() => setIsMobileSidebarOpen(false)} />
-            </div>
+      {/* Mobile Drawer Sidebar */}
+      {isMobileSidebarOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden flex">
+          <div 
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+            onClick={() => setIsMobileSidebarOpen(false)}
+          />
+          <div className="relative z-50 w-64 h-full bg-[#0D0F12]">
+            <AppSidebar onCloseMobile={() => setIsMobileSidebarOpen(false)} />
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Primary Content Scroll Area */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 max-w-7xl mx-auto w-full">
-          <Outlet context={{ onOpenStage2Modal: handleOpenStage2Modal }} />
+      {/* 2. MAIN APPLICATION AREA */}
+      <div className="flex-1 h-screen flex flex-col min-w-0 overflow-hidden">
+        {/* COMPACT TOP BAR: Fixed/sticky header inside main area */}
+        <AppNavbar 
+          onToggleSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)} 
+          isSidebarOpen={isMobileSidebarOpen}
+        />
+
+        {/* 3. SCROLLABLE CONTENT REGION: Dedicated scroll container */}
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 min-h-0">
+          <div className="max-w-7xl mx-auto w-full">
+            <Outlet context={{ onOpenStage2Modal: handleOpenStage2Modal }} />
+          </div>
         </main>
       </div>
 
@@ -71,3 +73,5 @@ export const CaseWorkspaceLayout: React.FC = () => {
     </div>
   );
 };
+
+export default CaseWorkspaceLayout;

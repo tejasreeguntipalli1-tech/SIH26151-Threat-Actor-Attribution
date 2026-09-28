@@ -23,10 +23,10 @@ interface AuthContextType {
 const DEFAULT_USER: UserProfile = {
   id: 'usr-inv-017',
   name: 'Senior Investigator INV-017',
-  email: 'investigator@argus.gov',
+  email: 'investigator@spectra.gov',
   role: 'Cyber Attribution Analyst',
-  badgeNumber: 'IN-7492',
-  agency: 'Cyber Threat Intelligence & Attribution Cell (SIH26151)',
+  badgeNumber: 'SP-7492',
+  agency: 'SPECTRA Threat Actor Attribution Unit (SIH26151)',
   warrantAuthorization: 'Warrant #CR-2026-8819',
   lastLogin: '2026-09-28 10:14 UTC',
   sessionActive: true
@@ -41,7 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     // Check existing stored session
     try {
-      const stored = localStorage.getItem('argus_auth_session') || sessionStorage.getItem('argus_auth_session');
+      const stored = localStorage.getItem('spectra_auth_session') || sessionStorage.getItem('spectra_auth_session');
       if (stored) {
         setUser(JSON.parse(stored));
       }
@@ -62,22 +62,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const cleanPass = pass.trim();
 
     // Valid demo credentials
-    const validEmails = ['investigator@argus.gov', 'investigator', 'admin', 'analyst@argus.gov', 'sih2026@argus.gov'];
-    const validPasses = ['argus2026!', 'argus2026', 'password123', 'sih2026'];
+    const validEmails = ['investigator@spectra.gov', 'investigator', 'admin', 'analyst@spectra.gov', 'sih2026@spectra.gov'];
+    const validPasses = ['spectra2026!', 'spectra2026', 'password123', 'sih2026'];
 
     if ((validEmails.includes(cleanEmail) && validPasses.includes(cleanPass)) || (cleanEmail && cleanPass.length >= 6)) {
       const sessionUser: UserProfile = {
         ...DEFAULT_USER,
-        email: cleanEmail.includes('@') ? cleanEmail : `${cleanEmail}@argus.gov`,
+        email: cleanEmail.includes('@') ? cleanEmail : `${cleanEmail}@spectra.gov`,
         lastLogin: new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC'
       };
 
       setUser(sessionUser);
 
       if (rememberMe) {
-        localStorage.setItem('argus_auth_session', JSON.stringify(sessionUser));
+        localStorage.setItem('spectra_auth_session', JSON.stringify(sessionUser));
       } else {
-        sessionStorage.setItem('argus_auth_session', JSON.stringify(sessionUser));
+        sessionStorage.setItem('spectra_auth_session', JSON.stringify(sessionUser));
       }
 
       setIsLoading(false);
@@ -93,8 +93,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('argus_auth_session');
-    sessionStorage.removeItem('argus_auth_session');
+    localStorage.removeItem('spectra_auth_session');
+    sessionStorage.removeItem('spectra_auth_session');
   };
 
   return (

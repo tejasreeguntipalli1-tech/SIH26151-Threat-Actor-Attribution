@@ -95,7 +95,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(234,88,12,0.6)]" />
               <span className="text-xs font-mono font-bold tracking-wider text-slate-100">
-                ARGUS ATTRIBUTION
+                SPECTRA ATTRIBUTION
               </span>
             </div>
             <span className="text-[10px] font-mono text-orange-400 bg-orange-500/10 border border-orange-500/30 px-1.5 py-0.5 rounded font-semibold">

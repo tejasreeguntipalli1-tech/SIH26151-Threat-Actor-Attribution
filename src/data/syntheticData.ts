@@ -158,12 +158,12 @@ export const syntheticIdentities: DigitalIdentity[] = [
   },
   {
     id: 'id-04',
-    username: 'x17_dev',
-    aliases: ['dev_x17', 'x17-ops'],
+    username: 'shadow17',
+    aliases: ['x17_dev', 'dev_x17', 'x17-ops'],
     platform: 'Exploit.in & Dev Git Mirror',
     firstSeen: '2024-11-05 16:30 UTC',
     lastSeen: '2026-08-26 23:50 UTC',
-    avatarLetter: 'D',
+    avatarLetter: 'S',
     status: 'ACTIVE',
     riskRating: 'HIGH',
     clusterId: 'Actor Cluster A',
@@ -200,12 +200,12 @@ export const syntheticIdentities: DigitalIdentity[] = [
   },
   {
     id: 'id-05',
-    username: 'night_market',
-    aliases: ['nm_cards', 'night_express'],
-    platform: 'CryptBB & Club2CR',
+    username: 'user_delta',
+    aliases: ['delta_carder', 'u_delta', 'nm_cards'],
+    platform: 'Telegram Channel & Peripheral Forums',
     firstSeen: '2025-01-10 11:15 UTC',
     lastSeen: '2026-08-20 18:30 UTC',
-    avatarLetter: 'N',
+    avatarLetter: 'U',
     status: 'ACTIVE',
     riskRating: 'ELEVATED',
     clusterId: 'Actor Cluster B',
@@ -352,9 +352,9 @@ export const initialActorClusters: ActorCluster[] = [
       'Shared reverse-proxy hosting IP (185.220.101.45) across onion gateway redirects and clear-web SSL cert',
       'High stylometric overlap: persistent double hyphen delimiters (--) and strictly lowercased openers',
       'Overlapping peak UTC activity window (20:00 - 04:00 UTC) with matching diurnal curve',
-      'Username morphological derivation: shadow_x17 ↔ x_shadow ↔ darkx17 ↔ x17_dev (17-suffix and shadow stem)',
+      'Username morphological derivation: shadow_x17 ↔ x_shadow ↔ darkx17 ↔ shadow17 (17-suffix and shadow stem)',
       'Identical off-chain escrow requirement phrasing ("escrow mandatory or no deal")',
-      'Automation deployment scripts published by x17_dev configuring darkx17 mirror server proxy',
+      'Automation deployment scripts published by shadow17 configuring darkx17 mirror server proxy',
       'Co-spend transaction inputs confirmed in Bitcoin block 842109',
       'Cryptographic commit signatures on Git mirror repository matching cluster public keyring',
       'Diurnal quiet period (04:00 - 12:00 UTC) consistently observed across all four handles'
@@ -1300,7 +1300,7 @@ export const initialPairwiseRelationships: PairwiseRelationship[] = [
     sourceIdentityId: 'id-03',
     sourceUsername: 'darkx17',
     targetIdentityId: 'id-04',
-    targetUsername: 'x17_dev',
+    targetUsername: 'shadow17',
     relationshipType: 'Codebase & Development Origin Linkage',
     overallScore: 86,
     classification: 'STRONG EVIDENCE',
@@ -1309,8 +1309,8 @@ export const initialPairwiseRelationships: PairwiseRelationship[] = [
         dimension: 'Username',
         score: 88,
         strength: 'Strong',
-        observedPattern: "Common 'x17' stem token with developer-oriented suffix variation",
-        explanation: "Handle continuity: 'x17_dev' preserves the exact alphanumeric stem 'x17' utilized across darknet personas."
+        observedPattern: "Common 'shadow17' stem token with developer-oriented suffix variation",
+        explanation: "Handle continuity: 'shadow17' preserves the exact alphanumeric stem 'shadow' and '17' utilized across darknet personas."
       },
       stylometry: {
         dimension: 'Stylometry',
@@ -1358,7 +1358,7 @@ export const initialPairwiseRelationships: PairwiseRelationship[] = [
   {
     id: 'rel-04-01',
     sourceIdentityId: 'id-04',
-    sourceUsername: 'x17_dev',
+    sourceUsername: 'shadow17',
     targetIdentityId: 'id-01',
     targetUsername: 'shadow_x17',
     relationshipType: 'Historical Persona & Cryptographic Heritage',
@@ -1369,8 +1369,8 @@ export const initialPairwiseRelationships: PairwiseRelationship[] = [
         dimension: 'Username',
         score: 90,
         strength: 'Strong',
-        observedPattern: "Direct alias reference: 'x17_dev' explicitly cited in shadow_x17 profile metadata archives",
-        explanation: "Historical web archive crawls from 2024 reveal shadow_x17 originally referenced 'x17_dev' as primary contact alias on legacy hacking forums."
+        observedPattern: "Direct alias reference: 'shadow17' explicitly cited in shadow_x17 profile metadata archives",
+        explanation: "Historical web archive crawls from 2024 reveal shadow_x17 originally referenced 'shadow17' (alias x17_dev) as primary contact alias on legacy hacking forums."
       },
       stylometry: {
         dimension: 'Stylometry',
