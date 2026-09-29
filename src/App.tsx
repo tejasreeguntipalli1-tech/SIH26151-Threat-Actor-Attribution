@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import { CaseProvider } from './context/CaseContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { CaseWorkspaceLayout } from './components/layout/CaseWorkspaceLayout';
+import Stage2 from './components/stage2/stage2';
 
 // Application Views & Dedicated Route Workspaces
 import { LoginView } from './views/LoginView';
@@ -53,7 +54,7 @@ export function App() {
               <Route path="/cases/:caseId/graph" element={<RelationshipGraphView initialTracePath={false} />} />
               <Route path="/cases/:caseId/clusters" element={<ActorClustersView />} />
               <Route path="/cases/:caseId/evidence" element={<EvidenceAnalysisView />} />
-              <Route path="/cases/:caseId/attribution" element={<Stage2AttributionView />} />
+              <Route path="/cases/:caseId/attribution" element={<Stage2 />}/>
               <Route path="/cases/:caseId/candidates" element={<CandidateEntitiesView />} />
               <Route path="/cases/:caseId/attribution-graph" element={<RelationshipGraphView initialTracePath={true} />} />
               <Route path="/cases/:caseId/timeline" element={<InvestigationTimelineView />} />
