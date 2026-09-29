@@ -105,6 +105,7 @@ interface PositionedNode extends GraphNode {
   y: number;
 }
 
+<<<<<<< HEAD
 /*
  * Fallback data.
  *
@@ -122,6 +123,155 @@ const fallbackNodes: GraphNode[] = [
     properties: {
       status: 'Under Investigation',
       profile: 'SHADOWTRACE',
+=======
+export const RelationshipGraphView: React.FC<RelationshipGraphViewProps> = ({
+  initialTracePath = false,
+  onNavigate
+}) => {
+  const { activeCase, selectedClusterId } = useCase();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const cyRef = useRef<cytoscape.Core | null>(null);
+
+  // Core Focal Identity Interaction State (Section 6 & 8)
+  const [focalIdentityId, setFocalIdentityId] = useState<string>('shadow_x17');
+  const [selectedEdgeId, setSelectedEdgeId] = useState<string>('rel-01-02');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedEvidenceFilter, setSelectedEvidenceFilter] = useState<string>('ALL');
+  const [zoomLevel, setZoomLevel] = useState<number>(100);
+  const [activeAnalysisTab, setActiveAnalysisTab] = useState<'pairwise' | 'one-to-many' | 'cluster'>('pairwise');
+
+  // Stage 1 vs Stage 2 Mode Switcher & "Why This Candidate?" Traversal (Points 7 & 19)
+  const [graphMode, setGraphMode] = useState<'stage1' | 'stage2'>(initialTracePath ? 'stage2' : 'stage1');
+  const [isWhyCandidateActive, setIsWhyCandidateActive] = useState<boolean>(initialTracePath);
+  const [selectedStage2Edge, setSelectedStage2Edge] = useState<any | null>(null);
+  const [stage2AnalysisTab, setStage2AnalysisTab] = useState<'provenance' | 'candidates' | 'contradictions'>('provenance');
+
+  useEffect(() => {
+    if (initialTracePath) {
+      setGraphMode('stage2');
+      setIsWhyCandidateActive(true);
+    }
+  }, [initialTracePath]);
+
+  // Stage 2 Knowledge Graph Nodes & Edges (Point 7 & Point 19)
+  const stage2Nodes = useMemo(() => [
+    { id: 'shadow_x17', category: 'identity', label: '@shadow_x17\nForum-X (Dread)\nDigital Persona', x: 80, y: 220 },
+    { id: 'pgp_key', category: 'technical', label: 'PGP: 0x7E4A8F2C91B4\nRSA-4096 Keyserver\nCryptographic Anchor', x: 250, y: 140 },
+    { id: 'domain_darkx17', category: 'domain', label: 'darkx17-vault.is\nICANN Mirror Domain\nClear-web Gateway', x: 430, y: 140 },
+    { id: 'node_185', category: 'infrastructure', label: '185.220.101.45\nFlokiNET Reverse Proxy\nSSL SAN Port 8443', x: 430, y: 310 },
+    { id: 'org_vector', category: 'organization', label: 'Vector Systems Ltd.\nAccount #VEC-ENT-410\nCorporate Umbrella', x: 610, y: 140 },
+    { id: 'candidate_a', category: 'candidate', label: 'Candidate A: Arun Mehta\nFICTIONAL DEMO ENTITY\n74% Attribution Lead', x: 790, y: 170 },
+    { id: 'candidate_b', category: 'candidate', label: 'Candidate B: Rohan Verma\nFICTIONAL DEMO ENTITY\n58% Requires Evidence', x: 790, y: 330 },
+    { id: 'org_vortex', category: 'organization', label: 'Vortex Cloud AS49210\nUpstream Peering Subnet\nFrankfurt Colo Facility', x: 610, y: 330 }
+  ], []);
+
+  const stage2Edges = useMemo(() => [
+    {
+      id: 'e-s2-1',
+      source: 'shadow_x17',
+      target: 'pgp_key',
+      label: 'PGP Fingerprint 94%',
+      why: 'Published on Dread database leak announcements by shadow_x17',
+      evidenceSource: 'OpenPGP SKS Federation Mirror & Dread Post #44912',
+      sourceReliability: 'A',
+      confidence: 94,
+      timestamp: '12 Feb 2026',
+      verificationStatus: 'Cross-source verified',
+      isInCandidatePath: true
+    },
+    {
+      id: 'e-s2-2',
+      source: 'pgp_key',
+      target: 'domain_darkx17',
+      label: 'Subkey Match 91%',
+      why: 'Cross-signed developer commit signature on darkx17 mirror repository',
+      evidenceSource: 'OpenPGP Keyserver & Git Commit Signatures',
+      sourceReliability: 'A',
+      confidence: 91,
+      timestamp: '18 Feb 2026',
+      verificationStatus: 'Cross-source verified',
+      isInCandidatePath: true
+    },
+    {
+      id: 'e-s2-3',
+      source: 'domain_darkx17',
+      target: 'node_185',
+      label: 'DNS A-Record 91%',
+      why: 'Historical DNS A-record resolution & SSL SAN cert reuse on port 8443',
+      evidenceSource: 'Passive DNS Archive & Shodan SSL Scans',
+      sourceReliability: 'A',
+      confidence: 91,
+      timestamp: '20 Feb 2026',
+      verificationStatus: 'Cross-source verified',
+      isInCandidatePath: false
+    },
+    {
+      id: 'e-s2-4',
+      source: 'domain_darkx17',
+      target: 'org_vector',
+      label: 'Corporate Billing 88%',
+      why: 'Mirror domain registrar account billed under Vector Systems commercial profile',
+      evidenceSource: 'Synthetic WHOIS Historical Registrar Database',
+      sourceReliability: 'B',
+      confidence: 88,
+      timestamp: '22 Feb 2026',
+      verificationStatus: 'Cross-source verified',
+      isInCandidatePath: true
+    },
+    {
+      id: 'e-s2-5',
+      source: 'org_vector',
+      target: 'candidate_a',
+      label: 'Corporate Officer 90%',
+      why: 'Corporate directorship & Git commit author linkage for x17_dev moniker',
+      evidenceSource: 'UK Companies House #REG-99104 & Developer Registry',
+      sourceReliability: 'A',
+      confidence: 90,
+      timestamp: '24 Feb 2026',
+      verificationStatus: 'Cross-source verified',
+      isInCandidatePath: true
+    },
+    {
+      id: 'e-s2-6',
+      source: 'node_185',
+      target: 'org_vortex',
+      label: 'BGP Route Transit 58%',
+      why: 'Autonomous system AS49210 announced upstream peering routes for proxy node',
+      evidenceSource: 'BGP Routing Table & Global Traceroute Graph',
+      sourceReliability: 'B',
+      confidence: 58,
+      timestamp: '22 Feb 2026',
+      verificationStatus: 'Single-source unconfirmed',
+      isInCandidatePath: false
+    },
+    {
+      id: 'e-s2-7',
+      source: 'org_vortex',
+      target: 'candidate_b',
+      label: 'Systems Admin 58%',
+      why: 'Listed systems administrator on customer support ticket #VORTEX-8812',
+      evidenceSource: 'Hosting Customer Support Ticket Telemetry',
+      sourceReliability: 'B',
+      confidence: 58,
+      timestamp: '23 Feb 2026',
+      verificationStatus: 'Single-source unconfirmed',
+      isInCandidatePath: false
+    }
+  ], []);
+
+  // Ground-Truth Digital Identities (Section 4 & 5)
+  const digitalIdentities: IdentityNodeData[] = useMemo(() => [
+    {
+      id: 'shadow_x17',
+      username: 'shadow_x17',
+      platform: 'Forum-X (Dread)',
+      cluster: 'Actor Cluster A',
+      aliases: ['shadow17', 'x17_root', 'sh4dow_op'],
+      role: 'Initial Access Broker / Database Seller',
+      evidenceStrength: 92,
+      connectedCount: 3,
+      avatarLetter: 'S'
+>>>>>>> origin/main
     },
   },
   {
@@ -308,6 +458,7 @@ export function EntityGraph({
   const containerRef =
     useRef<HTMLDivElement>(null);
 
+<<<<<<< HEAD
   /*
    * Find actor node.
    */
@@ -318,6 +469,437 @@ export function EntityGraph({
       ) ||
       nodes[0] ||
       null
+=======
+    // Filter identities based on search
+    const filteredNodes = digitalIdentities.filter(node => {
+      if (!searchQuery.trim()) return true;
+      const q = searchQuery.toLowerCase();
+      return (
+        node.username.toLowerCase().includes(q) ||
+        node.platform.toLowerCase().includes(q) ||
+        node.aliases.some(a => a.toLowerCase().includes(q))
+      );
+    });
+
+    const filteredNodeIds = new Set(filteredNodes.map(n => n.id));
+
+    // Construct Cytoscape elements depending on Stage 1 vs Stage 2 mode
+    const elements: cytoscape.ElementDefinition[] = graphMode === 'stage2'
+      ? [
+          ...stage2Nodes.map(n => {
+            const isHighlighted = ['shadow_x17', 'pgp_key', 'domain_darkx17', 'org_vector', 'candidate_a'].includes(n.id);
+            const classes = isWhyCandidateActive 
+              ? (isHighlighted ? 'why-highlight' : 'subdued')
+              : `stage2-${n.category}`;
+            return {
+              data: { id: n.id, label: n.label, category: n.category },
+              position: { x: n.x, y: n.y },
+              classes
+            };
+          }),
+          ...stage2Edges.map(e => {
+            const classes = isWhyCandidateActive
+              ? (e.isInCandidatePath ? 'why-edge-highlight' : 'subdued-edge')
+              : 'edge-neutral';
+            return {
+              data: { ...e },
+              classes
+            };
+          })
+        ]
+      : [
+          // Identity Nodes (Rectangular Professional Cards)
+          ...filteredNodes.map(id => ({
+            data: {
+              id: id.id,
+              username: id.username,
+              platform: id.platform,
+              cluster: id.cluster,
+              score: id.evidenceStrength,
+              connectedCount: id.connectedCount,
+              label: `${id.username}\n${id.platform}\n${id.cluster}`
+            },
+            position: identityPositions[id.id] || { x: 300, y: 250 },
+            classes: id.id === focalIdentityId ? 'focal' : 'neutral'
+          })),
+
+          // Pairwise Edges
+          ...pairwiseEdges
+            .filter(e => filteredNodeIds.has(e.source) && filteredNodeIds.has(e.target))
+            .map(e => ({
+              data: {
+                id: e.id,
+                source: e.source,
+                target: e.target,
+                label: e.evidenceLabel,
+                score: e.score,
+                relType: e.relationshipType
+              },
+              classes: 'edge-neutral'
+            }))
+        ];
+
+    const cy = cytoscape({
+      container: containerRef.current,
+      elements,
+      boxSelectionEnabled: false,
+      autoungrabify: false,
+      userZoomingEnabled: true,
+      userPanningEnabled: true,
+      minZoom: 0.4,
+      maxZoom: 2.5,
+      layout: {
+        name: 'preset',
+        fit: true,
+        padding: 50
+      },
+      style: [
+        // Base Identity Node (Clean Rectangular Badge Card)
+        {
+          selector: 'node',
+          style: {
+            'shape': 'round-rectangle',
+            'width': 180,
+            'height': 68,
+            'background-color': '#12161E',
+            'border-color': '#2A3444',
+            'border-width': 1.5,
+            'color': '#F8FAFC',
+            'font-family': 'JetBrains Mono, monospace',
+            'font-size': '10px',
+            'text-valign': 'center',
+            'text-halign': 'center',
+            'text-wrap': 'wrap',
+            'text-max-width': '160px',
+            'line-height': 1.3,
+            'padding': '8px',
+            'text-margin-y': 0,
+            'transition-property': 'background-color, border-color, border-width, opacity',
+            'transition-duration': 0.25
+          }
+        },
+
+        // Stage 2 Category Specific Styling
+        {
+          selector: 'node.stage2-identity',
+          style: { 'background-color': '#111927', 'border-color': '#3B82F6', 'border-width': 2.5, 'color': '#93C5FD' }
+        },
+        {
+          selector: 'node.stage2-technical',
+          style: { 'background-color': '#1E1428', 'border-color': '#A855F7', 'border-width': 2.5, 'color': '#E9D5FF' }
+        },
+        {
+          selector: 'node.stage2-domain',
+          style: { 'background-color': '#0C1E24', 'border-color': '#06B6D4', 'border-width': 2.5, 'color': '#A5F3FC' }
+        },
+        {
+          selector: 'node.stage2-infrastructure',
+          style: { 'background-color': '#241A0C', 'border-color': '#F59E0B', 'border-width': 2.5, 'color': '#FDE68A' }
+        },
+        {
+          selector: 'node.stage2-organization',
+          style: { 'background-color': '#0C2018', 'border-color': '#10B981', 'border-width': 2.5, 'color': '#A7F3D0' }
+        },
+        {
+          selector: 'node.stage2-candidate',
+          style: { 'background-color': '#281308', 'border-color': '#EA580C', 'border-width': 3, 'color': '#FFEDD5', 'font-weight': 'bold' }
+        },
+        {
+          selector: 'node.why-highlight',
+          style: { 'background-color': '#381606', 'border-color': '#F97316', 'border-width': 4, 'color': '#FFEDD5', 'font-weight': 'bold', 'z-index': 100 }
+        },
+        {
+          selector: 'edge.why-edge-highlight',
+          style: { 'line-color': '#F97316', 'target-arrow-color': '#F97316', 'width': 4.5, 'opacity': 1, 'color': '#FDBA74', 'font-weight': 'bold', 'z-index': 90 }
+        },
+
+        // Focal / Selected Identity Node
+        {
+          selector: 'node.focal',
+          style: {
+            'background-color': '#231408',
+            'border-color': '#EA580C',
+            'border-width': 3.5,
+            'color': '#FFEDD5',
+            'font-weight': 'bold',
+            'opacity': 1,
+            'z-index': 100
+          }
+        },
+
+        // Connected Identity Node
+        {
+          selector: 'node.connected',
+          style: {
+            'background-color': '#181E29',
+            'border-color': '#F59E0B',
+            'border-width': 2,
+            'color': '#FFFFFF',
+            'opacity': 1,
+            'z-index': 90
+          }
+        },
+
+        // Subdued / Unrelated Identity Node
+        {
+          selector: 'node.subdued',
+          style: {
+            'opacity': 0.15,
+            'border-color': '#1A202C',
+            'z-index': 1
+          }
+        },
+
+        // Base Edge Style
+        {
+          selector: 'edge',
+          style: {
+            'width': 2.5,
+            'line-color': '#2A3444',
+            'target-arrow-color': '#2A3444',
+            'target-arrow-shape': 'triangle',
+            'curve-style': 'bezier',
+            'label': 'data(label)',
+            'font-family': 'JetBrains Mono, monospace',
+            'font-size': '8px',
+            'color': '#94A3B8',
+            'text-background-opacity': 0.95,
+            'text-background-color': '#0D0F12',
+            'text-background-padding': '3px',
+            'text-background-shape': 'roundrectangle',
+            'opacity': 0.5,
+            'transition-property': 'line-color, width, opacity, color',
+            'transition-duration': 0.25
+          }
+        },
+
+        // Focal Active Edges
+        {
+          selector: 'edge.focal-edge',
+          style: {
+            'line-color': '#EA580C',
+            'target-arrow-color': '#EA580C',
+            'width': 3.5,
+            'opacity': 1,
+            'color': '#FDBA74',
+            'font-weight': 'bold',
+            'z-index': 50
+          }
+        },
+
+        // Selected Specific Edge
+        {
+          selector: 'edge.selected-edge',
+          style: {
+            'line-color': '#F59E0B',
+            'target-arrow-color': '#F59E0B',
+            'width': 5,
+            'opacity': 1,
+            'color': '#FEF08A',
+            'font-weight': 'bold',
+            'z-index': 60
+          }
+        },
+
+        // Subdued Edges
+        {
+          selector: 'edge.subdued-edge',
+          style: {
+            'opacity': 0.1,
+            'z-index': 1
+          }
+        }
+      ]
+    });
+
+    // Node Click -> Set Focal Identity (Section 6 & 14)
+    cy.on('tap', 'node', (evt) => {
+      const node = evt.target;
+      const clickedId = node.id();
+
+      if (graphMode === 'stage2') {
+        const connectedEdge = stage2Edges.find(e => e.source === clickedId || e.target === clickedId);
+        if (connectedEdge) {
+          setSelectedStage2Edge(connectedEdge);
+        }
+        return;
+      }
+
+      setFocalIdentityId(clickedId);
+
+      // Find an edge connected to this node to select as initial pairwise comparison
+      const connected = pairwiseEdges.find(e => e.source === clickedId || e.target === clickedId);
+      if (connected) {
+        setSelectedEdgeId(connected.id);
+      }
+    });
+
+    // Edge Click -> Set Pairwise Analysis or Stage 2 Inspector (Section 9 & 14)
+    cy.on('tap', 'edge', (evt) => {
+      const edge = evt.target;
+      const data = edge.data();
+
+      if (graphMode === 'stage2') {
+        setSelectedStage2Edge(data);
+      } else {
+        setSelectedEdgeId(edge.id());
+        setActiveAnalysisTab('pairwise');
+
+        // Ensure one of the endpoints is focal
+        if (data.source !== focalIdentityId && data.target !== focalIdentityId) {
+          setFocalIdentityId(data.source);
+        }
+      }
+    });
+
+    // Background Click -> Clear Edge Selection
+    cy.on('tap', (evt) => {
+      if (evt.target === cy) {
+        if (graphMode === 'stage2') {
+          setSelectedStage2Edge(null);
+        }
+      }
+    });
+
+    // Zoom listener for percentage display
+    cy.on('zoom', () => {
+      setZoomLevel(Math.round(cy.zoom() * 100));
+    });
+
+    cyRef.current = cy;
+
+    const handleResize = () => {
+      if (cyRef.current) {
+        cyRef.current.resize();
+      }
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      try {
+        cy.stop();
+        cy.elements().stop();
+        cy.destroy();
+      } catch (e) {
+        // safely ignore teardown
+      }
+      cyRef.current = null;
+    };
+  }, [digitalIdentities, pairwiseEdges, searchQuery, graphMode, isWhyCandidateActive, stage2Nodes, stage2Edges]);
+
+  // Dynamic Highlight Class Synchronization
+  useEffect(() => {
+    const cy = cyRef.current;
+    if (!cy) return;
+
+    if (graphMode === 'stage2') {
+      cy.batch(() => {
+        cy.nodes().removeClass('why-highlight subdued neutral focal connected');
+        cy.edges().removeClass('why-edge-highlight selected-edge subdued-edge edge-neutral focal-edge');
+
+        if (isWhyCandidateActive) {
+          const whyNodeIds = ['shadow_x17', 'pgp_key', 'domain_darkx17', 'org_vector', 'candidate_a'];
+          const whyEdgeIds = ['e-s2-1', 'e-s2-2', 'e-s2-4', 'e-s2-5'];
+
+          cy.nodes().forEach(node => {
+            if (whyNodeIds.includes(node.id())) {
+              node.addClass('why-highlight');
+            } else {
+              node.addClass('subdued');
+            }
+          });
+
+          cy.edges().forEach(edge => {
+            if (whyEdgeIds.includes(edge.id())) {
+              edge.addClass('why-edge-highlight');
+            } else {
+              edge.addClass('subdued-edge');
+            }
+          });
+        } else {
+          cy.nodes().addClass('neutral');
+          cy.edges().addClass('edge-neutral');
+        }
+
+        if (selectedStage2Edge) {
+          cy.$(`edge#${selectedStage2Edge.id}`).addClass('selected-edge');
+        }
+      });
+      return;
+    }
+
+    // Stage 1 highlighting
+    cy.batch(() => {
+      cy.nodes().removeClass('focal connected subdued neutral why-highlight');
+      cy.edges().removeClass('focal-edge selected-edge subdued-edge edge-neutral why-edge-highlight');
+
+      if (focalIdentityId) {
+        const focalNode = cy.$(`node#${focalIdentityId}`);
+        focalNode.addClass('focal');
+
+        const connectedEdges = focalNode.connectedEdges();
+        connectedEdges.addClass('focal-edge');
+
+        const connectedNodes = connectedEdges.connectedNodes().not(focalNode);
+        connectedNodes.addClass('connected');
+
+        cy.nodes().not(focalNode).not(connectedNodes).addClass('subdued');
+        cy.edges().not(connectedEdges).addClass('subdued-edge');
+
+        if (selectedEdgeId) {
+          cy.$(`edge#${selectedEdgeId}`).addClass('selected-edge');
+        }
+      } else {
+        cy.nodes().addClass('neutral');
+        cy.edges().addClass('edge-neutral');
+      }
+    });
+  }, [focalIdentityId, selectedEdgeId, graphMode, isWhyCandidateActive, selectedStage2Edge]);
+
+  // Toolbar Actions (Section 13 & 18)
+  const handleZoomIn = () => {
+    if (cyRef.current) {
+      cyRef.current.zoom(cyRef.current.zoom() * 1.25);
+    }
+  };
+
+  const handleZoomOut = () => {
+    if (cyRef.current) {
+      cyRef.current.zoom(cyRef.current.zoom() * 0.8);
+    }
+  };
+
+  const handleZoom100 = () => {
+    if (cyRef.current) {
+      cyRef.current.zoom(1.0);
+      cyRef.current.center();
+    }
+  };
+
+  const handleFit = () => {
+    if (cyRef.current) {
+      cyRef.current.fit(undefined, 40);
+    }
+  };
+
+  const handleReset = () => {
+    setFocalIdentityId('shadow_x17');
+    setSelectedEdgeId('rel-01-02');
+    setSearchQuery('');
+    setSelectedEvidenceFilter('ALL');
+    if (cyRef.current) {
+      cyRef.current.fit(undefined, 40);
+    }
+  };
+
+  // Switch focal identity by clicking from connected list (Section 8)
+  const handleSelectFocalIdentity = (id: string) => {
+    setFocalIdentityId(id);
+    const connectedEdge = pairwiseEdges.find(e => 
+      (e.source === id && e.target === focalIdentityId) || 
+      (e.target === id && e.source === focalIdentityId)
+>>>>>>> origin/main
     );
   }, [nodes]);
 

@@ -56,7 +56,7 @@ export const InvestigationReportView: React.FC<InvestigationReportViewProps> = (
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [copiedBrief, setCopiedBrief] = useState<boolean>(false);
   const [investigatorAddendum, setInvestigatorAddendum] = useState<string>(
-    "Lead Analyst Synthesis: The forensic examination of four primary digital identities associated with Actor Cluster A (TA-001 / 'Shadow Network') demonstrates conclusive multi-vector convergence across cryptographic anchors, shared reverse-proxy routing topology, and an idiosyncratic double-hyphen delimiter habit. Stage 1 correlation satisfies the statutory evidentiary threshold standard (92% > 80%). Stage 2 entity resolution established an 82% attribution strength lead linking staging infrastructure to Candidate Entity A (Meridian Analytics S.R.O. / Subject A. K., Prague, CZ). Sworn mutual legal assistance treaty (MLAT) preservation orders for gateway subnet 185.220.101.0/24 are formally endorsed."
+    "Lead Analyst Synthesis: The forensic examination of four primary digital identities associated with DarkWolf Cluster (TA-001) demonstrates conclusive multi-vector convergence across cryptographic anchors (PGP 0x7E4A8F2C91B4), shared reverse-proxy routing topology (185.220.101.45), and an idiosyncratic double-hyphen delimiter habit. Stage 1 correlation satisfies the statutory evidentiary threshold standard (91% > 80%). Stage 2 entity resolution established a 74% attribution confidence lead linking staging infrastructure and PGP subkeys to Candidate Entity A: Arun Mehta (FICTIONAL DEMO ENTITY). Candidate Entity B (Rohan Verma - 58%) and Candidate C (Vector Systems Ltd. - 62%) were evaluated. Temporal conflict (14:32 vs 14:33 UTC) and multi-tenant proxy hypotheses were rigorously challenged. Formal mutual legal assistance treaty (MLAT) preservation subpoenas are recommended."
   );
 
   const generationTimestamp = new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
@@ -1066,62 +1066,119 @@ ${investigatorAddendum}`;
           </div>
 
           {/* ---------------------------------------------------- */}
-          {/* SECTION 13 — STAGE 2 ATTRIBUTION */}
+          {/* SECTION 13 — STAGE 2 REAL-WORLD ENTITY ATTRIBUTION */}
           {/* ---------------------------------------------------- */}
-          <div className="report-section space-y-3">
+          <div className="report-section space-y-4">
             <div className="flex items-center justify-between border-b pb-1.5 border-[#C85F0A]/40">
               <h2 className="text-sm font-bold font-mono text-[#C85F0A] tracking-wider uppercase flex items-center gap-2">
-                <span>SECTION 13 — STAGE 2 REAL-WORLD ENTITY ATTRIBUTION</span>
+                <span>SECTION 13 — STAGE 2 REAL-WORLD ENTITY ATTRIBUTION ANALYSIS</span>
               </h2>
-              <span className="text-[10px] font-mono text-[#C85F0A] uppercase font-bold">ATTRIBUTION LEAD: 82%</span>
+              <span className="text-[10px] font-mono text-[#C85F0A] uppercase font-bold">ATTRIBUTION LEAD: 74% // PROBABLE</span>
             </div>
 
             <p className="font-sans leading-relaxed text-xs">
-              Upon investigator authorization crossing the Stage 1/Stage 2 critical gate, the SPECTRA entity resolution module resolved technical and corporate telemetry against registered physical entities. Two candidate entities were evaluated:
+              Following explicit investigator authorization crossing the Stage 1/Stage 2 critical gate (justification logged in immutable audit custody), the SPECTRA entity resolution module resolved technical and corporate telemetry against registered physical entities. Three candidate entities were evaluated using synthetic, controlled laboratory demonstration intelligence:
             </p>
 
-            <div className="space-y-3">
-              {/* Candidate A (Lead) */}
-              <div className={`p-4 rounded-lg border text-xs space-y-2 ${
-                isDossier ? 'bg-[#F2ECE1] border-[#C85F0A]' : 'bg-[#0D0F12] border-[#C85F0A]/60'
-              }`}>
-                <div className="flex items-center justify-between font-mono">
-                  <div className="flex items-center gap-2">
-                    <Building2 className="w-4 h-4 text-[#C85F0A]" />
-                    <span className="font-bold text-sm text-[#C85F0A]">Candidate Entity A: Meridian Analytics S.R.O.</span>
-                  </div>
-                  <span className="px-2.5 py-0.5 rounded font-bold font-mono text-[11px] bg-orange-500/20 text-[#C85F0A]">
-                    82% ATTRIBUTION STRENGTH (PRIMARY LEAD)
-                  </span>
+            {/* Candidate A (Lead) */}
+            <div className={`p-4 rounded-lg border text-xs space-y-2.5 ${
+              isDossier ? 'bg-[#F2ECE1] border-[#C85F0A]' : 'bg-[#0D0F12] border-[#C85F0A]/60'
+            }`}>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 font-mono">
+                <div className="flex items-center gap-2">
+                  <Fingerprint className="w-4 h-4 text-[#C85F0A]" />
+                  <span className="font-bold text-sm text-[#C85F0A]">Candidate Entity A: Arun Mehta (FICTIONAL DEMO ENTITY)</span>
                 </div>
-                <div className="font-sans leading-relaxed text-[11.5px] space-y-1.5">
-                  <div><strong>Entity Identification:</strong> Meridian Analytics S.R.O. (Subject: A. K., Lead Systems Architect), Registered Office: Prague 1, Czech Republic. Corporate Registry: CZ29481029.</div>
-                  <div><strong>Connecting Evidentiary Vectors:</strong></div>
-                  <ul className="list-disc list-inside pl-2 space-y-1 text-slate-700">
-                    <li>Hosting node <code>185.220.101.45</code> resides in IP allocation block leased under AS206238 to Meridian Analytics S.R.O. staging subnets.</li>
-                    <li>Historical reverse-WHOIS records for darknet mirror domain <code>darkx17-vault.is</code> uncovered corporate administrative registration using company email domains.</li>
-                    <li>Public GitHub account <code>alex-k-sec</code> contained identical SSH host keys and early commit commits of the custom Go reverse-proxy binary deployed to darknet leak mirrors.</li>
-                    <li>Financial tracing revealed Bitcoin SegWit escrow deposit consolidation into a European regulated crypto-fiat exchange registered to the company tax ID.</li>
-                  </ul>
+                <span className="px-2.5 py-0.5 rounded font-bold font-mono text-[11px] bg-orange-500/20 text-[#C85F0A] self-start sm:self-auto">
+                  74% ATTRIBUTION CONFIDENCE (PRIMARY INVESTIGATIVE LEAD)
+                </span>
+              </div>
+
+              <div className="font-sans leading-relaxed text-[11.5px] space-y-1.5">
+                <div><strong>Entity Affiliation & Jurisdiction:</strong> Former Senior Infrastructure Consultant at Vector Systems Ltd. / Director at Meridian Analytics; Registered Context: Bengaluru, India / Tallinn, Estonia. Source Reliability: Grade A.</div>
+                <div><strong>Connecting Evidentiary Vectors & Provenance:</strong></div>
+                <ul className="list-disc list-inside pl-2 space-y-1 text-slate-700">
+                  <li><strong>PGP Cryptographic Anchor:</strong> RSA-4096 Key ID <code>0x7E4A8F2C91B4</code> verified on public keyserver mirrors cross-signing clear-net developer keyring (Evidence ID: <code>EV-2047-18</code>, Reliability: Grade A).</li>
+                  <li><strong>Domain Registrar Account:</strong> Clear-web mirror domain <code>darkx17-vault.is</code> registered through corporate commercial account associated with Subject (Evidence ID: <code>EV-2047-20</code>, Reliability: Grade B).</li>
+                  <li><strong>Reverse Proxy Co-Location:</strong> Proxy node <code>185.220.101.45</code> answered TLS handshakes matching SSL SAN for both darknet mirror and corporate staging gateway (Evidence ID: <code>EV-2047-19</code>, Reliability: Grade A).</li>
+                  <li><strong>Stylometric & Lexical Concordance:</strong> Idiosyncratic double-hyphen syntax (--) and strict lowercase starters present across 100% of forum posts match candidate published whitepapers.</li>
+                </ul>
+              </div>
+
+              {/* Digital-to-Real Traversal Chain */}
+              <div className={`p-2.5 rounded border font-mono text-[10px] space-y-1 ${
+                isDossier ? 'bg-[#E5DFD3] border-[#D9D4CC]' : 'bg-[#121620] border-[#1E2535]'
+              }`}>
+                <span className="text-[#C85F0A] font-bold block">VERIFIED EVIDENTIARY TRAVERSAL PIPELINE:</span>
+                <div className="flex flex-wrap items-center gap-1.5 text-slate-700 font-semibold">
+                  <span>DarkWolf Cluster (91%)</span>
+                  <span>&rarr;</span>
+                  <span>@shadow_x17</span>
+                  <span>&rarr;</span>
+                  <span>PGP 0x7E4A8F2C91B4</span>
+                  <span>&rarr;</span>
+                  <span>darkx17-vault.is</span>
+                  <span>&rarr;</span>
+                  <span>Vector Systems Ltd.</span>
+                  <span>&rarr;</span>
+                  <span className="text-[#C85F0A]">Arun Mehta (74% Lead)</span>
                 </div>
               </div>
 
-              {/* Candidate B (Refuted) */}
+              {/* Contradictory Evidence & Temporal Conflict */}
+              <div className="p-2.5 rounded bg-red-950/20 border border-red-500/30 text-[11px] font-sans text-red-800 space-y-1">
+                <div className="flex items-center gap-1.5 font-bold font-mono text-red-700">
+                  <AlertTriangle className="w-3.5 h-3.5" />
+                  <span>CONTRADICTORY FINDINGS & TEMPORAL CONFLICT:</span>
+                </div>
+                <p>
+                  A temporal conflict was detected at 14:32 UTC (India ISP session) vs 14:33 UTC (Frankfurt DarkWolf command execution). This physically impossible 60-second cross-continental travel reduced attribution confidence from 87% to 74%. In accordance with SPECTRA doctrine, contradictions are never concealed.
+                </p>
+              </div>
+            </div>
+
+            {/* Candidate B & C Secondary Evaluations */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div className={`p-3.5 rounded-lg border text-xs space-y-1.5 ${
                 isDossier ? 'bg-[#EFE9DF] border-[#D9D4CC]' : 'bg-[#0D0F12] border-[#1E232B]'
               }`}>
                 <div className="flex items-center justify-between font-mono">
-                  <div className="flex items-center gap-2">
-                    <Building2 className="w-3.5 h-3.5 text-slate-400" />
-                    <span className="font-bold text-slate-600">Candidate Entity B: Vortex Cloud Solutions Ltd.</span>
-                  </div>
-                  <span className="px-2 py-0.5 rounded font-mono text-[10px] bg-slate-400/20 text-slate-500 font-semibold">
-                    34% (REFUTED / FALSE LEAD)
+                  <span className="font-bold text-slate-700">Candidate B: Rohan Verma (FICTIONAL DEMO)</span>
+                  <span className="px-2 py-0.5 rounded font-mono text-[10px] bg-amber-500/20 text-amber-700 font-semibold">
+                    58% (REQUIRES EVIDENCE)
                   </span>
                 </div>
                 <p className="font-sans text-[11px] text-slate-600 leading-relaxed">
-                  Refuted following BGP routing verification. While an IP subnet was temporarily announced through Vortex Cloud, forensic route history confirms a transient BGP prefix hijack lasting 48 hours rather than persistent corporate infrastructure ownership.
+                  Evaluated due to upstream BGP transit ASN AS49210 announcing proxy subnet. Refuted as primary actor; activity occurred during business hours (09:00 - 18:00 UTC) with zero PGP or stylometric correlation.
                 </p>
+              </div>
+
+              <div className={`p-3.5 rounded-lg border text-xs space-y-1.5 ${
+                isDossier ? 'bg-[#EFE9DF] border-[#D9D4CC]' : 'bg-[#0D0F12] border-[#1E232B]'
+              }`}>
+                <div className="flex items-center justify-between font-mono">
+                  <span className="font-bold text-slate-700">Candidate C: Vector Systems Ltd. (FICTIONAL DEMO)</span>
+                  <span className="px-2 py-0.5 rounded font-mono text-[10px] bg-orange-500/20 text-[#C85F0A] font-semibold">
+                    62% (CORPORATE UMBRELLA)
+                  </span>
+                </div>
+                <p className="font-sans text-[11px] text-slate-600 leading-relaxed">
+                  Corporate billing entity under which mirror hosting account #VEC-ENT-410 was registered. Connects Candidate A commits to operational infrastructure; individual intent remains with Subject.
+                </p>
+              </div>
+            </div>
+
+            {/* Evidence Independence Counter & Adversarial Challenge Brief */}
+            <div className={`p-3 rounded-lg border font-mono text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2 ${
+              isDossier ? 'bg-[#E5DFD3] border-[#D9D4CC]' : 'bg-[#10141E] border-[#1E2535]'
+            }`}>
+              <div>
+                <span className="text-slate-500 uppercase text-[10px] block">Evidence Independence Audit:</span>
+                <span className="font-bold text-slate-800">6 Independent Root Sources // 11 Derived Reports Deduplicated</span>
+              </div>
+              <div>
+                <span className="text-slate-500 uppercase text-[10px] block">Attribution Challenge:</span>
+                <span className="font-bold text-orange-700">10 Alternative Hypotheses Adversarially Rebutted</span>
               </div>
             </div>
           </div>

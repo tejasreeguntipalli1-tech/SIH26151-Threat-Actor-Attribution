@@ -4,6 +4,7 @@ import { useCase } from '../../context/CaseContext';
 import { 
   Activity,
   FolderOpen,
+  FolderPlus,
   Users, 
   GitMerge, 
   Share2, 
@@ -21,6 +22,12 @@ import {
   Cpu,
   Terminal,
   ShieldCheck,
+  CheckCircle,
+  FileCode,
+  FileSearch,
+  Timer,
+  Scan,
+  UserCheck,
   LucideIcon
 } from 'lucide-react';
 
@@ -52,22 +59,26 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ onCloseMobile }) => {
       title: 'CASE MANAGEMENT',
       items: [
         { to: '/cases', label: 'Investigation Cases', icon: FolderOpen, badge: '2 Active' },
-        { to: `/cases/${caseId}`, label: 'Case Overview', icon: FileCheck2 },
+        { to: '/cases?action=new', label: 'New Investigation', icon: FolderPlus },
       ]
     },
     {
       title: 'DIGITAL INVESTIGATION',
       items: [
-        { to: `/cases/${caseId}/identities`, label: 'Digital Identities', icon: Users, badge: `${identities.length} active` },
+        { to: `/cases/${caseId}/identities`, label: 'Digital Identities', icon: Users, badge: `${identities.length}` },
         { to: `/cases/${caseId}/correlation`, label: 'Actor Correlation', icon: GitMerge, badge: `${activeCase.correlationScore}%` },
         { to: `/cases/${caseId}/graph`, label: 'Relationship Graph', icon: Share2 },
-        { to: `/cases/${caseId}/clusters`, label: 'Actor Clusters', icon: Boxes, badge: `${clusters.length} clusters` },
+        { to: `/cases/${caseId}/clusters`, label: 'Actor Clusters', icon: Boxes, badge: `${clusters.length}` },
       ]
     },
     {
       title: 'EVIDENCE ANALYSIS',
       items: [
-        { to: `/cases/${caseId}/evidence`, label: 'Evidence Inventory', icon: Database, badge: '18 items' },
+        { to: `/cases/${caseId}/evidence`, label: 'Evidence Overview', icon: Database, badge: '18' },
+        { to: `/cases/${caseId}/evidence?tab=stylometry`, label: 'Stylometry', icon: FileCode },
+        { to: `/cases/${caseId}/evidence?tab=behaviour`, label: 'Behaviour Analysis', icon: Activity },
+        { to: `/cases/${caseId}/evidence?tab=temporal`, label: 'Temporal Analysis', icon: Timer },
+        { to: `/cases/${caseId}/evidence?tab=technical`, label: 'Technical Indicators', icon: Terminal },
       ]
     },
     {
@@ -82,20 +93,23 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ onCloseMobile }) => {
         },
         { to: `/cases/${caseId}/candidates`, label: 'Candidate Entities', icon: Building2, badge: '1 Lead' },
         { to: `/cases/${caseId}/attribution-graph`, label: 'Attribution Path', icon: Network },
+        { to: `/cases/${caseId}/attribution?tab=validation`, label: 'Human Validation', icon: UserCheck },
       ]
     },
     {
       title: 'REPORTING',
       items: [
         { to: `/cases/${caseId}/timeline`, label: 'Investigation Timeline', icon: Clock },
-        { to: `/cases/${caseId}/report`, label: 'Investigation Dossier', icon: FileText, badge: 'Dossier' },
+        { to: `/cases/${caseId}/evidence?tab=findings`, label: 'Findings', icon: FileSearch },
+        { to: `/cases/${caseId}/report`, label: 'Investigation Report', icon: FileText, badge: 'Dossier' },
       ]
     },
     {
       title: 'SYSTEM',
       items: [
-        { to: '/sources', label: 'Threat Intel Feeds', icon: Cpu },
-        { to: '/settings', label: 'Engine Settings', icon: Sliders },
+        { to: '/sources', label: 'Data Sources', icon: Cpu },
+        { to: '/sources?tab=jobs', label: 'Jobs & Scans', icon: Scan },
+        { to: '/settings', label: 'Settings', icon: Sliders },
       ]
     }
   ];
@@ -107,19 +121,19 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ onCloseMobile }) => {
         <div className="p-4 border-b border-[#1E232B]">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(234,88,12,0.6)]" />
+              <div className="w-2.5 h-2.5 rounded-full bg-[#E97817] shadow-[0_0_8px_rgba(233,120,23,0.6)]" />
               <span className="text-xs font-bold tracking-wider text-slate-100">
                 SPECTRA ATTRIBUTION
               </span>
             </div>
-            <span className="text-[10px] text-orange-400 bg-orange-500/10 border border-orange-500/30 px-1.5 py-0.5 rounded font-semibold">
-              SIH26151
+            <span className="text-[10px] text-[#E97817] bg-[#C85F0A]/15 border border-[#C85F0A]/40 px-1.5 py-0.5 rounded font-semibold">
+              SIH2026
             </span>
           </div>
 
           <div className="flex items-center justify-between text-[10px] text-slate-400 bg-[#14181F] px-2 py-1 rounded border border-[#232833]">
-            <span className="text-slate-500">ACTIVE WORKSPACE</span>
-            <span className="text-orange-400 font-bold">{caseId}</span>
+            <span className="text-slate-500">ACTIVE CASE</span>
+            <span className="text-[#E97817] font-bold">{caseId}</span>
           </div>
         </div>
       </div>
@@ -129,69 +143,65 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ onCloseMobile }) => {
         {navSections.map((section) => (
           <div key={section.title} className="space-y-1">
             <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">
-                {section.title}
-              </div>
-              <nav className="space-y-0.5">
-                {section.items.map((item) => {
-                  const Icon = item.icon;
-                  // Exact match or subroute match
-                  const isActive = location.pathname === item.to || (item.to.includes('/evidence') && location.pathname.includes('/evidence') && item.to === `/cases/${caseId}/evidence`);
+              {section.title}
+            </div>
+            <nav className="space-y-0.5">
+              {section.items.map((item) => {
+                const Icon = item.icon;
+                const currentFullUrl = location.pathname + location.search;
+                const isActive = item.to.includes('?') 
+                  ? currentFullUrl === item.to 
+                  : (location.pathname === item.to && !location.search);
 
-                  return (
-                    <NavLink
-                      key={item.to}
-                      to={item.to}
-                      onClick={onCloseMobile}
-                      className={`w-full flex items-center justify-between px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                return (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    onClick={onCloseMobile}
+                    className={`w-full flex items-center justify-between px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                      isActive
+                        ? 'bg-[#C85F0A]/15 text-[#E97817] font-semibold border-l-2 border-[#E97817] shadow-[inset_0_1px_0_0_rgba(233,120,23,0.1)]'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-[#16191E]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5 truncate font-sans">
+                      <Icon className={`w-3.5 h-3.5 flex-shrink-0 ${
+                        isActive 
+                          ? 'text-[#E97817]' 
+                          : item.isStage2 
+                            ? 'text-amber-400/90' 
+                            : 'text-slate-500'
+                      }`} />
+                      <span className="truncate">{item.label}</span>
+                    </div>
+
+                    {item.badge && (
+                      <span className={`text-[9px] font-mono font-semibold px-1.5 py-0.2 rounded border ${
                         isActive
-                          ? 'bg-orange-500/10 text-orange-400 font-semibold border-l-2 border-orange-500 shadow-[inset_0_1px_0_0_rgba(234,88,12,0.1)]'
-                          : 'text-slate-400 hover:text-slate-200 hover:bg-[#16191E]'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5 truncate font-sans">
-                        <Icon className={`w-3.5 h-3.5 flex-shrink-0 ${
-                          isActive 
-                            ? 'text-orange-400' 
-                            : item.isStage2 
-                              ? 'text-amber-400/90' 
-                              : 'text-slate-500'
-                        }`} />
-                        <span className="truncate">{item.label}</span>
-                      </div>
-                      {item.badge && (
-                        <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded ml-1 flex-shrink-0 ${
-                          isActive
-                            ? 'bg-orange-500/20 text-orange-300 border border-orange-500/40'
-                            : item.isStage2
-                              ? 'bg-amber-950/80 text-amber-300 border border-amber-800/60'
-                              : 'bg-[#181D26] text-slate-400 border border-[#262D38]'
-                        }`}>
-                          {item.badge}
-                        </span>
-                      )}
-                    </NavLink>
-                  );
-                })}
-              </nav>
+                          ? 'bg-[#C85F0A]/30 text-orange-300 border-[#C85F0A]/60'
+                          : item.isStage2
+                            ? 'bg-amber-950/40 text-amber-400 border-amber-800/40'
+                            : 'bg-[#181D26] text-slate-400 border-[#262F3E]'
+                      }`}>
+                        {item.badge}
+                      </span>
+                    )}
+                  </NavLink>
+                );
+              })}
+            </nav>
           </div>
         ))}
       </div>
 
-      {/* Operational Standard & Warrant Footer */}
-      <div className="p-3 border-t border-[#1E232B] space-y-2">
-        <div className="bg-[#14181F] border border-[#232833] rounded-lg p-2.5 text-[11px] text-slate-400 space-y-1">
-          <div className="flex items-center gap-1.5 text-slate-300 font-semibold">
-            <ShieldAlert className="w-3.5 h-3.5 text-orange-400 flex-shrink-0" />
-            <span className="text-[10px] uppercase tracking-wider text-slate-300">STATUTORY STANDARD</span>
-          </div>
-          <p className="text-[10px] text-slate-400 leading-snug font-sans">
-            Correlation &ne; Identification. Attribution Lead &ne; Confirmed Identity. Human validation mandatory.
-          </p>
+      {/* Statutory Footer */}
+      <div className="p-3 border-t border-[#1E232B] flex-shrink-0 bg-[#0A0C0E]">
+        <div className="text-[10px] text-slate-500 flex items-center gap-1.5">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
+          <span className="truncate">WARRANT {activeCase.warrantNumber}</span>
         </div>
-
-        <div className="flex items-center justify-between text-[10px] text-slate-400 px-1">
-          <span className="text-slate-500">{activeCase.warrantNumber}</span>
-          <span className="text-orange-400 font-bold">AUTHORIZED</span>
+        <div className="text-[9px] text-slate-600 font-mono mt-0.5">
+          SPECTRA Engine v2.4 &bull; Stage 1/2 Air-Gapped
         </div>
       </div>
     </aside>

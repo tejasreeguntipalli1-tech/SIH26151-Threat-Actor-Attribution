@@ -1,0 +1,264 @@
+# This is a public copy of api/openapi.yaml accessible at /api/openapi.yaml
+openapi: 3.0.3
+info:
+  title: SPECTRA Threat Actor Attribution Platform API
+  description: >
+    Official REST API for SPECTRA, an advanced cyber investigation platform for
+    Dark Web threat actor correlation (Stage 1) and evidence-backed real-world
+    entity attribution (Stage 2).
+  version: 1.0.0
+  contact:
+    name: SPECTRA Attribution Engineering Team
+    email: api-support@spectra.gov
+servers:
+  - url: http://localhost:5173/api
+    description: Local Development / Mock API Server
+  - url: https://spectra-attribution.gov/api
+    description: Production Agency Server
+
+tags:
+  - name: Authentication
+  - name: Cases
+  - name: Digital Identities
+  - name: Correlation
+  - name: Relationships
+  - name: Evidence
+  - name: Attribution
+  - name: Timeline
+  - name: Reports
+
+paths:
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: Authenticate investigator and issue session token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username]
+              properties:
+                username:
+                  type: string
+                  example: investigator@spectra.gov
+                password:
+                  type: string
+                  format: password
+                  example: Spectra2026!
+      responses:
+        '200':
+          description: Authentication successful
+
+  /auth/logout:
+    post:
+      tags: [Authentication]
+      summary: Invalidate active investigator session
+      responses:
+        '200':
+          description: Session terminated successfully
+
+  /auth/me:
+    get:
+      tags: [Authentication]
+      summary: Retrieve currently authenticated investigator profile
+      responses:
+        '200':
+          description: Active profile returned
+
+  /cases:
+    get:
+      tags: [Cases]
+      summary: List all active and archived investigation cases
+      responses:
+        '200':
+          description: List of cases
+    post:
+      tags: [Cases]
+      summary: Create a new investigation case workspace
+      responses:
+        '201':
+          description: Case created successfully
+
+  /cases/{caseId}:
+    get:
+      tags: [Cases]
+      summary: Retrieve details of a specific investigation case
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Case details
+
+  /cases/{caseId}/identities:
+    get:
+      tags: [Digital Identities]
+      summary: List all digital identities ingested in the specified case
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of digital identities
+
+  /identities/{identityId}:
+    get:
+      tags: [Digital Identities]
+      summary: Retrieve deep forensic profile of a specific identity
+      parameters:
+        - name: identityId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Digital identity details
+
+  /cases/{caseId}/correlation:
+    get:
+      tags: [Correlation]
+      summary: Retrieve Stage 1 actor correlation results and clusters
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Correlation results and clusters
+
+  /cases/{caseId}/correlation/analyze:
+    post:
+      tags: [Correlation]
+      summary: Execute multi-signal correlation algorithm with custom weights
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Updated cluster analysis
+
+  /cases/{caseId}/relationships:
+    get:
+      tags: [Relationships]
+      summary: Retrieve pairwise relationships and network edges for graph
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of pairwise relationships
+
+  /relationships/{relationshipId}:
+    get:
+      tags: [Relationships]
+      summary: Retrieve 6-dimensional pairwise analysis of a specific relationship
+      parameters:
+        - name: relationshipId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detailed pairwise dossier
+
+  /cases/{caseId}/evidence:
+    get:
+      tags: [Evidence]
+      summary: Retrieve all forensic indicators and evidence triage items
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Evidence items
+
+  /cases/{caseId}/attribution:
+    get:
+      tags: [Attribution]
+      summary: Retrieve Stage 2 candidate entities and attribution leads
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Candidate entities and resolution data
+
+  /cases/{caseId}/attribution/initiate:
+    post:
+      tags: [Attribution]
+      summary: Formally initiate Stage 2 Real-World Attribution with investigator justification
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Attribution workflow initiated
+
+  /cases/{caseId}/timeline:
+    get:
+      tags: [Timeline]
+      summary: Retrieve chronological investigation events
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Investigation timeline events
+
+  /cases/{caseId}/report:
+    get:
+      tags: [Reports]
+      summary: Retrieve structured investigation analytical dossier
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Complete case report payload
+
+  /cases/{caseId}/report/generate:
+    post:
+      tags: [Reports]
+      summary: Trigger formal report compilation and export
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Report generated

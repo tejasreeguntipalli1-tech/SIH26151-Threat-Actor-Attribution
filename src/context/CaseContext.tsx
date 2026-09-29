@@ -69,10 +69,11 @@ interface CaseContextType {
   updateConfig: (newConfig: InvestigationConfig) => void;
   confirmStage2: (clusterId: string, rationale: string, investigator: string) => void;
   recordInvestigatorDecision: (action: string, target: string, reason: string, details?: string) => void;
+  addAuditLog: (action: string, target: string, reasonOrDetails: string) => void;
   resetToDefault: () => void;
 }
 
-const DEFAULT_CASES: InvestigationCase[] = [
+export const initialCases: InvestigationCase[] = [
   {
     id: 'CASE-2026-001',
     name: 'Operation DarkEcho // Shadow Network Attribution',
@@ -120,6 +121,7 @@ const DEFAULT_CASES: InvestigationCase[] = [
     primaryAttributionLead: 'No Candidate Entity (Threshold Not Met)'
   }
 ];
+export const DEFAULT_CASES = initialCases;
 
 const CaseContext = createContext<CaseContextType | undefined>(undefined);
 
@@ -334,6 +336,10 @@ export const CaseProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setAuditLogs(prev => [newLog, ...prev]);
   };
 
+  const addAuditLog = (action: string, target: string, reasonOrDetails: string) => {
+    recordInvestigatorDecision(action, target, reasonOrDetails, reasonOrDetails);
+  };
+
   const resetToDefault = () => {
     setCases(DEFAULT_CASES);
     setActiveCaseId('CASE-2026-001');
@@ -370,6 +376,7 @@ export const CaseProvider: React.FC<{ children: React.ReactNode }> = ({ children
       updateConfig,
       confirmStage2,
       recordInvestigatorDecision,
+      addAuditLog,
       resetToDefault
     }}>
       {children}

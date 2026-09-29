@@ -1,0 +1,794 @@
+openapi: 3.0.3
+info:
+  title: SPECTRA Threat Actor Attribution Platform API
+  description: >
+    Official REST API for SPECTRA, an advanced cyber investigation platform for
+    Dark Web threat actor correlation (Stage 1) and evidence-backed real-world
+    entity attribution (Stage 2).
+  version: 1.0.0
+  contact:
+    name: SPECTRA Attribution Engineering Team
+    email: api-support@spectra.gov
+servers:
+  - url: http://localhost:5173/api
+    description: Local Development / Mock API Server
+  - url: https://spectra-attribution.gov/api
+    description: Production Agency Server
+
+tags:
+  - name: Authentication
+    description: Investigator session and token management
+  - name: Cases
+    description: Case management and investigation workspace metadata
+  - name: Digital Identities
+    description: Indexed darknet personas, aliases, and technical profiles
+  - name: Correlation
+    description: Stage 1 multi-signal actor correlation engine
+  - name: Relationships
+    description: Pairwise and cluster relationship network topology
+  - name: Evidence
+    description: Forensic indicators and tripartite evidence triage
+  - name: Attribution
+    description: Stage 2 real-world candidate entity resolution
+  - name: Timeline
+    description: Chronological investigative events and telemetry
+  - name: Reports
+    description: Formal intelligence dossier compilation and export
+
+paths:
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: Authenticate investigator and issue session token
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Invalid investigator credentials
+
+  /auth/logout:
+    post:
+      tags: [Authentication]
+      summary: Invalidate active investigator session
+      operationId: logout
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Session terminated successfully
+
+  /auth/me:
+    get:
+      tags: [Authentication]
+      summary: Retrieve currently authenticated investigator profile
+      operationId: getCurrentUser
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Active profile returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthUser'
+
+  /cases:
+    get:
+      tags: [Cases]
+      summary: List all active and archived investigation cases
+      operationId: listCases
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of cases
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InvestigationCase'
+    post:
+      tags: [Cases]
+      summary: Create a new investigation case workspace
+      operationId: createCase
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCaseRequest'
+      responses:
+        '201':
+          description: Case created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvestigationCase'
+
+  /cases/{caseId}:
+    get:
+      tags: [Cases]
+      summary: Retrieve details of a specific investigation case
+      operationId: getCaseById
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: CASE-2026-001
+      responses:
+        '200':
+          description: Case details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvestigationCase'
+        '404':
+          description: Case not found
+
+  /cases/{caseId}/identities:
+    get:
+      tags: [Digital Identities]
+      summary: List all digital identities ingested in the specified case
+      operationId: getIdentitiesByCase
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: CASE-2026-001
+      responses:
+        '200':
+          description: List of digital identities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DigitalIdentity'
+
+  /identities/{identityId}:
+    get:
+      tags: [Digital Identities]
+      summary: Retrieve deep forensic profile of a specific identity
+      operationId: getIdentityById
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: identityId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: shadow_x17
+      responses:
+        '200':
+          description: Digital identity details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DigitalIdentity'
+
+  /cases/{caseId}/correlation:
+    get:
+      tags: [Correlation]
+      summary: Retrieve Stage 1 actor correlation results and clusters
+      operationId: getCorrelationByCase
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: CASE-2026-001
+      responses:
+        '200':
+          description: Correlation results and clusters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CorrelationResult'
+
+  /cases/{caseId}/correlation/analyze:
+    post:
+      tags: [Correlation]
+      summary: Execute multi-signal correlation algorithm with custom weights
+      operationId: analyzeCorrelation
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: CASE-2026-001
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CorrelationAnalysisRequest'
+      responses:
+        '200':
+          description: Updated cluster analysis
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActorCluster'
+
+  /cases/{caseId}/relationships:
+    get:
+      tags: [Relationships]
+      summary: Retrieve pairwise relationships and network edges for graph
+      operationId: getRelationshipsByCase
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: CASE-2026-001
+      responses:
+        '200':
+          description: List of pairwise relationships
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PairwiseRelationship'
+
+  /relationships/{relationshipId}:
+    get:
+      tags: [Relationships]
+      summary: Retrieve 6-dimensional pairwise analysis of a specific relationship
+      operationId: getRelationshipById
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: relationshipId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: rel-01-02
+      responses:
+        '200':
+          description: Detailed pairwise dossier
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PairwiseRelationship'
+
+  /cases/{caseId}/evidence:
+    get:
+      tags: [Evidence]
+      summary: Retrieve all forensic indicators and evidence triage items
+      operationId: getEvidenceByCase
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: CASE-2026-001
+      responses:
+        '200':
+          description: Evidence items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DigitalIndicatorItem'
+
+  /cases/{caseId}/attribution:
+    get:
+      tags: [Attribution]
+      summary: Retrieve Stage 2 candidate entities and attribution leads
+      operationId: getAttributionByCase
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: CASE-2026-001
+      responses:
+        '200':
+          description: Candidate entities and resolution data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributionWorkspace'
+
+  /cases/{caseId}/attribution/initiate:
+    post:
+      tags: [Attribution]
+      summary: Formally initiate Stage 2 Real-World Attribution with investigator justification
+      operationId: initiateAttribution
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: CASE-2026-001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttributionInitiateRequest'
+      responses:
+        '200':
+          description: Attribution workflow initiated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributionInitiateResponse'
+
+  /cases/{caseId}/timeline:
+    get:
+      tags: [Timeline]
+      summary: Retrieve chronological investigation events
+      operationId: getTimelineByCase
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: CASE-2026-001
+      responses:
+        '200':
+          description: Investigation timeline events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TimelineEvent'
+
+  /cases/{caseId}/report:
+    get:
+      tags: [Reports]
+      summary: Retrieve structured investigation analytical dossier
+      operationId: getReportByCase
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: CASE-2026-001
+      responses:
+        '200':
+          description: Complete case report payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvestigationReport'
+
+  /cases/{caseId}/report/generate:
+    post:
+      tags: [Reports]
+      summary: Trigger formal report compilation and export
+      operationId: generateReport
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: CASE-2026-001
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportGenerationRequest'
+      responses:
+        '200':
+          description: Report generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportGenerationResponse'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    LoginRequest:
+      type: object
+      required: [username]
+      properties:
+        username:
+          type: string
+          example: investigator@spectra.gov
+        password:
+          type: string
+          format: password
+          example: Spectra2026!
+
+    LoginResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/AuthUser'
+        token:
+          type: string
+        expiresIn:
+          type: integer
+          example: 86400
+
+    AuthUser:
+      type: object
+      properties:
+        id:
+          type: string
+          example: USR-INV-017
+        username:
+          type: string
+          example: investigator@spectra.gov
+        name:
+          type: string
+          example: Special Agent INV-017
+        badgeNumber:
+          type: string
+          example: CR-8819
+        role:
+          type: string
+          example: Lead Forensic Investigator
+        agency:
+          type: string
+          example: SPECTRA Attribution Cell
+
+    InvestigationCase:
+      type: object
+      required: [id, name, targetActor, status]
+      properties:
+        id:
+          type: string
+          example: CASE-2026-001
+        name:
+          type: string
+          example: Shadow Network Investigation
+        codename:
+          type: string
+          example: Operation DarkEcho
+        targetActor:
+          type: string
+          example: Actor Cluster A (TA-001)
+        status:
+          type: string
+          enum: [ACTIVE INVESTIGATION, PENDING REVIEW, CLOSED, ARCHIVED]
+        priority:
+          type: string
+          enum: [CRITICAL, HIGH, MEDIUM]
+        currentStage:
+          type: string
+          example: Stage 1: Digital Actor Correlation
+        stage1Status:
+          type: string
+          enum: [COMPLETED, IN_PROGRESS]
+        stage2Status:
+          type: string
+          enum: [NOT_INITIATED, IN_PROGRESS, PENDING_VALIDATION, VALIDATED]
+        createdDate:
+          type: string
+          format: date
+        lastUpdated:
+          type: string
+          format: date
+        leadInvestigator:
+          type: string
+          example: Senior Inspector INV-017
+        agency:
+          type: string
+          example: SPECTRA Attribution Cell
+        warrantNumber:
+          type: string
+          example: WARRANT #CR-2026-8819
+        summary:
+          type: string
+        correlationScore:
+          type: number
+          example: 92
+        attributionConfidence:
+          type: number
+          example: 82
+
+    CreateCaseRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          example: Operation CobaltHydra
+        codename:
+          type: string
+          example: CobaltHydra
+        targetActor:
+          type: string
+          example: FIN-7 Sub-syndicate
+        priority:
+          type: string
+          enum: [CRITICAL, HIGH, MEDIUM]
+          default: HIGH
+        summary:
+          type: string
+
+    DigitalIdentity:
+      type: object
+      properties:
+        id:
+          type: string
+          example: id-01
+        username:
+          type: string
+          example: shadow_x17
+        aliases:
+          type: array
+          items:
+            type: string
+        platform:
+          type: string
+          example: Dread Forum
+        firstSeen:
+          type: string
+        lastSeen:
+          type: string
+        status:
+          type: string
+          enum: [ACTIVE, DORMANT, SUSPENDED]
+        clusterId:
+          type: string
+          example: Actor Cluster A
+        stylometry:
+          type: object
+        behavioural:
+          type: object
+        temporal:
+          type: object
+        technical:
+          type: object
+
+    ActorCluster:
+      type: object
+      properties:
+        id:
+          type: string
+          example: Actor Cluster A
+        codename:
+          type: string
+          example: Shadow Network
+        actorCorrelationScore:
+          type: number
+          example: 92
+        classification:
+          type: string
+          example: VERY STRONG EVIDENCE
+        supportingReasons:
+          type: array
+          items:
+            type: string
+        conflictingReasons:
+          type: array
+          items:
+            type: string
+        unknownReasons:
+          type: array
+          items:
+            type: string
+
+    CorrelationResult:
+      type: object
+      properties:
+        clusters:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActorCluster'
+        primaryCluster:
+          $ref: '#/components/schemas/ActorCluster'
+
+    CorrelationAnalysisRequest:
+      type: object
+      properties:
+        weights:
+          type: object
+          properties:
+            technical:
+              type: number
+            stylometry:
+              type: number
+            behaviour:
+              type: number
+            infrastructure:
+              type: number
+            temporal:
+              type: number
+
+    PairwiseRelationship:
+      type: object
+      properties:
+        id:
+          type: string
+          example: rel-01-02
+        sourceUsername:
+          type: string
+          example: shadow_x17
+        targetUsername:
+          type: string
+          example: x_shadow
+        overallScore:
+          type: number
+          example: 94
+        relationshipType:
+          type: string
+          example: High-Confidence Persona Convergence
+        supportingEvidence:
+          type: array
+          items:
+            type: string
+        conflictingEvidence:
+          type: array
+          items:
+            type: string
+        unknownEvidence:
+          type: array
+          items:
+            type: string
+        analystSummary:
+          type: string
+
+    DigitalIndicatorItem:
+      type: object
+      properties:
+        id:
+          type: string
+          example: IND-001
+        type:
+          type: string
+          enum: [Identity, Behavioural, Technical, Financial, Infrastructure]
+        indicator:
+          type: string
+        confidence:
+          type: string
+          enum: [High, Moderate, Weak]
+        status:
+          type: string
+          enum: [Supporting, Conflicting, Unknown]
+
+    CandidateEntity:
+      type: object
+      properties:
+        id:
+          type: string
+          example: CANDIDATE-A
+        name:
+          type: string
+          example: Meridian Analytics S.R.O.
+        attributionStrength:
+          type: number
+          example: 82
+        status:
+          type: string
+          example: ATTRIBUTION LEAD
+
+    AttributionWorkspace:
+      type: object
+      properties:
+        candidates:
+          type: array
+          items:
+            $ref: '#/components/schemas/CandidateEntity'
+        lead:
+          type: object
+
+    AttributionInitiateRequest:
+      type: object
+      required: [justification, authorizedBy]
+      properties:
+        justification:
+          type: string
+          example: Stage 1 correlation is 92%, satisfying the 80% statutory bar.
+        authorizedBy:
+          type: string
+          example: Senior Inspector INV-017
+
+    AttributionInitiateResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: STAGE 2 INITIATED
+        auditLog:
+          type: object
+
+    TimelineEvent:
+      type: object
+      properties:
+        id:
+          type: string
+        date:
+          type: string
+        title:
+          type: string
+        category:
+          type: string
+        description:
+          type: string
+
+    InvestigationReport:
+      type: object
+      properties:
+        reportMetadata:
+          type: object
+        digitalIdentities:
+          type: array
+        actorCluster:
+          $ref: '#/components/schemas/ActorCluster'
+        pairwiseRelationships:
+          type: array
+        indicators:
+          type: array
+        candidateEntities:
+          type: array
+
+    ReportGenerationRequest:
+      type: object
+      properties:
+        format:
+          type: string
+          enum: [json, pdf]
+        investigatorNotes:
+          type: string
+
+    ReportGenerationResponse:
+      type: object
+      properties:
+        downloadUrl:
+          type: string
+        reportData:
+          type: object
