@@ -1,56 +1,129 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
-import cytoscape from 'cytoscape';
-import { 
-  Share2, 
-  ZoomIn, 
-  ZoomOut, 
-  RotateCcw, 
-  Maximize2, 
-  Search, 
-  Filter, 
-  Layers, 
-  FileText, 
-  CheckCircle2, 
-  AlertTriangle, 
-  HelpCircle, 
-  ShieldCheck, 
-  ShieldAlert, 
-  ArrowRight, 
-  ChevronRight, 
-  Clock, 
-  Key, 
-  Server, 
-  Globe, 
-  User, 
-  Users, 
-  Sparkles,
-  ExternalLink,
-  Table,
-  Sliders
+import { useState, useRef, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import type { GraphNode, GraphLink, EntityType } from '@/types';
+
+import {
+  Shield,
+  User,
+  ShoppingCart,
+  MessageSquare,
+  Key,
+  Wallet,
+  Globe,
+  Server,
+  Award,
+  Network,
+  FileText,
+  Calendar,
+  X,
 } from 'lucide-react';
-import { initialPairwiseRelationships } from '../../data/syntheticData';
-import { PairwiseRelationship } from '../../types/investigation';
-import { ConfidenceBadge } from '../common/ConfidenceBadge';
-import { useCase } from '../../context/CaseContext';
 
-interface IdentityNodeData {
-  id: string;
-  username: string;
-  platform: string;
-  cluster: string;
-  aliases: string[];
-  role: string;
-  evidenceStrength: number;
-  connectedCount: number;
-  avatarLetter: string;
-  isFocal?: boolean;
+const entityConfig: Record<
+  EntityType,
+  {
+    color: string;
+    glow: string;
+    icon: React.ComponentType<{
+      className?: string;
+      style?: React.CSSProperties;
+    }>;
+  }
+> = {
+  actor: {
+    color: '#ef4444',
+    glow: 'rgba(239, 68, 68, 0.45)',
+    icon: Shield,
+  },
+  alias: {
+    color: '#fb923c',
+    glow: 'rgba(251, 146, 60, 0.4)',
+    icon: User,
+  },
+  marketplace: {
+    color: '#f59e0b',
+    glow: 'rgba(245, 158, 11, 0.4)',
+    icon: ShoppingCart,
+  },
+  forum: {
+    color: '#06b6d4',
+    glow: 'rgba(6, 182, 212, 0.4)',
+    icon: MessageSquare,
+  },
+  pgp: {
+    color: '#22c55e',
+    glow: 'rgba(34, 197, 94, 0.4)',
+    icon: Key,
+  },
+  wallet: {
+    color: '#eab308',
+    glow: 'rgba(234, 179, 8, 0.4)',
+    icon: Wallet,
+  },
+  domain: {
+    color: '#8b5cf6',
+    glow: 'rgba(139, 92, 246, 0.4)',
+    icon: Globe,
+  },
+  server: {
+    color: '#3b82f6',
+    glow: 'rgba(59, 130, 246, 0.4)',
+    icon: Server,
+  },
+  certificate: {
+    color: '#14b8a6',
+    glow: 'rgba(20, 184, 166, 0.4)',
+    icon: Award,
+  },
+  ip: {
+    color: '#6366f1',
+    glow: 'rgba(99, 102, 241, 0.4)',
+    icon: Network,
+  },
+  post: {
+    color: '#ec4899',
+    glow: 'rgba(236, 72, 153, 0.4)',
+    icon: FileText,
+  },
+  event: {
+    color: '#a855f7',
+    glow: 'rgba(168, 85, 247, 0.4)',
+    icon: Calendar,
+  },
+};
+
+interface Props {
+  nodes?: GraphNode[];
+  links?: GraphLink[];
+  height?: number;
+  layout?: 'force' | 'radial' | 'vertical';
+  showLabels?: boolean;
+  onSelectNode?: (node: GraphNode) => void;
 }
 
-interface RelationshipGraphViewProps {
-  initialTracePath?: boolean;
-  onNavigate?: (tabId: string) => void;
+interface PositionedNode extends GraphNode {
+  x: number;
+  y: number;
 }
 
+<<<<<<< HEAD
+/*
+ * Fallback data.
+ *
+ * This is only used when the parent page does not provide
+ * nodes and links. It allows the graph to render immediately.
+ */
+const fallbackNodes: GraphNode[] = [
+  {
+    id: 'actor-1',
+    type: 'actor',
+    label: 'THREAT ACTOR',
+    sublabel: 'Actor DNA',
+    risk: 94,
+    confidence: 91,
+    properties: {
+      status: 'Under Investigation',
+      profile: 'SHADOWTRACE',
+=======
 export const RelationshipGraphView: React.FC<RelationshipGraphViewProps> = ({
   initialTracePath = false,
   onNavigate
@@ -198,219 +271,205 @@ export const RelationshipGraphView: React.FC<RelationshipGraphViewProps> = ({
       evidenceStrength: 92,
       connectedCount: 3,
       avatarLetter: 'S'
+>>>>>>> origin/main
     },
-    {
-      id: 'x_shadow',
-      username: 'x_shadow',
-      platform: 'Market-Y (XSS Forum)',
-      cluster: 'Actor Cluster A',
-      aliases: ['x-shadow-sec', 'x_shdw'],
-      role: 'Ransomware Access Broker',
-      evidenceStrength: 94,
-      connectedCount: 3,
-      avatarLetter: 'X'
+  },
+  {
+    id: 'alias-1',
+    type: 'alias',
+    label: 'NightWolf',
+    sublabel: 'Alias',
+    risk: 82,
+    confidence: 89,
+    properties: {
+      source: 'Dark Web',
     },
-    {
-      id: 'darkx17',
-      username: 'darkx17',
-      platform: 'Chat-Z (BreachForums Mirror)',
-      cluster: 'Actor Cluster A',
-      aliases: ['dark_17', 'vault17_admin'],
-      role: 'Data Leak Publisher & Gateway Operator',
-      evidenceStrength: 89,
-      connectedCount: 3,
-      avatarLetter: 'D'
+  },
+  {
+    id: 'pgp-1',
+    type: 'pgp',
+    label: 'PGP-7F3A',
+    sublabel: 'PGP Fingerprint',
+    risk: 78,
+    confidence: 86,
+    properties: {
+      fingerprint: '7F3A...91C2',
     },
-    {
-      id: 'shadow17',
-      username: 'shadow17',
-      platform: 'Exploit.in & Dev Git Mirror',
-      cluster: 'Actor Cluster A',
-      aliases: ['x17_dev', 'dev_x17', 'x17-ops'],
-      role: 'Exploit Developer & Infrastructure Automation',
-      evidenceStrength: 91,
-      connectedCount: 3,
-      avatarLetter: 'S'
+  },
+  {
+    id: 'domain-1',
+    type: 'domain',
+    label: 'shadow-node',
+    sublabel: 'Domain',
+    risk: 85,
+    confidence: 84,
+    properties: {
+      type: 'Infrastructure',
     },
-    {
-      id: 'user_delta',
-      username: 'user_delta',
-      platform: 'Telegram Channel / CardBB',
-      cluster: 'Actor Cluster B (Peripheral)',
-      aliases: ['delta_carder', 'u_delta', 'nm_cards'],
-      role: 'Bulk Financial Credentials Vendor',
-      evidenceStrength: 42,
-      connectedCount: 0,
-      avatarLetter: 'U'
-    }
-  ], []);
-
-  // Preset Layout Coordinates for Clear Visual Spacing (Section 5)
-  const identityPositions: Record<string, { x: number; y: number }> = {
-    shadow_x17: { x: 380, y: 240 },
-    x_shadow:   { x: 170, y: 110 },
-    darkx17:    { x: 170, y: 370 },
-    shadow17:   { x: 590, y: 120 },
-    user_delta: { x: 630, y: 380 },
-  };
-
-  // Explicit Data-Backed Relationships (Section 7)
-  const pairwiseEdges = useMemo(() => [
-    {
-      id: 'rel-01-02',
-      source: 'shadow_x17',
-      target: 'x_shadow',
-      relationshipType: 'ACTOR CORRELATION',
-      score: 94,
-      classification: 'VERY STRONG EVIDENCE',
-      evidenceLabel: 'ACTOR CORRELATION // 94%',
-      primarySignals: ['Stylometry (--)', 'Username root', 'Temporal r=0.88', 'PGP Key']
+  },
+  {
+    id: 'wallet-1',
+    type: 'wallet',
+    label: 'WALLET-83A',
+    sublabel: 'Crypto Wallet',
+    risk: 76,
+    confidence: 81,
+    properties: {
+      network: 'Blockchain',
     },
-    {
-      id: 'rel-01-03',
-      source: 'shadow_x17',
-      target: 'darkx17',
-      relationshipType: 'INFRASTRUCTURE LINK',
-      score: 88,
-      classification: 'STRONG EVIDENCE',
-      evidenceLabel: 'INFRASTRUCTURE & OP // 88%',
-      primarySignals: ['Reverse Proxy 185.220.101.45', 'Escrow phrasing', 'Double hyphens']
+  },
+  {
+    id: 'forum-1',
+    type: 'forum',
+    label: 'Forum Profile',
+    sublabel: 'Dark-Web Forum',
+    risk: 74,
+    confidence: 79,
+    properties: {
+      activity: 'Recurring',
     },
-    {
-      id: 'rel-04-01',
-      source: 'shadow_x17',
-      target: 'shadow17',
-      relationshipType: 'TECHNICAL INDICATOR',
-      score: 91,
-      classification: 'VERY STRONG EVIDENCE',
-      evidenceLabel: 'DEV MIRROR & PGP // 91%',
-      primarySignals: ['Historical alias archive', 'SSH host key reuse', 'Go binary hash']
+  },
+  {
+    id: 'server-1',
+    type: 'server',
+    label: 'Server-204',
+    sublabel: 'Infrastructure',
+    risk: 88,
+    confidence: 87,
+    properties: {
+      role: 'Hosting',
     },
-    {
-      id: 'rel-02-03',
-      source: 'x_shadow',
-      target: 'darkx17',
-      relationshipType: 'BEHAVIOURAL SIMILARITY',
-      score: 89,
-      classification: 'STRONG EVIDENCE',
-      evidenceLabel: 'EXPLOIT MONETIZATION // 89%',
-      primarySignals: ['12-min publication sequence', 'Shared proxy 185.220.101.45', 'BTC input']
+  },
+  {
+    id: 'ip-1',
+    type: 'ip',
+    label: '185.x.x.x',
+    sublabel: 'IP Address',
+    risk: 71,
+    confidence: 73,
+    properties: {
+      source: 'Network Logs',
     },
-    {
-      id: 'rel-03-04',
-      source: 'darkx17',
-      target: 'shadow17',
-      relationshipType: 'INFRASTRUCTURE LINK',
-      score: 86,
-      classification: 'STRONG EVIDENCE',
-      evidenceLabel: 'GATEWAY HOSTING // 86%',
-      primarySignals: ['darkx17-vault.is DNS A-record', 'Git commit automation', 'Subkey sig']
+  },
+  {
+    id: 'market-1',
+    type: 'marketplace',
+    label: 'Marketplace',
+    sublabel: 'Dark-Web Market',
+    risk: 80,
+    confidence: 76,
+    properties: {
+      activity: 'Observed',
     },
-    {
-      id: 'rel-02-04',
-      source: 'x_shadow',
-      target: 'shadow17',
-      relationshipType: 'BEHAVIOURAL SIMILARITY',
-      score: 87,
-      classification: 'STRONG EVIDENCE',
-      evidenceLabel: 'ESCROW SCRIPTING // 87%',
-      primarySignals: ['Escrow automation daemon', 'Multi-sig contract verification']
-    }
-  ], []);
+  },
+];
 
-  // Focal Identity Object
-  const focalIdentity = useMemo(() => {
-    return digitalIdentities.find(id => id.id === focalIdentityId) || digitalIdentities[0];
-  }, [digitalIdentities, focalIdentityId]);
+const fallbackLinks: GraphLink[] = [
+  {
+    source: 'actor-1',
+    target: 'alias-1',
+    label: 'USES ALIAS',
+    confidence: 91,
+  },
+  {
+    source: 'actor-1',
+    target: 'pgp-1',
+    label: 'PGP LINK',
+    confidence: 86,
+  },
+  {
+    source: 'actor-1',
+    target: 'domain-1',
+    label: 'INFRASTRUCTURE',
+    confidence: 84,
+  },
+  {
+    source: 'actor-1',
+    target: 'wallet-1',
+    label: 'WALLET LINK',
+    confidence: 81,
+  },
+  {
+    source: 'actor-1',
+    target: 'forum-1',
+    label: 'FORUM ACTIVITY',
+    confidence: 79,
+  },
+  {
+    source: 'actor-1',
+    target: 'server-1',
+    label: 'HOSTING',
+    confidence: 87,
+  },
+  {
+    source: 'server-1',
+    target: 'ip-1',
+    label: 'RESOLVES TO',
+    confidence: 73,
+  },
+  {
+    source: 'alias-1',
+    target: 'market-1',
+    label: 'MARKET ACTIVITY',
+    confidence: 76,
+  },
+  {
+    source: 'domain-1',
+    target: 'ip-1',
+    label: 'DNS RELATION',
+    confidence: 82,
+  },
+  {
+    source: 'pgp-1',
+    target: 'forum-1',
+    label: 'SIGNATURE',
+    confidence: 80,
+  },
+];
 
-  // Connected identities to focal
-  const connectedIdentitiesToFocal = useMemo(() => {
-    const connectedIds = new Set<string>();
-    pairwiseEdges.forEach(e => {
-      if (e.source === focalIdentityId) connectedIds.add(e.target);
-      if (e.target === focalIdentityId) connectedIds.add(e.source);
-    });
-    return digitalIdentities.filter(id => connectedIds.has(id.id));
-  }, [pairwiseEdges, focalIdentityId, digitalIdentities]);
+export function EntityGraph({
+  nodes: inputNodes,
+  links: inputLinks,
+  height = 600,
+  layout = 'radial',
+  showLabels = true,
+  onSelectNode,
+}: Props) {
+  /*
+   * Use real project data when available.
+   * Otherwise use fallback data so the visualization is visible.
+   */
+  const nodes =
+    inputNodes && inputNodes.length > 0
+      ? inputNodes
+      : fallbackNodes;
 
-  // Active Pairwise Relationship Data for Detailed View (Section 9)
-  const activePairwiseData = useMemo(() => {
-    // Find matching in initialPairwiseRelationships
-    const fromList = initialPairwiseRelationships.find(p => p.id === selectedEdgeId);
-    if (fromList) return fromList;
+  const links =
+    inputLinks && inputLinks.length > 0
+      ? inputLinks
+      : fallbackLinks;
 
-    // Fallback to synthetic relationship
-    const foundEdge = pairwiseEdges.find(e => e.id === selectedEdgeId);
-    if (!foundEdge) return initialPairwiseRelationships[0];
+  const [selected, setSelected] =
+    useState<GraphNode | null>(null);
 
-    return {
-      id: foundEdge.id,
-      sourceIdentityId: foundEdge.source,
-      sourceUsername: foundEdge.source,
-      targetIdentityId: foundEdge.target,
-      targetUsername: foundEdge.target,
-      relationshipType: foundEdge.relationshipType,
-      overallScore: foundEdge.score,
-      classification: foundEdge.classification as any,
-      signals: {
-        username: {
-          dimension: 'Username',
-          score: 92,
-          strength: 'Strong',
-          observedPattern: "Common stem 'shadow' and numerical suffix '17'",
-          explanation: "Levenshtein distance of 3 with 100% lexical root continuity across primary and secondary accounts."
-        },
-        stylometry: {
-          dimension: 'Stylometry',
-          score: 92,
-          strength: 'Strong',
-          observedPattern: "Double-hyphen (--) delimiter habit present in 100% of posts",
-          explanation: "Jaccard syntactic similarity index of 0.89 across darknet forum posts."
-        },
-        behaviour: {
-          dimension: 'Behaviour',
-          score: 88,
-          strength: 'Strong',
-          observedPattern: "Escrow enforcement mandatory; 45-minute exploit-to-sale escalation",
-          explanation: "Announcements followed within 45 minutes by sales escrow listings on secondary marketplace."
-        },
-        temporal: {
-          dimension: 'Temporal',
-          score: 91,
-          strength: 'Strong',
-          observedPattern: "Diurnal posting window: 20:00–03:00 UTC (Peak: 22:30 UTC)",
-          explanation: "Pearson activity correlation coefficient r = 0.88 across 180 monitored days in UTC+03:00."
-        },
-        technical: {
-          dimension: 'Technical',
-          score: 96,
-          strength: 'Strong',
-          observedPattern: "Shared PGP key (0x7E4A8F2C91B4) & reverse proxy 185.220.101.45",
-          explanation: "Hard technical anchor: Identical RSA-4096 key signature referenced on profile metadata."
-        }
-      },
-      supportingEvidence: [
-        'Shared cryptographic anchor: PGP fingerprint 0x7E4A8F2C91B4 referenced in profiles',
-        'Shared reverse-proxy hosting node: IP 185.220.101.45 (Njalla/FlokiNET ASN)',
-        'Idiosyncratic double-hyphen (--) punctuation habit present across 100% of post samples',
-        'Synchronized diurnal activity window (20:00–03:00 UTC), r = 0.88',
-        'Monetization escrow coordination: Leak publication followed within 45 min by marketplace listing'
-      ],
-      conflictingEvidence: [
-        'Distinct darknet browser TLS JA3 fingerprints indicating potential dual-workstation operational setup'
-      ],
-      unknownEvidence: [
-        'Exact hardware MAC address unknown behind virtualized environment',
-        'ISP subscriber identity unknown (shielded by multi-hop Tor onion routing)'
-      ],
-      analystSummary: 'Very high multi-vector correlation. Hard cryptographic anchor corroborated by identical stylometric punctuation quirks and diurnal synchronization confirms unified actor control.'
-    } as PairwiseRelationship;
-  }, [selectedEdgeId, pairwiseEdges]);
+  const [hovered, setHovered] =
+    useState<string | null>(null);
 
-  // Cytoscape Canvas Initialization (Section 12, 13, 14, 15, 16, 17)
-  useEffect(() => {
-    if (!containerRef.current) return;
+  const containerRef =
+    useRef<HTMLDivElement>(null);
 
+<<<<<<< HEAD
+  /*
+   * Find actor node.
+   */
+  const focalNode = useMemo(() => {
+    return (
+      nodes.find(
+        (node) => node.type === 'actor'
+      ) ||
+      nodes[0] ||
+      null
+=======
     // Filter identities based on search
     const filteredNodes = digitalIdentities.filter(node => {
       if (!searchQuery.trim()) return true;
@@ -840,1333 +899,1045 @@ export const RelationshipGraphView: React.FC<RelationshipGraphViewProps> = ({
     const connectedEdge = pairwiseEdges.find(e => 
       (e.source === id && e.target === focalIdentityId) || 
       (e.target === id && e.source === focalIdentityId)
+>>>>>>> origin/main
     );
-    if (connectedEdge) {
-      setSelectedEdgeId(connectedEdge.id);
+  }, [nodes]);
+
+  /*
+   * Calculate positions.
+   */
+  const positioned = useMemo<
+    PositionedNode[]
+  >(() => {
+    if (!nodes.length) {
+      return [];
     }
-    if (cyRef.current) {
-      const node = cyRef.current.$(`node#${id}`);
-      if (node.length > 0) {
-        cyRef.current.animate({
-          center: { eles: node },
-          duration: 300
+
+    const width =
+      containerRef.current?.clientWidth ||
+      1000;
+
+    const centerX = width / 2;
+    const centerY = height / 2;
+
+    /*
+     * VERTICAL LAYOUT
+     */
+    if (layout === 'vertical') {
+      const levels: Record<
+        string,
+        number
+      > = {};
+
+      if (focalNode) {
+        levels[focalNode.id] = 0;
+      }
+
+      let changed = true;
+
+      while (changed) {
+        changed = false;
+
+        links.forEach((link) => {
+          if (
+            levels[link.source] !==
+              undefined &&
+            levels[link.target] ===
+              undefined
+          ) {
+            levels[link.target] =
+              levels[link.source] + 1;
+
+            changed = true;
+          }
+
+          if (
+            levels[link.target] !==
+              undefined &&
+            levels[link.source] ===
+              undefined
+          ) {
+            levels[link.source] =
+              levels[link.target] + 1;
+
+            changed = true;
+          }
         });
       }
+
+      const maxLevel = Math.max(
+        ...Object.values(levels),
+        0
+      );
+
+      const groups: Record<
+        number,
+        GraphNode[]
+      > = {};
+
+      nodes.forEach((node) => {
+        const level =
+          levels[node.id] ?? maxLevel;
+
+        if (!groups[level]) {
+          groups[level] = [];
+        }
+
+        groups[level].push(node);
+      });
+
+      const result: PositionedNode[] =
+        [];
+
+      Object.entries(groups).forEach(
+        ([levelString, group]) => {
+          const level =
+            Number(levelString);
+
+          group.forEach(
+            (node, index) => {
+              const x =
+                group.length === 1
+                  ? centerX
+                  : 100 +
+                    (index /
+                      (group.length - 1)) *
+                      Math.max(
+                        width - 200,
+                        400
+                      );
+
+              const y =
+                60 +
+                (level /
+                  Math.max(
+                    maxLevel,
+                    1
+                  )) *
+                  Math.max(
+                    height - 120,
+                    300
+                  );
+
+              result.push({
+                ...node,
+                x,
+                y,
+              });
+            }
+          );
+        }
+      );
+
+      return result;
     }
+
+    /*
+     * RADIAL LAYOUT
+     */
+    const actor = focalNode;
+
+    if (!actor) {
+      return [];
+    }
+
+    const others = nodes.filter(
+      (node) =>
+        node.id !== actor.id
+    );
+
+    const priority: Record<
+      string,
+      number
+    > = {
+      alias: 1,
+      pgp: 2,
+      domain: 3,
+      wallet: 4,
+      forum: 5,
+      marketplace: 6,
+      server: 7,
+      ip: 8,
+      certificate: 9,
+      post: 10,
+      event: 11,
+    };
+
+    const sorted = [...others].sort(
+      (a, b) =>
+        (priority[a.type] ?? 99) -
+        (priority[b.type] ?? 99)
+    );
+
+    /*
+     * Keep first 6 nodes close to actor.
+     */
+    const innerRing = sorted.slice(0, 6);
+
+    /*
+     * Remaining nodes form outer ring.
+     */
+    const outerRing = sorted.slice(6);
+
+    const result: PositionedNode[] = [
+      {
+        ...actor,
+        x: centerX,
+        y: centerY,
+      },
+    ];
+
+    innerRing.forEach(
+      (node, index) => {
+        const angle =
+          (index /
+            Math.max(
+              innerRing.length,
+              1
+            )) *
+            Math.PI *
+            2 -
+          Math.PI / 2;
+
+        result.push({
+          ...node,
+          x:
+            centerX +
+            Math.cos(angle) *
+              Math.min(
+                width * 0.27,
+                260
+              ),
+          y:
+            centerY +
+            Math.sin(angle) *
+              Math.min(
+                height * 0.28,
+                155
+              ),
+        });
+      }
+    );
+
+    outerRing.forEach(
+      (node, index) => {
+        const angle =
+          (index /
+            Math.max(
+              outerRing.length,
+              1
+            )) *
+            Math.PI *
+            2 -
+          Math.PI / 2;
+
+        result.push({
+          ...node,
+          x:
+            centerX +
+            Math.cos(angle) *
+              Math.min(
+                width * 0.41,
+                390
+              ),
+          y:
+            centerY +
+            Math.sin(angle) *
+              Math.min(
+                height * 0.40,
+                225
+              ),
+        });
+      }
+    );
+
+    return result;
+  }, [
+    nodes,
+    links,
+    layout,
+    height,
+    focalNode,
+  ]);
+
+  /*
+   * Node lookup.
+   */
+  const nodeById = useMemo(
+    () =>
+      new Map(
+        positioned.map((node) => [
+          node.id,
+          node,
+        ])
+      ),
+    [positioned]
+  );
+
+  /*
+   * Determine whether node is connected
+   * to selected/hovered node.
+   */
+  const isConnected = (
+    nodeId: string
+  ) => {
+    const focusId =
+      hovered || selected?.id;
+
+    if (!focusId) {
+      return true;
+    }
+
+    if (focusId === nodeId) {
+      return true;
+    }
+
+    return links.some(
+      (link) =>
+        (link.source === focusId &&
+          link.target === nodeId) ||
+        (link.target === focusId &&
+          link.source === nodeId)
+    );
+  };
+
+  /*
+   * Curved connection path.
+   */
+  const createCurve = (
+    source: PositionedNode,
+    target: PositionedNode,
+    direction: number
+  ) => {
+    const dx =
+      target.x - source.x;
+
+    const dy =
+      target.y - source.y;
+
+    const distance =
+      Math.sqrt(
+        dx * dx + dy * dy
+      ) || 1;
+
+    const normalX =
+      -dy / distance;
+
+    const normalY =
+      dx / distance;
+
+    const curve =
+      Math.min(
+        75,
+        Math.max(
+          25,
+          distance * 0.12
+        )
+      );
+
+    const controlX =
+      (source.x + target.x) /
+        2 +
+      normalX *
+        curve *
+        direction;
+
+    const controlY =
+      (source.y + target.y) /
+        2 +
+      normalY *
+        curve *
+        direction;
+
+    return `
+      M ${source.x} ${source.y}
+      Q ${controlX} ${controlY}
+        ${target.x} ${target.y}
+    `;
   };
 
   return (
-    <div className="space-y-6 font-sans">
-      {/* 1. Header & Investigation Principle */}
-      <div className="bg-[#12161E] border border-[#232A36] rounded-xl p-6 shadow-xl space-y-3">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-3 border-b border-[#1E2430]">
-          <div>
-            <div className="flex items-center gap-2 mb-1 flex-wrap">
-              <span className={`text-xs font-mono font-bold px-2 py-0.5 rounded border ${
-                graphMode === 'stage1' 
-                  ? 'bg-orange-500/10 text-orange-400 border-orange-500/30'
-                  : 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30'
-              }`}>
-                {graphMode === 'stage1' ? 'STAGE 1 // PERSONA CORRELATION GRAPH' : 'STAGE 2 // REAL-WORLD KNOWLEDGE GRAPH'}
-              </span>
-              <span className="text-xs text-slate-400 font-mono">
-                CASE: {activeCase.id}
-              </span>
-              <span className="text-slate-600 font-mono">|</span>
-              <span className="text-xs text-slate-400 font-mono">
-                TARGET: <strong className="text-white">DarkWolf Cluster (TA-001)</strong>
+    <div
+      ref={containerRef}
+      className="relative w-full overflow-hidden rounded-lg border border-cyber-border bg-[#050b16]"
+      style={{
+        height,
+        minHeight: 500,
+      }}
+    >
+      {/* Background */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.12]"
+        style={{
+          backgroundImage: `
+            linear-gradient(
+              rgba(0,212,255,0.08) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              90deg,
+              rgba(0,212,255,0.08) 1px,
+              transparent 1px
+            )
+          `,
+          backgroundSize:
+            '32px 32px',
+        }}
+      />
+
+      {/* Central glow */}
+      <div
+        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{
+          width: 360,
+          height: 360,
+          background:
+            'radial-gradient(circle, rgba(0,212,255,0.08), transparent 70%)',
+        }}
+      />
+
+      {/* SVG CONNECTIONS */}
+      <svg
+        width="100%"
+        height={height}
+        className="absolute inset-0 z-[1]"
+      >
+        <defs>
+          <marker
+            id="shadowtrace-arrow"
+            markerWidth="7"
+            markerHeight="7"
+            refX="6"
+            refY="3.5"
+            orient="auto"
+          >
+            <path
+              d="M0,0 L7,3.5 L0,7"
+              fill="none"
+              stroke="#49637f"
+              strokeWidth="1"
+            />
+          </marker>
+        </defs>
+
+        {links.map(
+          (link, index) => {
+            const source =
+              nodeById.get(
+                link.source
+              );
+
+            const target =
+              nodeById.get(
+                link.target
+              );
+
+            if (!source || !target) {
+              return null;
+            }
+
+            const focusId =
+              hovered ||
+              selected?.id;
+
+            const connected =
+              !focusId ||
+              link.source ===
+                focusId ||
+              link.target ===
+                focusId;
+
+            const highlighted =
+              link.source ===
+                hovered ||
+              link.target ===
+                hovered ||
+              link.source ===
+                selected?.id ||
+              link.target ===
+                selected?.id;
+
+            const confidence =
+              typeof link.confidence ===
+              'number'
+                ? link.confidence
+                : 0;
+
+            const confidenceColor =
+              confidence >= 90
+                ? '#22c55e'
+                : confidence >= 80
+                  ? '#00d4ff'
+                  : confidence >=
+                      70
+                    ? '#f59e0b'
+                    : '#64748b';
+
+            const path =
+              createCurve(
+                source,
+                target,
+                index % 2 === 0
+                  ? 1
+                  : -1
+              );
+
+            return (
+              <g
+                key={`${link.source}-${link.target}-${index}`}
+                opacity={
+                  connected
+                    ? 1
+                    : 0.12
+                }
+              >
+                {/* Glow */}
+                {highlighted && (
+                  <path
+                    d={path}
+                    fill="none"
+                    stroke={
+                      confidenceColor
+                    }
+                    strokeWidth="7"
+                    opacity="0.10"
+                  />
+                )}
+
+                {/* Main line */}
+                <path
+                  d={path}
+                  fill="none"
+                  stroke={
+                    highlighted
+                      ? confidenceColor
+                      : '#29415d'
+                  }
+                  strokeWidth={
+                    highlighted
+                      ? 2.2
+                      : 1.2
+                  }
+                  strokeDasharray={
+                    highlighted
+                      ? '7 5'
+                      : '4 6'
+                  }
+                  markerEnd="url(#shadowtrace-arrow)"
+                >
+                  <animate
+                    attributeName="stroke-dashoffset"
+                    from="24"
+                    to="0"
+                    dur="1.2s"
+                    repeatCount="indefinite"
+                  />
+                </path>
+              </g>
+            );
+          }
+        )}
+      </svg>
+
+      {/* NODES */}
+      {positioned.map(
+        (node) => {
+          const config =
+            entityConfig[
+              node.type
+            ];
+
+          /*
+           * Safety fallback in case a future
+           * node type is not configured.
+           */
+          if (!config) {
+            return null;
+          }
+
+          const Icon =
+            config.icon;
+
+          const isHovered =
+            hovered === node.id;
+
+          const isSelected =
+            selected?.id ===
+            node.id;
+
+          const connected =
+            isConnected(node.id);
+
+          const isActor =
+            node.type ===
+            'actor';
+
+          const connectedLinks =
+            links.filter(
+              (link) =>
+                link.source ===
+                  node.id ||
+                link.target ===
+                  node.id
+            );
+
+          return (
+            <motion.div
+              key={node.id}
+              initial={{
+                opacity: 0,
+                scale: 0.7,
+              }}
+              animate={{
+                opacity:
+                  connected
+                    ? 1
+                    : 0.2,
+
+                scale:
+                  isHovered ||
+                  isSelected
+                    ? 1.08
+                    : 1,
+
+                x:
+                  node.x -
+                  (isActor
+                    ? 75
+                    : 62),
+
+                y:
+                  node.y -
+                  (isActor
+                    ? 45
+                    : 25),
+              }}
+              transition={{
+                duration: 0.25,
+              }}
+              className="absolute z-[5]"
+              onMouseEnter={() =>
+                setHovered(
+                  node.id
+                )
+              }
+              onMouseLeave={() =>
+                setHovered(null)
+              }
+              onClick={() => {
+                setSelected(
+                  node
+                );
+
+                onSelectNode?.(
+                  node
+                );
+              }}
+            >
+              {isActor ? (
+                /*
+                 * CENTRAL ACTOR
+                 */
+                <div
+                  className="relative flex h-[90px] w-[150px] cursor-pointer flex-col items-center justify-center rounded-xl border-2"
+                  style={{
+                    borderColor:
+                      config.color,
+
+                    background:
+                      'linear-gradient(145deg, rgba(35,12,17,.98), rgba(8,16,28,.98))',
+
+                    boxShadow:
+                      isHovered ||
+                      isSelected
+                        ? `0 0 30px ${config.glow}`
+                        : `0 0 18px ${config.glow}`,
+                  }}
+                >
+                  <div
+                    className="absolute -inset-[6px] rounded-xl border opacity-20"
+                    style={{
+                      borderColor:
+                        config.color,
+                    }}
+                  />
+
+                  <Icon
+                    className="mb-1 h-6 w-6"
+                    style={{
+                      color:
+                        config.color,
+                    }}
+                  />
+
+                  <div className="text-[12px] font-bold text-white">
+                    {node.label}
+                  </div>
+
+                  <div
+                    className="mt-1 text-[8px] font-mono uppercase tracking-wider"
+                    style={{
+                      color:
+                        config.color,
+                    }}
+                  >
+                    {node.sublabel ||
+                      'THREAT ACTOR'}
+                  </div>
+
+                  {typeof node.confidence ===
+                    'number' && (
+                    <div className="mt-1 text-[8px] font-mono text-cyan-400">
+                      CONFIDENCE{' '}
+                      {
+                        node.confidence
+                      }
+                      %
+                    </div>
+                  )}
+
+                  {node.risk >=
+                    85 && (
+                    <span className="absolute -right-1.5 -top-1.5 h-3 w-3 animate-pulse rounded-full bg-red-400" />
+                  )}
+                </div>
+              ) : (
+                /*
+                 * EVIDENCE NODE
+                 */
+                <div
+                  className="relative flex min-w-[125px] max-w-[165px] cursor-pointer items-center gap-2 rounded-lg border px-2.5 py-2"
+                  style={{
+                    borderColor:
+                      isHovered ||
+                      isSelected
+                        ? config.color
+                        : `${config.color}88`,
+
+                    background:
+                      'linear-gradient(135deg, rgba(10,20,34,.97), rgba(6,13,24,.97))',
+
+                    boxShadow:
+                      isHovered ||
+                      isSelected
+                        ? `0 0 20px ${config.glow}`
+                        : '0 5px 15px rgba(0,0,0,.3)',
+                  }}
+                >
+                  <div
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border"
+                    style={{
+                      borderColor:
+                        `${config.color}88`,
+                      background:
+                        `${config.color}12`,
+                    }}
+                  >
+                    <Icon
+                      className="h-4 w-4"
+                      style={{
+                        color:
+                          config.color,
+                      }}
+                    />
+                  </div>
+
+                  <div className="min-w-0">
+                    <div className="truncate text-[9px] font-semibold text-white">
+                      {node.label}
+                    </div>
+
+                    {node.sublabel && (
+                      <div
+                        className="truncate text-[7px] font-mono uppercase"
+                        style={{
+                          color:
+                            config.color,
+                        }}
+                      >
+                        {
+                          node.sublabel
+                        }
+                      </div>
+                    )}
+
+                    {typeof node.confidence ===
+                      'number' && (
+                      <div className="mt-0.5 text-[7px] font-mono text-cyan-400">
+                        CONF{' '}
+                        {
+                          node.confidence
+                        }
+                        %
+                      </div>
+                    )}
+                  </div>
+
+                  {node.risk >=
+                    85 && (
+                    <span className="absolute -right-1 -top-1 h-2.5 w-2.5 animate-pulse rounded-full bg-red-400" />
+                  )}
+                </div>
+              )}
+
+              {/* Hover connection count */}
+              {isHovered &&
+                connectedLinks.length >
+                  0 && (
+                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded border border-cyan-800 bg-[#07111f] px-2 py-1 text-[8px] font-mono text-cyan-300">
+                    {
+                      connectedLinks.length
+                    }{' '}
+                    CONNECTION
+                    {connectedLinks.length !==
+                    1
+                      ? 'S'
+                      : ''}
+                  </div>
+                )}
+            </motion.div>
+          );
+        }
+      )}
+
+      {/* SELECTED NODE PANEL */}
+      <AnimatePresence>
+        {selected && (
+          <motion.div
+            initial={{
+              opacity: 0,
+              x: 20,
+            }}
+            animate={{
+              opacity: 1,
+              x: 0,
+            }}
+            exit={{
+              opacity: 0,
+              x: 20,
+            }}
+            className="absolute right-3 top-3 z-20 w-72 rounded-lg border border-cyber-border-bright bg-cyber-panel p-4 shadow-glow"
+          >
+            <button
+              onClick={() =>
+                setSelected(
+                  null
+                )
+              }
+              className="absolute right-2 top-2 text-cyber-muted hover:text-cyber-text"
+            >
+              <X className="h-4 w-4" />
+            </button>
+
+            <div className="mb-3 flex items-center gap-2">
+              {(() => {
+                const Icon =
+                  entityConfig[
+                    selected.type
+                  ].icon;
+
+                return (
+                  <Icon
+                    className="h-4 w-4"
+                    style={{
+                      color:
+                        entityConfig[
+                          selected
+                            .type
+                        ]
+                          .color,
+                    }}
+                  />
+                );
+              })()}
+
+              <span className="text-xs font-mono uppercase text-cyber-muted">
+                {selected.sublabel ||
+                  selected.type}
               </span>
             </div>
-            <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2 font-mono">
-              <Share2 className="w-6 h-6 text-orange-400" />
-              <span>
-                {graphMode === 'stage1' 
-                  ? 'Multi-Identity Investigation & Relationship Graph' 
-                  : 'Real-World Entity Attribution & Provenance Knowledge Graph'}
-              </span>
-            </h1>
-          </div>
 
-          <div className="flex items-center gap-3">
-            {graphMode === 'stage1' ? (
-              <div className="flex items-center gap-2 bg-[#0D1016] border border-[#202734] px-3 py-1.5 rounded-lg font-mono text-xs text-slate-300">
-                <span className="text-slate-500">CORRELATION CONFIDENCE:</span>
-                <span className="text-orange-400 font-bold text-sm">91%</span>
-                <ConfidenceBadge band="VERY STRONG EVIDENCE" size="sm" />
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 bg-[#0D1016] border border-[#202734] px-3 py-1.5 rounded-lg font-mono text-xs text-slate-300">
-                <span className="text-slate-500">ATTRIBUTION CONFIDENCE:</span>
-                <span className="text-orange-400 font-bold text-sm">74%</span>
-                <span className="text-[10px] bg-orange-500/20 text-orange-300 font-bold px-2 py-0.5 rounded border border-orange-500/40">
-                  PROBABLE CANDIDATE
+            <h3 className="mb-3 font-mono text-sm font-semibold text-cyber-text">
+              {selected.label}
+            </h3>
+
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs">
+                <span className="text-cyber-muted">
+                  Risk Score
+                </span>
+
+                <span className="font-mono text-red-400">
+                  {
+                    selected.risk
+                  }
+                  /100
                 </span>
               </div>
-            )}
-          </div>
-        </div>
 
-        <p className="text-xs text-slate-400 leading-relaxed font-sans max-w-4xl">
-          {graphMode === 'stage1' ? (
-            'Interactive actor-relationship exploration workspace. Evaluates whether disparate digital personas across Dread, XSS, BreachForums, and Git mirrors demonstrate evidence-backed correlation to the same underlying threat actor cluster. Click any persona node to illuminate its pairwise network.'
-          ) : (
-            'Multi-hop identity-link resolution and chain-of-custody knowledge graph. Traces correlated digital personas through cryptographic keys, domain mirrors, hosting infrastructure, and corporate registries to evidence-backed real-world entity candidates. Click any link to inspect provenance, source reliability, and verification status.'
-          )}
-        </p>
-      </div>
+              <div className="flex justify-between text-xs">
+                <span className="text-cyber-muted">
+                  Confidence
+                </span>
 
-      {/* 2. Compact Graph Toolbar (Section 18 & Point 7) */}
-      <div className="bg-[#12161E] border border-[#232A36] rounded-xl p-3 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-3 font-mono text-xs">
-        {/* Left: Mode Switcher & "Why This Candidate?" Traversal Button */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <div className="flex items-center bg-[#0D1016] p-1 rounded-lg border border-[#222A38]">
-            <button
-              onClick={() => { setGraphMode('stage1'); setIsWhyCandidateActive(false); setSelectedStage2Edge(null); }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-mono font-bold transition-all ${
-                graphMode === 'stage1'
-                  ? 'bg-orange-600 text-white shadow'
-                  : 'text-slate-400 hover:text-white hover:bg-[#161C26]'
-              }`}
-            >
-              <Users className="w-3.5 h-3.5" />
-              <span>Stage 1: Personas</span>
-            </button>
-            <button
-              onClick={() => { setGraphMode('stage2'); }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-mono font-bold transition-all ${
-                graphMode === 'stage2'
-                  ? 'bg-cyan-600 text-white shadow'
-                  : 'text-slate-400 hover:text-white hover:bg-[#161C26]'
-              }`}
-            >
-              <Globe className="w-3.5 h-3.5" />
-              <span>Stage 2: Real-World Graph</span>
-            </button>
-          </div>
-
-          {graphMode === 'stage2' && (
-            <button
-              onClick={() => {
-                const nextState = !isWhyCandidateActive;
-                setIsWhyCandidateActive(nextState);
-                if (nextState) {
-                  const firstPathEdge = stage2Edges.find(e => e.id === 'e-s2-1');
-                  if (firstPathEdge) setSelectedStage2Edge(firstPathEdge);
-                }
-              }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border font-mono text-xs transition-all ${
-                isWhyCandidateActive
-                  ? 'bg-orange-500/25 text-orange-200 border-orange-500 shadow-lg shadow-orange-500/20 font-bold'
-                  : 'bg-[#161C26] text-slate-300 border-[#2A3444] hover:border-orange-500/50 hover:text-white'
-              }`}
-            >
-              <Sparkles className={`w-3.5 h-3.5 ${isWhyCandidateActive ? 'text-orange-400 animate-spin' : 'text-slate-400'}`} />
-              <span>{isWhyCandidateActive ? 'ACTIVE: CANDIDATE PATH (ARUN MEHTA)' : 'WHY THIS CANDIDATE? (ARUN MEHTA)'}</span>
-            </button>
-          )}
-
-          {graphMode === 'stage1' && (
-            <div className="relative flex-1 min-w-[200px]">
-              <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search persona handle..."
-                className="w-full bg-[#0D1016] border border-[#222A38] focus:border-orange-500 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none transition-colors"
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Right: Graph Zoom Controls (Section 13) */}
-        <div className="flex items-center gap-1.5 self-end md:self-auto">
-          <button
-            onClick={handleZoomOut}
-            className="px-2.5 py-1.5 rounded bg-[#161C26] hover:bg-[#202736] border border-[#263040] text-slate-200 transition-colors"
-            title="Zoom Out"
-          >
-            <ZoomOut className="w-3.5 h-3.5" />
-          </button>
-
-          <button
-            onClick={handleZoom100}
-            className="px-2.5 py-1.5 rounded bg-[#161C26] hover:bg-[#202736] border border-[#263040] text-slate-200 transition-colors font-mono text-[11px]"
-            title="Reset Zoom to 100%"
-          >
-            {zoomLevel}%
-          </button>
-
-          <button
-            onClick={handleZoomIn}
-            className="px-2.5 py-1.5 rounded bg-[#161C26] hover:bg-[#202736] border border-[#263040] text-slate-200 transition-colors"
-            title="Zoom In"
-          >
-            <ZoomIn className="w-3.5 h-3.5" />
-          </button>
-
-          <div className="h-4 w-px bg-slate-800 mx-1" />
-
-          <button
-            onClick={handleFit}
-            className="flex items-center gap-1 px-3 py-1.5 rounded bg-[#161C26] hover:bg-[#202736] border border-[#263040] text-slate-200 transition-colors text-[11px]"
-            title="Fit Graph in Viewport"
-          >
-            <Maximize2 className="w-3 h-3 text-orange-400" />
-            <span>Fit Graph</span>
-          </button>
-
-          <button
-            onClick={handleReset}
-            className="flex items-center gap-1 px-3 py-1.5 rounded bg-[#161C26] hover:bg-[#202736] border border-[#263040] text-slate-200 transition-colors text-[11px]"
-            title="Reset View"
-          >
-            <RotateCcw className="w-3 h-3 text-emerald-400" />
-            <span>Reset</span>
-          </button>
-        </div>
-      </div>
-
-      {/* 3. Main Graph Canvas & Selected Identity Panel (Grid Layout) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* GRAPH CANVAS: Fixed Controlled Viewport Height (Section 12) */}
-        <div className="lg:col-span-8 bg-[#0B0E14] border border-[#232A36] rounded-xl overflow-hidden shadow-2xl relative flex flex-col h-[540px]">
-          {/* Top Canvas Bar: Active Mode Banner */}
-          <div className="px-4 py-2.5 bg-[#0F131C] border-b border-[#1E2532] flex items-center justify-between font-mono text-xs z-10 flex-shrink-0">
-            {graphMode === 'stage1' ? (
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
-                <span className="text-slate-400">FOCAL DIGITAL IDENTITY:</span>
-                <strong className="text-white bg-[#161C27] px-2 py-0.5 rounded border border-orange-500/40 text-orange-400">
-                  @{focalIdentity.username}
-                </strong>
+                <span className="font-mono text-cyan-400">
+                  {
+                    selected.confidence
+                  }
+                  %
+                </span>
               </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                <span className="text-slate-400">STAGE 2 KNOWLEDGE GRAPH:</span>
-                <strong className="text-white bg-[#161C27] px-2 py-0.5 rounded border border-cyan-500/40 text-cyan-300">
-                  DarkWolf Cluster → Entity Candidates
-                </strong>
-                {isWhyCandidateActive && (
-                  <span className="text-[10px] bg-orange-500/20 text-orange-300 px-2 py-0.5 rounded border border-orange-500/40 font-bold hidden sm:inline">
-                    PATH ACTIVE: ARUN MEHTA (74%)
-                  </span>
+
+              {selected.properties &&
+                Object.entries(
+                  selected.properties
+                ).map(
+                  ([
+                    key,
+                    value,
+                  ]) => (
+                    <div
+                      key={key}
+                      className="flex justify-between gap-3 text-xs"
+                    >
+                      <span className="text-cyber-muted">
+                        {key}
+                      </span>
+
+                      <span className="max-w-[160px] truncate text-right font-mono text-cyber-text">
+                        {String(
+                          value
+                        )}
+                      </span>
+                    </div>
+                  )
                 )}
+            </div>
+
+            <div className="mt-3 border-t border-cyber-border pt-3">
+              <div className="mb-1 text-[10px] font-mono uppercase text-cyber-muted">
+                Connected Links
               </div>
-            )}
-            <span className="text-[11px] text-slate-500 hidden sm:inline">
-              {graphMode === 'stage1'
-                ? 'Click any node to shift focus • Click edge for pairwise analysis'
-                : 'Click any edge to inspect provenance & reliability • Click nodes to view entity'}
+
+              {links
+                .filter(
+                  (link) =>
+                    link.source ===
+                      selected.id ||
+                    link.target ===
+                      selected.id
+                )
+                .map(
+                  (
+                    link,
+                    index
+                  ) => (
+                    <div
+                      key={
+                        index
+                      }
+                      className="flex justify-between py-0.5 text-[10px] text-cyber-text"
+                    >
+                      <span>
+                        {link.label ||
+                          'Relationship'}
+                      </span>
+
+                      <span className="font-mono text-cyan-400">
+                        {
+                          link.confidence
+                        }
+                        %
+                      </span>
+                    </div>
+                  )
+                )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* FOCAL IDENTITY */}
+      {focalNode && (
+        <div className="absolute left-3 top-3 z-10 rounded border border-slate-700 bg-[#07111f]/90 px-3 py-1.5 backdrop-blur">
+          <div className="text-[8px] font-mono uppercase tracking-widest text-slate-500">
+            FOCAL DIGITAL IDENTITY
+          </div>
+
+          <div className="text-[10px] font-semibold text-white">
+            {
+              focalNode.label
+            }
+          </div>
+        </div>
+      )}
+
+      {/* STATUS */}
+      <div className="absolute bottom-3 left-3 z-10 rounded-md border border-slate-800 bg-[#07111f]/90 px-3 py-2 backdrop-blur">
+        <div className="flex items-center gap-3 text-[8px] font-mono">
+          <span className="text-slate-500">
+            NODES{' '}
+            <span className="text-cyan-400">
+              {nodes.length}
             </span>
-          </div>
+          </span>
 
-          {/* Cytoscape Viewport Container: Does not shift or reflow on page scroll */}
-          <div className="flex-1 w-full h-full relative">
-            <div ref={containerRef} className="w-full h-full" />
+          <span className="text-slate-500">
+            LINKS{' '}
+            <span className="text-cyan-400">
+              {links.length}
+            </span>
+          </span>
 
-            {/* Bottom-left Mini Legend */}
-            <div className="absolute bottom-3 left-3 bg-[#0D1016]/95 backdrop-blur-md border border-[#202734] rounded-lg p-2.5 font-mono text-[10px] space-y-1 text-slate-400 pointer-events-none shadow-lg z-10">
-              {graphMode === 'stage1' ? (
-                <>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded bg-orange-600 border border-orange-400" />
-                    <span className="text-slate-300">Selected / Focal Persona</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded bg-[#181E29] border border-amber-400" />
-                    <span className="text-slate-300">Evidence-Connected Persona</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-0.5 bg-orange-500" />
-                    <span className="text-slate-300">Data-Backed Evidence Edge</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded bg-slate-800 opacity-30" />
-                    <span className="text-slate-500">Subdued Unrelated Persona</span>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded bg-[#111927] border border-blue-500" />
-                    <span className="text-slate-300">Digital Persona</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded bg-[#1E1428] border border-purple-500" />
-                    <span className="text-slate-300">Technical Anchor (PGP)</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded bg-[#0C1E24] border border-cyan-500" />
-                    <span className="text-slate-300">Clear-web Domain Gateway</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded bg-[#0C2018] border border-emerald-500" />
-                    <span className="text-slate-300">Organization / Corporate</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded bg-[#281308] border border-orange-500" />
-                    <span className="text-orange-300 font-bold">Real-World Entity Candidate</span>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
+          <span className="text-green-400">
+            ● LIVE
+          </span>
         </div>
+      </div>
 
-        {/* RIGHT PANEL: STAGE 1 IDENTITY OR STAGE 2 PROVENANCE INSPECTOR */}
-        <div className="lg:col-span-4 bg-[#12161E] border border-[#232A36] rounded-xl p-5 shadow-xl flex flex-col justify-between space-y-4">
-          {graphMode === 'stage2' ? (
-            selectedStage2Edge ? (
-              /* Stage 2 Selected Edge Provenance Inspector */
-              <div className="space-y-4 font-mono text-xs">
-                <div className="flex items-center justify-between pb-3 border-b border-[#1E2430]">
-                  <div className="flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-cyan-400" />
-                    <h3 className="font-bold text-white uppercase tracking-wider">
-                      EDGE PROVENANCE INSPECTOR
-                    </h3>
-                  </div>
-                  <span className="text-[10px] bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 px-1.5 py-0.5 rounded font-bold">
-                    {selectedStage2Edge.confidence}% CONFIDENCE
-                  </span>
-                </div>
-
-                <div className="bg-[#0D1016] border border-[#1E2430] rounded-xl p-4 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] uppercase text-slate-500 font-bold">RELATIONSHIP LINK</span>
-                    <span className="text-[10px] font-mono text-cyan-400 bg-cyan-950/40 px-1.5 py-0.5 rounded border border-cyan-800/40">
-                      {selectedStage2Edge.id}
-                    </span>
-                  </div>
-                  <div className="text-sm font-bold text-white tracking-wide">
-                    {selectedStage2Edge.label}
-                  </div>
-                  <div className="flex items-center gap-2 text-[11px] text-slate-300 font-mono">
-                    <span className="text-orange-400 font-bold">{selectedStage2Edge.source}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-slate-600" />
-                    <span className="text-emerald-400 font-bold">{selectedStage2Edge.target}</span>
-                  </div>
-
-                  <div className="pt-2 border-t border-[#181D26] space-y-2">
-                    <div className="flex justify-between items-center text-[11px]">
-                      <span className="text-slate-500">Source Reliability:</span>
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
-                        selectedStage2Edge.sourceReliability === 'A'
-                          ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                          : 'bg-blue-500/10 text-blue-400 border-blue-500/30'
-                      }`}>
-                        GRADE {selectedStage2Edge.sourceReliability} [{selectedStage2Edge.sourceReliability === 'A' ? 'Completely Reliable' : 'Usually Reliable'}]
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between items-center text-[11px]">
-                      <span className="text-slate-500">Verification Status:</span>
-                      <span className="text-emerald-400 font-bold flex items-center gap-1">
-                        <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                        <span>{selectedStage2Edge.verificationStatus}</span>
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between items-center text-[11px]">
-                      <span className="text-slate-500">Observed Timestamp:</span>
-                      <span className="text-slate-300">{selectedStage2Edge.timestamp}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Why this link exists */}
-                <div className="space-y-1.5">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                    WHY THIS LINK EXISTS:
-                  </span>
-                  <div className="p-3 bg-[#0D1016] border border-[#1E2430] rounded-lg text-slate-200 font-sans text-xs leading-relaxed">
-                    {selectedStage2Edge.why}
-                  </div>
-                </div>
-
-                {/* Evidence Source */}
-                <div className="space-y-1.5">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                    EVIDENCE PROVENANCE & CUSTODY:
-                  </span>
-                  <div className="p-2.5 bg-[#0D1016] border border-[#1E2430] rounded-lg text-slate-300 font-mono text-[11px] flex items-center justify-between">
-                    <span>{selectedStage2Edge.evidenceSource}</span>
-                    <ExternalLink className="w-3 h-3 text-slate-500" />
-                  </div>
-                </div>
-
-                {selectedStage2Edge.isInCandidatePath && (
-                  <div className="p-2.5 bg-orange-500/10 border border-orange-500/30 rounded-lg text-[11px] text-orange-300 font-sans flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-orange-400 flex-shrink-0" />
-                    <span>This hop forms part of the primary evidence chain to <strong>Candidate A: Arun Mehta (74%)</strong>.</span>
-                  </div>
-                )}
-
-                <button
-                  onClick={() => setSelectedStage2Edge(null)}
-                  className="w-full py-2 rounded-lg bg-[#161C26] hover:bg-[#202736] border border-[#263040] text-slate-300 text-xs font-mono transition-colors"
-                >
-                  ← Deselect Edge & View Candidate Summary
-                </button>
-              </div>
-            ) : (
-              /* Stage 2 Candidate Overview & Traversal Summary */
-              <div className="space-y-4 font-mono text-xs">
-                <div className="flex items-center justify-between pb-3 border-b border-[#1E2430]">
-                  <div className="flex items-center gap-2">
-                    <Globe className="w-4 h-4 text-orange-400" />
-                    <h3 className="font-bold text-white uppercase tracking-wider">
-                      STAGE 2 ENTITY RESOLUTION
-                    </h3>
-                  </div>
-                  <span className="text-[10px] bg-orange-500/10 text-orange-400 border border-orange-500/30 px-1.5 py-0.5 rounded font-bold">
-                    74% LEAD CONFIDENCE
-                  </span>
-                </div>
-
-                {/* Lead Candidate Badge */}
-                <div className="bg-[#0D1016] border border-[#1E2430] rounded-xl p-4 space-y-3">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <div className="text-sm font-bold text-white">
-                        Arun Mehta
-                      </div>
-                      <div className="text-[10px] text-orange-400 font-mono mt-0.5">
-                        FICTIONAL DEMO ENTITY // LEAD CANDIDATE
-                      </div>
-                      <div className="text-[10px] text-slate-400 mt-1 font-sans">
-                        Managing Director & Shareholder (Vector Systems Ltd.)
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-2xl font-black text-orange-400">74%</span>
-                      <div className="text-[9px] text-slate-500 uppercase font-mono">Attribution</div>
-                    </div>
-                  </div>
-
-                  <div className="pt-2 border-t border-[#181D26] space-y-1.5 text-[11px]">
-                    <div className="flex justify-between">
-                      <span className="text-slate-500">Corporate Shell:</span>
-                      <span className="text-slate-200">Vector Systems Ltd. (UK #REG-99104)</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-500">Root Corroboration:</span>
-                      <span className="text-emerald-400 font-bold">6 Independent Feeds</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-500">Evidentiary Hops:</span>
-                      <span className="text-white font-bold">4 Verified Hops</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 5-Hop Trail to Inspect */}
-                <div className="space-y-2">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                    CLICK TO INSPECT HOP PROVENANCE:
-                  </span>
-                  <div className="space-y-1.5">
-                    {stage2Edges.filter(e => e.isInCandidatePath).map((edge, idx) => (
-                      <button
-                        key={edge.id}
-                        onClick={() => setSelectedStage2Edge(edge)}
-                        className="w-full flex items-center justify-between p-2 rounded-lg bg-[#0D1016] hover:bg-[#161C26] border border-[#1E2430] hover:border-orange-500/40 text-left transition-colors text-[11px] group"
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="w-4 h-4 rounded bg-[#1A2230] text-slate-400 flex items-center justify-center text-[10px] font-bold group-hover:text-orange-400">
-                            {idx + 1}
-                          </span>
-                          <div>
-                            <div className="text-slate-200 font-bold">{edge.label}</div>
-                            <div className="text-[10px] text-slate-500 truncate max-w-[160px]">{edge.evidenceSource.split(' ')[0]}</div>
-                          </div>
-                        </div>
-                        <span className="text-orange-400 font-bold">{edge.confidence}%</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => setIsWhyCandidateActive(!isWhyCandidateActive)}
-                  className="w-full py-2.5 rounded-lg bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/30 hover:border-orange-500 text-orange-300 font-bold text-xs flex items-center justify-center gap-2 transition-all"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-orange-400" />
-                  <span>{isWhyCandidateActive ? 'Reset Graph Highlight' : 'Illuminate Attribution Chain'}</span>
-                </button>
+      {/* LEGEND */}
+      <div className="absolute bottom-3 right-3 z-10 flex max-w-[60%] flex-wrap gap-x-3 gap-y-1.5 rounded-md border border-slate-800 bg-[#07111f]/90 px-3 py-2 backdrop-blur">
+        {Object.entries(
+          entityConfig
+        )
+          .filter(
+            ([type]) =>
+              nodes.some(
+                (node) =>
+                  node.type ===
+                  type
+              )
+          )
+          .map(
+            ([
+              type,
+              config,
+            ]) => (
+              <div
+                key={type}
+                className="flex items-center gap-1 text-[8px] font-mono uppercase text-slate-500"
+              >
+                <span
+                  className="h-2 w-2 rounded-full"
+                  style={{
+                    background:
+                      config.color,
+                    boxShadow: `0 0 5px ${config.glow}`,
+                  }}
+                />
+                {type}
               </div>
             )
-          ) : (
-            /* Stage 1 Existing Selected Digital Identity */
-            <div className="space-y-4">
-              {/* Header */}
-              <div className="flex items-center justify-between pb-3 border-b border-[#1E2430]">
-                <div className="flex items-center gap-2">
-                  <User className="w-4 h-4 text-orange-400" />
-                  <h3 className="font-mono text-xs font-bold text-white uppercase tracking-wider">
-                    SELECTED DIGITAL IDENTITY
-                  </h3>
-                </div>
-                <span className="text-[10px] font-mono bg-orange-500/10 text-orange-400 border border-orange-500/30 px-1.5 py-0.5 rounded">
-                  FOCAL NODE
-                </span>
-              </div>
-
-              {/* Profile Summary Card */}
-              <div className="bg-[#0D1016] border border-[#1E2430] rounded-xl p-4 space-y-3 font-mono text-xs">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <div className="text-base font-bold text-white tracking-wide">
-                      @{focalIdentity.username}
-                    </div>
-                    <div className="text-[11px] text-slate-400 font-sans mt-0.5">
-                      {focalIdentity.platform}
-                    </div>
-                  </div>
-                  <div className="w-8 h-8 rounded-lg bg-orange-500/20 border border-orange-500/40 text-orange-400 flex items-center justify-center font-bold text-sm">
-                    {focalIdentity.avatarLetter}
-                  </div>
-                </div>
-
-                <div className="space-y-1.5 pt-2 border-t border-[#181D26] text-[11px]">
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Known Aliases:</span>
-                    <span className="text-slate-200 font-sans">{focalIdentity.aliases.join(', ')}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Actor Cluster:</span>
-                    <span className="text-orange-400 font-semibold">{focalIdentity.cluster}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Evidence Strength:</span>
-                    <span className="text-emerald-400 font-bold">{focalIdentity.evidenceStrength}%</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Connected Identities:</span>
-                    <span className="text-white font-bold">{connectedIdentitiesToFocal.length} personas</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* CONNECTED IDENTITIES LIST (Section 8 Prompt Mandated) */}
-              <div className="space-y-2">
-                <span className="text-[11px] font-mono uppercase text-slate-400 font-bold tracking-wider block">
-                  CONNECTED IDENTITIES ({connectedIdentitiesToFocal.length}):
-                </span>
-
-                {connectedIdentitiesToFocal.length > 0 ? (
-                  <div className="space-y-1.5">
-                    {connectedIdentitiesToFocal.map(conn => (
-                      <button
-                        key={conn.id}
-                        onClick={() => handleSelectFocalIdentity(conn.id)}
-                        className="w-full flex items-center justify-between p-2.5 rounded-lg bg-[#0D1016] hover:bg-[#161C26] border border-[#1E2430] hover:border-orange-500/40 text-left transition-colors font-mono text-xs group"
-                      >
-                        <div className="flex items-center gap-2">
-                          <ArrowRight className="w-3.5 h-3.5 text-orange-400 group-hover:translate-x-0.5 transition-transform" />
-                          <div>
-                            <div className="font-bold text-white">@{conn.username}</div>
-                            <div className="text-[10px] text-slate-500">{conn.platform.split(' ')[0]}</div>
-                          </div>
-                        </div>
-                        <span className="text-orange-400 font-bold text-[11px]">
-                          {conn.evidenceStrength}%
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="p-3 bg-[#0D1016] border border-[#1E2430] rounded-lg text-xs font-mono text-slate-500 italic text-center">
-                    No verified same-actor relationships linked to this persona.
-                  </div>
-                )}
-              </div>
-            </div>
           )}
-
-          <div className="p-3 bg-[#0D1016] border border-[#1A202C] rounded-lg text-[11px] text-slate-400 font-sans leading-relaxed">
-            {graphMode === 'stage2'
-              ? 'Clicking any multi-hop edge in the graph or sidebar exposes chain-of-custody metadata, source credibility ratings, and verification status.'
-              : 'Clicking any connected identity sets it as the new focal persona, re-illuminating its specific pairwise relationship web across the cluster.'}
-          </div>
-        </div>
-      </div>
-
-      {/* 4. Multi-Section Analytical Breakdown (Sections 9, 10, 11) */}
-      <div className="bg-[#12161E] border border-[#232A36] rounded-xl shadow-xl overflow-hidden">
-        {/* Navigation Tabs */}
-        <div className="flex border-b border-[#1E2430] bg-[#0E1117] font-mono text-xs overflow-x-auto">
-          {graphMode === 'stage1' ? (
-            <>
-              <button
-                onClick={() => setActiveAnalysisTab('pairwise')}
-                className={`px-5 py-3.5 flex items-center gap-2 border-b-2 font-bold transition-colors whitespace-nowrap ${
-                  activeAnalysisTab === 'pairwise'
-                    ? 'border-orange-500 text-orange-400 bg-[#12161E]'
-                    : 'border-transparent text-slate-400 hover:text-white'
-                }`}
-              >
-                <Sliders className="w-4 h-4" />
-                <span>1. Pairwise Relationship Analysis (One-to-One)</span>
-              </button>
-
-              <button
-                onClick={() => setActiveAnalysisTab('one-to-many')}
-                className={`px-5 py-3.5 flex items-center gap-2 border-b-2 font-bold transition-colors whitespace-nowrap ${
-                  activeAnalysisTab === 'one-to-many'
-                    ? 'border-orange-500 text-orange-400 bg-[#12161E]'
-                    : 'border-transparent text-slate-400 hover:text-white'
-                }`}
-              >
-                <Table className="w-4 h-4" />
-                <span>2. One-to-Many Actor Relationship Analysis</span>
-              </button>
-
-              <button
-                onClick={() => setActiveAnalysisTab('cluster')}
-                className={`px-5 py-3.5 flex items-center gap-2 border-b-2 font-bold transition-colors whitespace-nowrap ${
-                  activeAnalysisTab === 'cluster'
-                    ? 'border-orange-500 text-orange-400 bg-[#12161E]'
-                    : 'border-transparent text-slate-400 hover:text-white'
-                }`}
-              >
-                <Layers className="w-4 h-4" />
-                <span>3. Overall Actor Cluster Synthesis</span>
-              </button>
-            </>
-          ) : (
-            <>
-              <button
-                onClick={() => setStage2AnalysisTab('provenance')}
-                className={`px-5 py-3.5 flex items-center gap-2 border-b-2 font-bold transition-colors whitespace-nowrap ${
-                  stage2AnalysisTab === 'provenance'
-                    ? 'border-cyan-500 text-cyan-400 bg-[#12161E]'
-                    : 'border-transparent text-slate-400 hover:text-white'
-                }`}
-              >
-                <Share2 className="w-4 h-4" />
-                <span>1. Multi-Hop Identity-Link Registry (7 Links)</span>
-              </button>
-
-              <button
-                onClick={() => setStage2AnalysisTab('candidates')}
-                className={`px-5 py-3.5 flex items-center gap-2 border-b-2 font-bold transition-colors whitespace-nowrap ${
-                  stage2AnalysisTab === 'candidates'
-                    ? 'border-cyan-500 text-cyan-400 bg-[#12161E]'
-                    : 'border-transparent text-slate-400 hover:text-white'
-                }`}
-              >
-                <Table className="w-4 h-4" />
-                <span>2. Candidate Resolution Matrix (3 Entities)</span>
-              </button>
-
-              <button
-                onClick={() => setStage2AnalysisTab('contradictions')}
-                className={`px-5 py-3.5 flex items-center gap-2 border-b-2 font-bold transition-colors whitespace-nowrap ${
-                  stage2AnalysisTab === 'contradictions'
-                    ? 'border-cyan-500 text-cyan-400 bg-[#12161E]'
-                    : 'border-transparent text-slate-400 hover:text-white'
-                }`}
-              >
-                <AlertTriangle className="w-4 h-4 text-amber-400" />
-                <span>3. Contradiction Analysis & Temporal Conflict</span>
-              </button>
-            </>
-          )}
-        </div>
-
-        {/* STAGE 1 CONTENT */}
-        {graphMode === 'stage1' && (
-          <>
-            {/* TAB 1: PAIRWISE RELATIONSHIP ANALYSIS (Section 9 Prompt Mandated) */}
-            {activeAnalysisTab === 'pairwise' && (
-          <div className="p-6 space-y-6">
-            {/* Pair Heading & Evidence Strength */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#1E2430]">
-              <div>
-                <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500 font-bold block mb-1">
-                  STAGE 1 PAIRWISE FORENSIC INSPECTOR
-                </span>
-                <h2 className="text-lg font-bold font-mono text-white flex items-center gap-2">
-                  <span>PAIRWISE RELATIONSHIP ANALYSIS:</span>
-                  <span className="text-orange-400">
-                    @{activePairwiseData.sourceUsername} ↔ @{activePairwiseData.targetUsername}
-                  </span>
-                </h2>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <div className="text-right font-mono">
-                  <span className="text-[10px] text-slate-500 uppercase block">Evidence Strength</span>
-                  <span className="text-2xl font-black text-orange-400">
-                    {activePairwiseData.overallScore}%
-                  </span>
-                </div>
-                <ConfidenceBadge band={activePairwiseData.classification} />
-              </div>
-            </div>
-
-            {/* The Six Analysis Dimensions (Section 9 Prompt Mandated) */}
-            <div className="space-y-4 font-mono text-xs">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-[#1A202C] pb-2">
-                The Six Evidentiary Dimensions
-              </h3>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* 1. Username / Alias Similarity */}
-                <div className="bg-[#0D1016] border border-[#1E2430] rounded-xl p-4 space-y-2">
-                  <div className="flex items-center justify-between pb-1.5 border-b border-[#181D26]">
-                    <span className="font-bold text-white">1. Username / Alias Similarity</span>
-                    <span className="text-orange-400 font-bold">{activePairwiseData.signals.username.score}%</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 text-[10px] uppercase block">Evidence:</span>
-                    <p className="text-slate-300 font-sans text-[11px] leading-relaxed">
-                      {activePairwiseData.signals.username.observedPattern}
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 text-[10px] uppercase block">Assessment:</span>
-                    <p className="text-slate-400 font-sans text-[11px] leading-relaxed">
-                      {activePairwiseData.signals.username.explanation}
-                    </p>
-                  </div>
-                </div>
-
-                {/* 2. Stylometry / Writing Style */}
-                <div className="bg-[#0D1016] border border-[#1E2430] rounded-xl p-4 space-y-2">
-                  <div className="flex items-center justify-between pb-1.5 border-b border-[#181D26]">
-                    <span className="font-bold text-white">2. Stylometry / Writing Style</span>
-                    <span className="text-orange-400 font-bold">{activePairwiseData.signals.stylometry.score}%</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 text-[10px] uppercase block">Evidence:</span>
-                    <p className="text-slate-300 font-sans text-[11px] leading-relaxed">
-                      {activePairwiseData.signals.stylometry.observedPattern}
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 text-[10px] uppercase block">Assessment:</span>
-                    <p className="text-slate-400 font-sans text-[11px] leading-relaxed">
-                      {activePairwiseData.signals.stylometry.explanation}
-                    </p>
-                  </div>
-                </div>
-
-                {/* 3. Behavioural Similarity */}
-                <div className="bg-[#0D1016] border border-[#1E2430] rounded-xl p-4 space-y-2">
-                  <div className="flex items-center justify-between pb-1.5 border-b border-[#181D26]">
-                    <span className="font-bold text-white">3. Behavioural Similarity</span>
-                    <span className="text-orange-400 font-bold">{activePairwiseData.signals.behaviour.score}%</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 text-[10px] uppercase block">Evidence:</span>
-                    <p className="text-slate-300 font-sans text-[11px] leading-relaxed">
-                      {activePairwiseData.signals.behaviour.observedPattern}
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 text-[10px] uppercase block">Assessment:</span>
-                    <p className="text-slate-400 font-sans text-[11px] leading-relaxed">
-                      {activePairwiseData.signals.behaviour.explanation}
-                    </p>
-                  </div>
-                </div>
-
-                {/* 4. Temporal Activity */}
-                <div className="bg-[#0D1016] border border-[#1E2430] rounded-xl p-4 space-y-2">
-                  <div className="flex items-center justify-between pb-1.5 border-b border-[#181D26]">
-                    <span className="font-bold text-white">4. Temporal Activity</span>
-                    <span className="text-orange-400 font-bold">{activePairwiseData.signals.temporal.score}%</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 text-[10px] uppercase block">Evidence:</span>
-                    <p className="text-slate-300 font-sans text-[11px] leading-relaxed">
-                      {activePairwiseData.signals.temporal.observedPattern}
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 text-[10px] uppercase block">Assessment:</span>
-                    <p className="text-slate-400 font-sans text-[11px] leading-relaxed">
-                      {activePairwiseData.signals.temporal.explanation}
-                    </p>
-                  </div>
-                </div>
-
-                {/* 5. Technical / Digital Indicators */}
-                <div className="bg-[#0D1016] border border-[#1E2430] rounded-xl p-4 space-y-2">
-                  <div className="flex items-center justify-between pb-1.5 border-b border-[#181D26]">
-                    <span className="font-bold text-white">5. Technical / Digital Indicators</span>
-                    <span className="text-orange-400 font-bold">{activePairwiseData.signals.technical.score}%</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 text-[10px] uppercase block">Evidence:</span>
-                    <p className="text-slate-300 font-sans text-[11px] leading-relaxed">
-                      {activePairwiseData.signals.technical.observedPattern}
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 text-[10px] uppercase block">Assessment:</span>
-                    <p className="text-slate-400 font-sans text-[11px] leading-relaxed">
-                      {activePairwiseData.signals.technical.explanation}
-                    </p>
-                  </div>
-                </div>
-
-                {/* 6. Infrastructure / Relationship Evidence */}
-                <div className="bg-[#0D1016] border border-[#1E2430] rounded-xl p-4 space-y-2">
-                  <div className="flex items-center justify-between pb-1.5 border-b border-[#181D26]">
-                    <span className="font-bold text-white">6. Infrastructure / Relationship Evidence</span>
-                    <span className="text-orange-400 font-bold">92%</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 text-[10px] uppercase block">Evidence:</span>
-                    <p className="text-slate-300 font-sans text-[11px] leading-relaxed">
-                      Reverse-proxy routing relay IP 185.220.101.45 co-hosting clearweb gateway mirror darkx17-vault.is.
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 text-[10px] uppercase block">Assessment:</span>
-                    <p className="text-slate-400 font-sans text-[11px] leading-relaxed">
-                      Staging certificates and backend proxy rules confirm unified infrastructure orchestration.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Supporting, Conflicting, Unknown Triage Cards (Section 9 Prompt Mandated) */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 font-mono text-xs">
-              {/* Supporting Evidence */}
-              <div className="bg-[#09140E] border border-emerald-900/60 rounded-xl p-4 space-y-2.5">
-                <div className="flex items-center gap-1.5 text-emerald-400 font-bold text-xs uppercase">
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>SUPPORTING EVIDENCE ({activePairwiseData.supportingEvidence.length})</span>
-                </div>
-                <ul className="space-y-1.5 text-[11px] text-slate-300 font-sans">
-                  {activePairwiseData.supportingEvidence.map((ev, i) => (
-                    <li key={i} className="flex items-start gap-1.5">
-                      <span className="text-emerald-400 font-bold">✓</span>
-                      <span>{ev}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Conflicting Evidence */}
-              <div className="bg-[#170A0A] border border-red-900/60 rounded-xl p-4 space-y-2.5">
-                <div className="flex items-center gap-1.5 text-red-400 font-bold text-xs uppercase">
-                  <AlertTriangle className="w-4 h-4" />
-                  <span>CONFLICTING EVIDENCE ({activePairwiseData.conflictingEvidence.length})</span>
-                </div>
-                <ul className="space-y-1.5 text-[11px] text-slate-300 font-sans">
-                  {activePairwiseData.conflictingEvidence.map((ev, i) => (
-                    <li key={i} className="flex items-start gap-1.5">
-                      <span className="text-red-400 font-bold">✗</span>
-                      <span>{ev}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Unknown / Missing Evidence */}
-              <div className="bg-[#141007] border border-amber-900/60 rounded-xl p-4 space-y-2.5">
-                <div className="flex items-center gap-1.5 text-amber-400 font-bold text-xs uppercase">
-                  <HelpCircle className="w-4 h-4" />
-                  <span>UNKNOWN / MISSING EVIDENCE ({activePairwiseData.unknownEvidence.length})</span>
-                </div>
-                <ul className="space-y-1.5 text-[11px] text-slate-300 font-sans">
-                  {activePairwiseData.unknownEvidence.map((ev, i) => (
-                    <li key={i} className="flex items-start gap-1.5">
-                      <span className="text-amber-400 font-bold">?</span>
-                      <span>{ev}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* TAB 2: ONE-TO-MANY ACTOR RELATIONSHIP ANALYSIS (Section 10 Prompt Mandated) */}
-        {activeAnalysisTab === 'one-to-many' && (
-          <div className="p-6 space-y-6">
-            <div className="pb-4 border-b border-[#1E2430]">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500 font-bold block mb-1">
-                MULTI-PERSONA CONVERGENCE MATRIX
-              </span>
-              <h2 className="text-lg font-bold font-mono text-white flex items-center gap-2">
-                <span>ONE-TO-MANY ACTOR RELATIONSHIP ANALYSIS</span>
-              </h2>
-              <div className="flex items-center gap-4 mt-2 font-mono text-xs text-slate-400">
-                <div>Focal Identity: <strong className="text-orange-400 font-bold">@{focalIdentity.username}</strong></div>
-                <span>|</span>
-                <div>Connected Personas: <strong className="text-white font-bold">{connectedIdentitiesToFocal.length}</strong></div>
-              </div>
-            </div>
-
-            {/* Matrix Table (Section 10 Prompt Example Format) */}
-            <div className="overflow-x-auto border border-[#1E2430] rounded-xl bg-[#0D1016]">
-              <table className="w-full text-left font-mono text-xs">
-                <thead>
-                  <tr className="bg-[#141822] text-slate-400 border-b border-[#1E2430]">
-                    <th className="p-3 font-bold text-white uppercase text-[11px]">Connected Identity</th>
-                    <th className="p-3 font-bold uppercase text-[11px]">Platform</th>
-                    <th className="p-3 font-bold uppercase text-[11px] text-center">Username</th>
-                    <th className="p-3 font-bold uppercase text-[11px] text-center">Stylometry</th>
-                    <th className="p-3 font-bold uppercase text-[11px] text-center">Behaviour</th>
-                    <th className="p-3 font-bold uppercase text-[11px] text-center">Temporal</th>
-                    <th className="p-3 font-bold uppercase text-[11px] text-center">Technical</th>
-                    <th className="p-3 font-bold uppercase text-[11px] text-center">Infrastructure</th>
-                    <th className="p-3 font-bold uppercase text-[11px] text-right">Confidence</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#1A202C]">
-                  {connectedIdentitiesToFocal.map((id) => (
-                    <tr key={id.id} className="hover:bg-[#121622] transition-colors">
-                      <td className="p-3 font-bold text-white flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-orange-400" />
-                        <span>@{id.username}</span>
-                      </td>
-                      <td className="p-3 text-slate-400 font-sans text-[11px]">{id.platform}</td>
-                      <td className="p-3 text-center text-emerald-400 font-bold">✓</td>
-                      <td className="p-3 text-center text-emerald-400 font-bold">✓</td>
-                      <td className="p-3 text-center text-emerald-400 font-bold">✓</td>
-                      <td className="p-3 text-center text-emerald-400 font-bold">✓</td>
-                      <td className="p-3 text-center text-emerald-400 font-bold">✓</td>
-                      <td className="p-3 text-center text-emerald-400 font-bold">✓</td>
-                      <td className="p-3 text-right text-orange-400 font-bold text-sm">
-                        {id.evidenceStrength}%
-                      </td>
-                    </tr>
-                  ))}
-                  {connectedIdentitiesToFocal.length === 0 && (
-                    <tr>
-                      <td colSpan={9} className="p-6 text-center text-slate-500 italic">
-                        No connected identities for the selected persona.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Narrative Pattern Analysis */}
-            <div className="bg-[#0D1016] border border-[#1E2430] rounded-xl p-5 space-y-2 text-xs font-sans text-slate-300 leading-relaxed">
-              <span className="font-mono text-xs font-bold text-orange-400 uppercase tracking-wider block">
-                Evidence Co-Occurrence Summary:
-              </span>
-              <p>
-                Cross-identity multi-vector analysis confirms that the primary focal identity <strong className="text-white font-mono">@{focalIdentity.username}</strong> exhibits persistent shared markers across all three associated personas. Specifically, cryptographic PGP key ID 0x7E4A8F2C91B4 and reverse proxy gateway 185.220.101.45 appear in 100% of the active pairwise correlations, corroborated by the idiosyncratic double-hyphen (--) delimiter habit.
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* TAB 3: OVERALL ACTOR CLUSTER ANALYSIS (Section 11 Prompt Mandated) */}
-        {activeAnalysisTab === 'cluster' && (
-          <div className="p-6 space-y-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#1E2430]">
-              <div>
-                <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500 font-bold block mb-1">
-                  MULTI-PERSONA CLUSTER DOSSIER
-                </span>
-                <h2 className="text-lg font-bold font-mono text-white flex items-center gap-2">
-                  <span>OVERALL ACTOR CLUSTER ANALYSIS:</span>
-                  <span className="text-orange-400">Actor Cluster A (TA-001)</span>
-                </h2>
-                <div className="text-xs font-mono text-slate-400 mt-1">
-                  Identities: <span className="text-slate-200">@shadow_x17, @x_shadow, @darkx17, @shadow17</span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <div className="text-right font-mono">
-                  <span className="text-[10px] text-slate-500 uppercase block">Cluster Confidence</span>
-                  <span className="text-2xl font-black text-orange-400">92%</span>
-                </div>
-                <ConfidenceBadge band="VERY STRONG EVIDENCE" />
-              </div>
-            </div>
-
-            {/* Synthesized Narrative Analysis (Section 11 Prompt Mandated) */}
-            <div className="bg-[#0D1016] border border-[#1E2430] rounded-xl p-5 space-y-4">
-              <div className="flex items-center gap-2 text-white font-mono text-xs font-bold uppercase">
-                <FileText className="w-4 h-4 text-orange-400" />
-                <span>Analytical Synthesis & Independent Corroboration</span>
-              </div>
-
-              <p className="text-xs text-slate-300 font-sans leading-relaxed">
-                The selected cluster contains four distinct digital identities operating across multiple darknet marketplaces, leak forums, and development repositories. Rather than computing an arbitrary average of isolated scores, the SPECTRA correlation engine synthesizes repeated signals and independent corroboration:
-              </p>
-
-              <div className="space-y-3 font-mono text-xs">
-                <div className="p-3 rounded-lg bg-[#141822] border border-[#202734]">
-                  <strong className="text-orange-400 block mb-1">1. Hard Cryptographic Collisions (Repeated Signals):</strong>
-                  <p className="text-slate-300 font-sans text-[11px] leading-relaxed">
-                    Identical RSA-4096 PGP key fingerprint (0x7E4A8F2C91B4) verified across Forum-X, Market-Y, Chat-Z, and Exploit.in Git repositories. CoinJoin transaction telemetry establishes co-spend inputs from common SegWit deposit address bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh.
-                  </p>
-                </div>
-
-                <div className="p-3 rounded-lg bg-[#141822] border border-[#202734]">
-                  <strong className="text-orange-400 block mb-1">2. Staging Infrastructure & Operational Precedence:</strong>
-                  <p className="text-slate-300 font-sans text-[11px] leading-relaxed">
-                    Clear-web mirror domain darkx17-vault.is and Dread paste mirrors route through the same reverse-proxy IP (185.220.101.45) hosted on Njalla / FlokiNET. Source code adjustments committed by developer persona @shadow17 precede public database release announcements by darkx17 by 4.2 hours.
-                  </p>
-                </div>
-
-                <div className="p-3 rounded-lg bg-[#141822] border border-[#202734]">
-                  <strong className="text-orange-400 block mb-1">3. Longitudinal Stylometric & Temporal Cohesion:</strong>
-                  <p className="text-slate-300 font-sans text-[11px] leading-relaxed">
-                    Double-hyphen (--) punctuation delimiter present in 100% of post samples and Git commit headers. Activity curves show synchronized diurnal windows (20:00–03:30 UTC, r = 0.88, UTC+03:00 timezone) and an identical multi-week hiatus during December holiday intervals.
-                  </p>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-[#1E2430] flex items-center justify-between text-xs font-mono text-slate-400">
-                <span>Threshold Standard: 91% &gt; 80% (Statutory Gate Cleared)</span>
-                <span className="text-emerald-400 font-bold">ELIGIBLE FOR STAGE 2 ATTRIBUTION</span>
-              </div>
-            </div>
-          </div>
-        )}
-          </>
-        )}
-
-        {/* STAGE 2 CONTENT */}
-        {graphMode === 'stage2' && (
-          <>
-            {/* TAB 1: STAGE 2 PROVENANCE REGISTRY */}
-            {stage2AnalysisTab === 'provenance' && (
-              <div className="p-6 space-y-6">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#1E2430]">
-                  <div>
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-cyan-400 font-bold block mb-1">
-                      STAGE 2 CHAIN-OF-CUSTODY REGISTRY
-                    </span>
-                    <h2 className="text-lg font-bold font-mono text-white flex items-center gap-2">
-                      <Share2 className="w-5 h-5 text-cyan-400" />
-                      <span>MULTI-HOP IDENTITY-LINK EVIDENCE TRAIL</span>
-                    </h2>
-                  </div>
-                  <div className="flex items-center gap-2 bg-[#0D1016] border border-[#202734] px-3 py-1.5 rounded-lg font-mono text-xs">
-                    <span className="text-slate-500">ATTRIBUTION LEAD:</span>
-                    <span className="text-orange-400 font-bold">Arun Mehta (74%)</span>
-                  </div>
-                </div>
-
-                <div className="overflow-x-auto rounded-xl border border-[#1E2430]">
-                  <table className="w-full text-left font-mono text-xs">
-                    <thead className="bg-[#0E121A] text-slate-400 border-b border-[#1E2430]">
-                      <tr>
-                        <th className="p-3">HOP ID</th>
-                        <th className="p-3">SOURCE ENTITY</th>
-                        <th className="p-3">TARGET ENTITY</th>
-                        <th className="p-3">RELATIONSHIP LINK</th>
-                        <th className="p-3 text-center">CONFIDENCE</th>
-                        <th className="p-3 text-center">RELIABILITY</th>
-                        <th className="p-3">STATUS</th>
-                        <th className="p-3 text-right">ACTION</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[#1A202C] bg-[#0A0D14]">
-                      {stage2Edges.map(edge => (
-                        <tr 
-                          key={edge.id}
-                          className={`hover:bg-[#121620] transition-colors ${
-                            selectedStage2Edge?.id === edge.id ? 'bg-[#182030]' : ''
-                          }`}
-                        >
-                          <td className="p-3 text-cyan-400 font-bold">{edge.id}</td>
-                          <td className="p-3 text-white font-bold">{edge.source}</td>
-                          <td className="p-3 text-slate-300">{edge.target}</td>
-                          <td className="p-3 text-slate-200">
-                            <div>{edge.label}</div>
-                            <div className="text-[10px] text-slate-500 font-sans">{edge.why}</div>
-                          </td>
-                          <td className="p-3 text-center">
-                            <span className="font-bold text-orange-400">{edge.confidence}%</span>
-                          </td>
-                          <td className="p-3 text-center">
-                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
-                              edge.sourceReliability === 'A' 
-                                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                                : 'bg-blue-500/10 text-blue-400 border-blue-500/30'
-                            }`}>
-                              GRADE {edge.sourceReliability}
-                            </span>
-                          </td>
-                          <td className="p-3">
-                            <span className={`text-[11px] font-bold flex items-center gap-1 ${
-                              edge.verificationStatus.includes('Cross-source') 
-                                ? 'text-emerald-400' 
-                                : 'text-amber-400'
-                            }`}>
-                              {edge.verificationStatus.includes('Cross-source') ? (
-                                <CheckCircle2 className="w-3.5 h-3.5" />
-                              ) : (
-                                <AlertTriangle className="w-3.5 h-3.5" />
-                              )}
-                              <span>{edge.verificationStatus}</span>
-                            </span>
-                          </td>
-                          <td className="p-3 text-right">
-                            <button
-                              onClick={() => {
-                                setSelectedStage2Edge(edge);
-                                window.scrollTo({ top: 300, behavior: 'smooth' });
-                              }}
-                              className="px-2.5 py-1 rounded bg-[#161C26] hover:bg-[#222B3A] border border-[#263040] text-slate-200 text-[11px] transition-colors"
-                            >
-                              Inspect Hop
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="p-4 bg-[#0D1016] border border-[#1E2430] rounded-xl flex items-start gap-3 text-xs font-sans text-slate-300">
-                  <ShieldCheck className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="text-white font-mono block mb-1">Chain-of-Custody Verification Principle:</strong>
-                    Each identity link represents an independently logged evidentiary record with verifiable cryptographic or documentary proof. Candidate A (Arun Mehta) is supported by a 4-hop chain with 6 independent corroborating sources, satisfying the threshold for formal investigative escalation.
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 2: CANDIDATE RESOLUTION MATRIX */}
-            {stage2AnalysisTab === 'candidates' && (
-              <div className="p-6 space-y-6">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#1E2430]">
-                  <div>
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-cyan-400 font-bold block mb-1">
-                      REAL-WORLD ENTITY CANDIDATES
-                    </span>
-                    <h2 className="text-lg font-bold font-mono text-white flex items-center gap-2">
-                      <Table className="w-5 h-5 text-cyan-400" />
-                      <span>CANDIDATE RESOLUTION & ATTRIBUTION MATRIX</span>
-                    </h2>
-                  </div>
-                  <span className="text-xs font-mono text-slate-400">
-                    EVALUATED CANDIDATES: <strong className="text-white">3 ENTITIES</strong>
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 font-mono text-xs">
-                  {/* Candidate A */}
-                  <div className="bg-[#0D1016] border-2 border-orange-500/60 rounded-xl p-5 space-y-4 relative shadow-xl shadow-orange-500/5">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] bg-orange-500/20 text-orange-400 font-bold px-2 py-0.5 rounded border border-orange-500/40">
-                        PRIMARY LEAD
-                      </span>
-                      <span className="text-xl font-black text-orange-400">74%</span>
-                    </div>
-
-                    <div>
-                      <h3 className="text-base font-bold text-white">Arun Mehta</h3>
-                      <div className="text-[10px] text-orange-400 font-mono">FICTIONAL DEMO ENTITY</div>
-                      <p className="text-slate-400 font-sans text-xs mt-1">
-                        Managing Director & 100% Shareholder, Vector Systems Ltd. (UK #REG-99104).
-                      </p>
-                    </div>
-
-                    <div className="space-y-2 pt-2 border-t border-[#1E2430] text-[11px]">
-                      <div>
-                        <span className="text-slate-500 block">Identified Via:</span>
-                        <span className="text-slate-200">PGP Key 0x7E4A8F2C91B4 → Git Moniker x17_dev → UK Companies House</span>
-                      </div>
-                      <div>
-                        <span className="text-slate-500 block">Independent Feeds:</span>
-                        <span className="text-emerald-400 font-bold">6 Distinct Roots (11 Derived)</span>
-                      </div>
-                      <div>
-                        <span className="text-slate-500 block">Evidentiary Gaps:</span>
-                        <span className="text-amber-400 font-sans text-[11px]">Physical keystroke attribution pending lawful device seizure; remote VPN jump observed.</span>
-                      </div>
-                    </div>
-
-                    <div className="p-2.5 bg-[#141A24] rounded-lg border border-[#202736] text-[11px] font-sans text-slate-300">
-                      Recommendation: Issue formal evidentiary preservation request under statutory attribution protocols.
-                    </div>
-                  </div>
-
-                  {/* Candidate B */}
-                  <div className="bg-[#0D1016] border border-[#1E2430] rounded-xl p-5 space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] bg-slate-800 text-slate-400 font-bold px-2 py-0.5 rounded border border-slate-700">
-                        SECONDARY LEAD
-                      </span>
-                      <span className="text-xl font-black text-slate-400">58%</span>
-                    </div>
-
-                    <div>
-                      <h3 className="text-base font-bold text-white">Rohan Verma</h3>
-                      <div className="text-[10px] text-slate-500 font-mono">FICTIONAL DEMO ENTITY</div>
-                      <p className="text-slate-400 font-sans text-xs mt-1">
-                        Systems Administrator, Vortex Cloud AS49210 (Frankfurt colo facility).
-                      </p>
-                    </div>
-
-                    <div className="space-y-2 pt-2 border-t border-[#1E2430] text-[11px]">
-                      <div>
-                        <span className="text-slate-500 block">Identified Via:</span>
-                        <span className="text-slate-200">Proxy Node 185.220.101.45 → Support Ticket #VORTEX-8812</span>
-                      </div>
-                      <div>
-                        <span className="text-slate-500 block">Independent Feeds:</span>
-                        <span className="text-slate-300">1 Single Feed (Hosting Provider)</span>
-                      </div>
-                      <div>
-                        <span className="text-slate-500 block">Evidentiary Gaps:</span>
-                        <span className="text-amber-400 font-sans text-[11px]">Zero stylometric, cryptographic, or monetary overlap with DarkWolf personas.</span>
-                      </div>
-                    </div>
-
-                    <div className="p-2.5 bg-[#141A24] rounded-lg border border-[#202736] text-[11px] font-sans text-slate-400">
-                      Assessment: Likely technical systems contractor or hosting provider collateral; insufficient attribution basis.
-                    </div>
-                  </div>
-
-                  {/* Candidate C */}
-                  <div className="bg-[#0D1016] border border-[#1E2430] rounded-xl p-5 space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded border border-emerald-500/40">
-                        INFRASTRUCTURE UMBRELLA
-                      </span>
-                      <span className="text-xl font-black text-emerald-400">62%</span>
-                    </div>
-
-                    <div>
-                      <h3 className="text-base font-bold text-white">Vector Systems Ltd.</h3>
-                      <div className="text-[10px] text-emerald-400 font-mono">FICTIONAL DEMO ORGANIZATION</div>
-                      <p className="text-slate-400 font-sans text-xs mt-1">
-                        Commercial software consultancy registered in London, UK (#REG-99104).
-                      </p>
-                    </div>
-
-                    <div className="space-y-2 pt-2 border-t border-[#1E2430] text-[11px]">
-                      <div>
-                        <span className="text-slate-500 block">Identified Via:</span>
-                        <span className="text-slate-200">darkx17-vault.is ICANN WHOIS Commercial Billing Profile</span>
-                      </div>
-                      <div>
-                        <span className="text-slate-500 block">Independent Feeds:</span>
-                        <span className="text-slate-300">2 Independent Feeds (Registrar + Registry)</span>
-                      </div>
-                      <div>
-                        <span className="text-slate-500 block">Evidentiary Gaps:</span>
-                        <span className="text-amber-400 font-sans text-[11px]">Entity is a corporate persona; individual keyboard culpability requires director-level resolution.</span>
-                      </div>
-                    </div>
-
-                    <div className="p-2.5 bg-[#141A24] rounded-lg border border-[#202736] text-[11px] font-sans text-slate-300">
-                      Assessment: Confirmed operational corporate vehicle used for domain gateway billing and server procurement.
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 3: CONTRADICTIONS & TEMPORAL CONFLICT */}
-            {stage2AnalysisTab === 'contradictions' && (
-              <div className="p-6 space-y-6">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#1E2430]">
-                  <div>
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold block mb-1">
-                      CONTRADICTION & NEGATIVE HYPOTHESIS TESTING
-                    </span>
-                    <h2 className="text-lg font-bold font-mono text-white flex items-center gap-2">
-                      <AlertTriangle className="w-5 h-5 text-amber-400" />
-                      <span>INVESTIGATIVE SAFEGUARDS & CONFLICT AUDIT</span>
-                    </h2>
-                  </div>
-                  <span className="text-xs font-mono text-slate-400">
-                    TESTED HYPOTHESES: <strong className="text-white">10 ALTERNATIVES</strong>
-                  </span>
-                </div>
-
-                {/* Critical Conflict Banner */}
-                <div className="bg-red-500/10 border-2 border-red-500/50 rounded-xl p-5 space-y-3 font-mono">
-                  <div className="flex items-center gap-2 text-red-400 font-bold text-xs uppercase tracking-wider">
-                    <AlertTriangle className="w-4 h-4" />
-                    <span>HIGH-SEVERITY TEMPORAL IMPOSSIBILITY DETECTED (65-SECOND SPREAD)</span>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-sans text-slate-300">
-                    <div className="p-3 bg-[#0D1016] rounded-lg border border-red-500/30">
-                      <span className="text-slate-400 block font-mono text-[10px]">EVENT A (FORUM LOGIN):</span>
-                      <strong className="text-white font-mono">14:32:10 UTC — Bengaluru, India (UTC+05:30)</strong>
-                      <p className="text-slate-400 text-[11px] mt-1">Direct ISP session telemetry observed on forum credentials portal.</p>
-                    </div>
-                    <div className="p-3 bg-[#0D1016] rounded-lg border border-red-500/30">
-                      <span className="text-slate-400 block font-mono text-[10px]">EVENT B (GIT COMMIT PUSH):</span>
-                      <strong className="text-white font-mono">14:33:15 UTC — Frankfurt, Germany (UTC+01:00)</strong>
-                      <p className="text-slate-400 text-[11px] mt-1">SSH git commit push signed by subkey through Frankfurt proxy datacenter.</p>
-                    </div>
-                  </div>
-                  <div className="p-3 bg-[#0D1016] rounded-lg border border-[#1E2430] text-[11px] text-amber-300 font-sans">
-                    <strong>Forensic Deductive Finding:</strong> Physical travel across 6,800 kilometers in 65 seconds is physically impossible. This conclusively proves the actor was operating through a remote proxy node or an automated deployment script, protecting investigators against naive single-location false attribution.
-                  </div>
-                </div>
-
-                {/* 4 Tested Hypotheses */}
-                <div className="space-y-3 font-mono text-xs">
-                  <div className="p-4 bg-[#0D1016] border border-[#1E2430] rounded-xl space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-white">Hypothesis 1: Stolen / Leaked Cryptographic PGP Key</span>
-                      <span className="text-emerald-400 font-bold">REBUTTED (Low Probability)</span>
-                    </div>
-                    <p className="text-slate-300 font-sans text-xs leading-relaxed">
-                      Continuous, unbroken 18-month signature timeline without key revocation certificate; consistent commit styling and PGP subkey generation habits corroborate single authentic owner.
-                    </p>
-                  </div>
-
-                  <div className="p-4 bg-[#0D1016] border border-[#1E2430] rounded-xl space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-white">Hypothesis 2: Multi-Operator Threat Group Cell</span>
-                      <span className="text-orange-400 font-bold">PARTIALLY PLAUSIBLE (Dual Setup)</span>
-                    </div>
-                    <p className="text-slate-300 font-sans text-xs leading-relaxed">
-                      While distinct browser TLS JA3 fingerprints suggest potential dual-workstation operations, identical double-hyphen (--) delimiter habits and synchronized diurnal windows (r = 0.88) confirm unified core operational leadership.
-                    </p>
-                  </div>
-
-                  <div className="p-4 bg-[#0D1016] border border-[#1E2430] rounded-xl space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-white">Hypothesis 3: Cloud Infrastructure Compromise (Innocent Proxy)</span>
-                      <span className="text-emerald-400 font-bold">REBUTTED (Low Probability)</span>
-                    </div>
-                    <p className="text-slate-300 font-sans text-xs leading-relaxed">
-                      Vector Systems Ltd. maintained uninterrupted corporate card payments and recurring registrar renewals for darkx17-vault.is over 9 consecutive months, inconsistent with an unmonitored transient hijack.
-                    </p>
-                  </div>
-
-                  <div className="p-4 bg-[#0D1016] border border-[#1E2430] rounded-xl space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-white">Hypothesis 4: Deliberate False Flag / Frame-Up</span>
-                      <span className="text-emerald-400 font-bold">REBUTTED (Low Probability)</span>
-                    </div>
-                    <p className="text-slate-300 font-sans text-xs leading-relaxed">
-                      PGP subkey cross-signing and developer commit author timestamps precede the first public darknet leak activities by 6 months, ruling out retroactive framing by a hostile party.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="p-4 bg-[#0D1016] border border-[#1E2430] rounded-xl flex items-center justify-between text-xs font-mono text-slate-400">
-                  <span>Evidentiary Standard: Synthesized Confidence 74% &lt; 90% (Subpoena Standard Cleared)</span>
-                  <span className="text-orange-400 font-bold">PROBABLE CANDIDATE FOR LAWFUL INQUIRY</span>
-                </div>
-              </div>
-            )}
-          </>
-        )}
       </div>
     </div>
   );
-};
+}
 
-export default RelationshipGraphView;
+/*
+ * Keep both names available.
+ */
+export const RelationshipGraphView =
+  EntityGraph;
+
+export default EntityGraph;
