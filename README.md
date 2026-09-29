@@ -1,154 +1,178 @@
-# Dark Web Threat Actor De-anonymization and Real-World Attribution
-### Smart India Hackathon (SIH 2026) — Problem Statement: SIH26151
-**Investigation ID**: `INV-2026-0151` &bull; **Case Officer**: `Investigator INV-017`
+# SPECTRA — Threat Actor Attribution Platform
 
-An investigator-centric digital forensics and threat intelligence platform designed to analyze fragmented dark web identities, calculate evidentiary correlation confidence, and enable authorized human investigators to evaluate real-world attribution leads.
+### Smart India Hackathon (SIH 2026) | Problem Statement: SIH26151
+**Theme**: Cybersecurity & Law Enforcement Digital Forensics  
+**Developed by**: Team SPECTRA  
+**Case Reference**: `CASE-2026-001 // Operation DarkEcho` &bull; **Lead Investigator**: `Senior Investigator INV-017`
+
+---
+
+## 🛡️ Executive Overview
+
+**SPECTRA** is an enterprise-grade digital forensics and threat actor attribution platform engineered for cybercrime investigators, national intelligence agencies, and incident response teams. The platform bridges the critical evidentiary gap between fragmented anonymous dark web personas and verified real-world entity candidates.
+
+Unlike conventional black-box analytics tools, SPECTRA implements a **two-stage investigative methodology** bounded by strict statutory guidelines, negative hypothesis challenge engines, deduplicated chain-of-custody tracking, and human-in-the-loop decision gates.
 
 ---
 
 ## 🏛️ End-to-End Investigation Architecture
 
 ```
-   [ STAGE 1: DIGITAL ACTOR CORRELATION ]
-     • Username / Alias Morphology & N-grams
-     • Stylometry & Textual Habit Analysis (Sentence length, TTR, Punctuation)
-     • Behavioural Profiling & OPSEC Discipline
-     • Temporal Analysis (Active UTC hours, Diurnal curve)
-     • Technical Indicators (PGP, BTC SegWit, XMR subaddresses, Reverse-Proxy IP)
-                    ↓
-   [ ACTOR CLUSTERING & EVIDENCE CONFIDENCE ]
-     • Actor Cluster A (92% Very Strong Evidence)
-     • Actor Cluster B (84% Strong Evidence)
-     • Actor Cluster C (67% Weak / Inconclusive)
-                    ↓
-  ════════════════════════════════════════════════════════════════
-  🔒 STAGE 2 EVIDENCE GATE (Human-in-the-Loop Authorization)
-  ════════════════════════════════════════════════════════════════
-     • Never automatically moves to Stage 2
-     • Mandatory threshold verification (Default: ≥ 80%)
-     • Explicit Investigator Authorization Modal
-                    ↓ (Authorized Clusters Only)
-   [ STAGE 2: REAL-WORLD ENTITY ATTRIBUTION ]
-     • Module 1: Digital Actor Profile Card
-     • Module 2: Known Digital Indicators Inventory (IND-0041, IND-0022, etc.)
-     • Module 3: Entity Resolution Engine (6 Consistency Dimensions)
-     • Module 4: Candidate Entity Discovery Table (Candidates A, B, C)
-                    ↓
-   [ 8 INNOVATIVE INVESTIGATIVE FEATURES ]
-     1. Evidence Chain Explorer (Trace: Actor → Indicator → Relationship → Entity)
-     2. Support / Conflict / Unknown Matrix (Prevents treating missing data as negative)
-     3. Attribution Confidence Evolution (Step-by-step strength visualization)
-     4. What Evidence is Still Missing? (Lawful evidence gap directives)
-     5. Multi-Hypothesis Attribution Board (Retains multiple candidate hypotheses)
-     6. Why Did This Entity Appear? (Explainable rationale breakdown)
-     7. What Would Change This Assessment? (Strengthening vs. weakening factors)
-     8. Evidence Provenance & Trace Back to Source
-                    ↓
-   [ HUMAN-IN-THE-LOOP VALIDATION ]
-     • Per-relationship Accept / Reject / Need More Evidence with mandatory rationale
-     • Final Attribution Lead Decision
-     • Immutable Attribution Decision Audit Log
-                    ↓
-   [ FINAL OUTPUT: ATTRIBUTION LEAD — HUMAN VALIDATION REQUIRED ]
+                                [ DIGITAL EVIDENCE INGESTION ]
+          ┌───────────────────────────────────┼───────────────────────────────────┐
+          ↓                                   ↓                                   ↓
+    Forum-X (Dread)                   Market-Y (XSS Forum)              Chat-Z (BreachForums)
+   Leak Publisher: @shadow_x17       Access Broker: @x_shadow          Gateway Host: @darkx17
+          └───────────────────────────────────┬───────────────────────────────────┘
+                                              ↓
+                        [ STAGE 1: MULTI-SIGNAL CORRELATION ]
+            • Username / Alias Lexical Morphology (Levenshtein & N-gram roots)
+            • Stylometric Habit Analysis (Jaccard punctuation, double-hyphen habit)
+            • Diurnal Temporal Synchronization (UTC+03:00 diurnal window, r = 0.88)
+            • Cryptographic Fingerprinting (RSA-4096 PGP key 0x7E4A8F2C91B4)
+            • Infrastructure Intersection (Shared reverse-proxy 185.220.101.45)
+                                              ↓
+                   [ DIGITAL ACTOR CLUSTER: DarkWolf Cluster (TA-001) ]
+                                 Stage 1 Confidence: 91%
+                                              ↓
+    ═════════════════════════════════════════════════════════════════════════════════
+    🔒 CRITICAL DECISION GATE (Human-in-the-Loop Statutory Authorization)
+    ═════════════════════════════════════════════════════════════════════════════════
+            • Mandatory statutory correlation threshold verification (≥ 80%)
+            • Sworn officer authorization required with mandatory written justification
+            • Action recorded to immutable cryptographic audit log
+                                              ↓ (Authorized Cases Only)
+                 [ STAGE 2: REAL-WORLD ENTITY RESOLUTION & ATTRIBUTION ]
+            • Multi-Hop Identity-Link Discovery & Traversal
+            • Cross-Registry Correlation (ICANN WHOIS, Corporate Registrars, BGP Routing)
+            • Lineage Deduplication (11 derived reporting feeds → 6 independent roots)
+            • Negative Hypothesis Testing Engine (10 alternative explanations evaluated)
+            • High-Severity Temporal Conflict Safeguard (Bengaluru 14:32 vs Frankfurt 14:33)
+                                              ↓
+                   [ REAL-WORLD ENTITY CANDIDATES RESOLUTION MATRIX ]
+            ├── Candidate A: Arun Mehta (FICTIONAL DEMO ENTITY) [74% — PRIMARY ATTRIBUTION LEAD]
+            ├── Candidate B: Rohan Verma (FICTIONAL DEMO ENTITY) [58% — SINGLE-SOURCE COLLATERAL]
+            └── Candidate C: Vector Systems Ltd. (FICTIONAL DEMO ORG) [62% — CORPORATE SHELL]
+                                              ↓
+                    [ FINAL HUMAN-IN-THE-LOOP INVESTIGATOR DECISION ]
+            • Per-hop provenance validation & evidence status tracking
+            • Final Decision: VALIDATED INVESTIGATIVE LEAD (Subject to lawful subpoena)
+            • Comprehensive 16-Section Legal Investigation Dossier Generation
+            • Continuous Telemetry Simulation ("Watch This Actor" dynamic re-scoring)
 ```
 
 ---
 
-## ⚖️ Essential System Principles
+## ⚖️ Core Evidentiary Principles & Safeguards
 
 1. **Correlation ≠ Identification**:
-   Strong correlation between dark web handles indicates they are likely operated by the same digital threat actor. It does **not** prove legal real-world identity.
-2. **Attribution Lead ≠ Confirmed Identity**:
-   Stage 2 entity resolution yields an evidence-backed lead for mutual legal assistance (MLAT) and court subpoenas, not an automated conviction.
-3. **Missing Evidence is Not Negative Evidence**:
-   When an indicator is missing, it is explicitly cataloged as `UNKNOWN`, `NOT AVAILABLE`, or `INSUFFICIENT DATA`. It is **never** penalized as negative evidence.
-4. **Iterative Investigation Loop**:
-   If Stage 2 reveals insufficient entity-level evidence, investigators can click `[ RETURN TO STAGE 1 ]` to refine digital actor correlation without losing Stage 2 findings.
-5. **No Black-Box Scores**:
-   Every score must be broken down by contributing signal weights, accompanied by explainable reasoning (`✓ WHY Connected`, `⚠ Conflicting Evidence`, `? Unknown Data`, and `Evidence Gaps`).
+   Strong correlation between dark web personas indicates unified operational control. It does **not** assert the physical identity of an individual.
+2. **Attribution Lead ≠ Confirmed Guilt**:
+   Stage 2 outputs an *evidence-backed real-world entity candidate* for formal subpoena and mutual legal assistance treaty (MLAT) requests, strictly preventing automated conviction.
+3. **Negative Evidence Rigor**:
+   Missing indicators are cataloged as `UNKNOWN` or `INSUFFICIENT DATA` and are never treated as negative proof.
+4. **Temporal Impossibility Safeguard**:
+   When events occur across disparate geographic regions within impossible human travel windows (e.g. Bengaluru, India at 14:32 UTC and Frankfurt, Germany at 14:33 UTC — 65 seconds apart), the platform flags a critical anomaly, proving the actor used a remote proxy jump or automated cron daemon.
+5. **Deduplicated Lineage Tracking**:
+   The engine traces intelligence feeds back to primary root sources, preventing circular reporting from artificially inflating attribution scores.
 
 ---
 
-## 🔬 Evidence Confidence Bands
+## 🔬 Evidence Confidence Standards
 
-| Confidence Band | Range | Interpretation & Stage 2 Status |
-| :--- | :--- | :--- |
-| **VERY STRONG EVIDENCE** | 90–100% | Immediate Stage 2 Candidate (Investigator review permitted) |
-| **STRONG EVIDENCE** | 80–89% | Meets default threshold (Investigator review permitted) |
-| **MODERATE EVIDENCE** | 70–79% | Below threshold; requires secondary corroboration |
-| **WEAK / INCONCLUSIVE** | 50–69% | Not eligible for Stage 2; active monitoring required |
-| **INSUFFICIENT EVIDENCE** | Below 50% | Strictly rejected; isolated or false-positive collision |
-
-> *"Confidence bands represent the strength of available evidence and are not definitive identity determinations."*
+| Tier | Range | Analytical Interpretation | Statutory Action |
+| :--- | :---: | :--- | :--- |
+| **VERY STRONG EVIDENCE** | 90–100% | Hard cryptographic & multi-vector overlap | Eligible for Stage 2 Authorization Review |
+| **STRONG EVIDENCE** | 80–89% | Consistent longitudinal signals across platforms | Meets statutory threshold for review |
+| **MODERATE EVIDENCE** | 70–79% | Probable behavioral & temporal alignment | Requires secondary independent corroboration |
+| **WEAK / INCONCLUSIVE** | 50–69% | Peripheral connection; potential shared host | Retained in passive monitoring; Stage 2 blocked |
+| **INSUFFICIENT EVIDENCE** | < 50% | Isolated indicator or false-positive collision | Rejected from attribution analysis |
 
 ---
 
-## 🧪 Demonstration Dataset (Synthetic & Controlled)
+## ✨ Key Features & Platform Capabilities
 
-In strict accordance with prototype boundaries, all identities and indicators are 100% synthetic:
-- **`@shadow_x17`** (Forum-X / Dread, initial access broker, PGP `0x7E4A8F2C91B4`, BTC `bc1qxy...`)
-- **`@x_shadow`** (Market-Y / XSS, Telegram access broker, PGP `0x7E4A8F2C91B4`, IP `185.220.101.45`)
-- **`@darkx17`** (Chat-Z / BreachForums, operator of `darkx17-vault.is`, PGP `0x7E4A8F2C91B4`)
-  - **Actor Cluster A**: **92% Correlation Strength** (VERY STRONG &rarr; Eligible for Stage 2)
-  - **Candidate Entity A**: **82% Attribution Evidence Strength** (Subject A. K. / Meridian Analytics Front)
-  - **Candidate Entity B**: **67% Attribution Evidence Strength** (Vortex Cloud Hosting Ltd.)
-  - **Candidate Entity C**: **41% Attribution Evidence Strength** (Autonomous Proxy Operator #88)
-- **`@night_market`** & **`@ghost_404`** (CryptBB & Bohemia clone carding storefronts)
-  - **Actor Cluster B**: **84% Correlation Strength** (STRONG &rarr; Eligible for Stage 2)
-- **`@silentnode`** (Ramp Market, standalone cryptographic researcher, Ed25519 key)
-  - **Actor Cluster C**: **67% Correlation Strength** (WEAK / INCONCLUSIVE &rarr; Stage 2 Blocked)
-- **Actor Cluster D**: **43% Correlation Strength** (INSUFFICIENT EVIDENCE &rarr; Stage 2 Blocked)
+### 1. Dual-Mode Cytoscape.js Relationship & Knowledge Graph
+- **Stage 1 (Persona Correlation)**: Explores pairwise and cluster connections between forum aliases with dynamic focal highlighting.
+- **Stage 2 (Real-World Knowledge Graph)**: Maps directed links across personas, PGP anchors, clear-web domains, proxy nodes, corporate entities, and candidate persons.
+- **"WHY THIS CANDIDATE?" Button**: Automatically highlights the 5-hop critical path to Candidate A (`@shadow_x17 → PGP Key → darkx17-vault.is → Vector Systems Ltd. → Arun Mehta`) while subduing unrelated peripheral nodes.
 
----
+### 2. Edge Provenance Inspector
+- Click any knowledge graph edge to reveal chain-of-custody metadata, source credibility ratings (**Grade A–E**), verification status, observed timestamps, and primary source citations.
 
-## 📑 13-Section Formal Investigation Dossier
+### 3. Attribution Challenge Engine (Negative Hypothesis Testing)
+- Rigorously tests 10 alternative explanations (Credential Stuffing / Stolen Key, Shared Team Multi-Operator Setup, False Flag / Frame-up, Cloud Jump-Host Collateral) with evidence for, evidence against, and rebuttal assessments.
 
-The built-in report generator compiles an official 13-section report:
-1. Section 1 — Digital Identities
-2. Section 2 — Actor Correlation
-3. Section 3 — Actor Clusters
-4. Section 4 — Investigator Validation (Stage 1)
-5. Section 5 — Stage 2 Initiation
-6. Section 6 — Digital Indicators Inventory
-7. Section 7 — Entity Resolution (Six Dimensions)
-8. Section 8 — Candidate Entities
-9. Section 9 — Supporting / Conflicting / Unknown Evidence
-10. Section 10 — Evidence Gaps & Directives
-11. Section 11 — Attribution Evidence Strength
-12. Section 12 — Investigator Decisions
-13. Section 13 — Final Attribution Lead (`ATTRIBUTION LEAD — HUMAN VALIDATION REQUIRED`)
+### 4. Continuous Monitoring & Live Telemetry Simulation
+- The "Watch This Actor" module enables ongoing telemetry tracking with live simulation capabilities, showing how new data points (e.g., German BKA MLAT response, secondary ISP logs) dynamically adjust attribution confidence.
+
+### 5. Official 16-Section Legal Investigation Dossier
+- Generates a comprehensive, court-admissible forensic report complete with executive briefings, chain-of-custody audit logs, candidate matrices, and investigator signature blocks.
+
+### 6. Developer API & Specifications
+- Complete **OpenAPI 3.1** specification (`api/openapi.yaml`) and **Postman Collection** (`api/postman/SPECTRA-API.postman_collection.json`) covering authentication, case management, digital identities, correlation, attribution, and reporting.
 
 ---
 
-## 🛠️ Tech Stack & Key Modules
+## 🛠️ Technology Stack
 
-- **Frontend Core**: React 19, TypeScript, Vite 8
-- **Styling**: Tailwind CSS v4 (Cybersecurity Analyst dark theme: Slate-950, Cyan & Emerald accents, minimal red)
-- **Graph Visualizer**: **Cytoscape.js** (Cross-stage grouping: Digital Actor Evidence vs. Real-World Entity Evidence with COSE, Concentric, Circle, and Breadthfirst layouts)
+- **Frontend Core**: React 19, TypeScript, Vite
+- **Graph Visualization**: Cytoscape.js (Directed knowledge graph with custom layout and node styling)
+- **Styling & Design System**: Tailwind CSS v4 (Cybersecurity dark charcoal `#0D0F12`, border `#1E2535`, amber/orange accents `#EA580C`)
+- **Typography**: JetBrains Mono, Inter, IBM Plex Sans
 - **Icons**: Lucide React
-- **Architecture**: Modular service-oriented design ready for seamless connection to FastAPI / Python backend intelligence engines (`actorService`, `indicatorService`, `entityResolutionService`, `evidenceService`, `attributionService`, `timelineService`, `reportService`).
+- **Data Visualization**: Recharts
 
 ---
 
-## 🚀 Running the Prototype Locally
+## 🚀 Getting Started
 
-### 1. Prerequisites
-Ensure you have **Node.js (v18+)** and **npm** installed.
+### Prerequisites
+- **Node.js**: v18.0.0 or higher
+- **npm**: v9.0.0 or higher
 
-### 2. Installation
-```powershell
-cd C:\Users\Teju\.gemini\antigravity\scratch\sih-darkweb-attribution
-npm install
-```
+### Installation
 
-### 3. Launch Development Server
-```powershell
-npm run dev
-```
-Open your browser at `http://localhost:5173` (or the port displayed in your terminal).
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/tejasreeguntipalli1-tech/SIH26151-Threat-Actor-Attribution.git
+   cd SIH26151-Threat-Actor-Attribution
+   ```
 
-### 4. Production Build
-```powershell
+2. **Install project dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server**:
+   ```bash
+   npm run dev
+   ```
+   Open your browser and navigate to:
+   ```
+   http://localhost:5173/
+   ```
+
+### Production Build
+
+```bash
 npm run build
 npm run preview
 ```
+
+---
+
+## 🧪 Synthetic Lab Demonstration Data
+
+All dark web identities, domain mirrors, IP addresses, corporate records, and person names in this repository are **100% synthetic demonstration data** created strictly for evaluating algorithmic entity resolution within the Smart India Hackathon scope:
+- **Correlated Cluster**: `DarkWolf Cluster (TA-001)`
+- **Candidate A**: `Arun Mehta (FICTIONAL DEMO ENTITY)` — 74% Attribution Lead
+- **Candidate B**: `Rohan Verma (FICTIONAL DEMO ENTITY)` — 58% Single-Source Lead
+- **Candidate C**: `Vector Systems Ltd. (FICTIONAL DEMO ORGANIZATION)` — 62% Corporate Umbrella
+
+---
+
+## 📄 License & Attribution
+
+This project is developed for the **Smart India Hackathon (SIH 2026)** under Problem Statement **SIH26151**.  
+Developed by **Team SPECTRA**. All rights reserved.
