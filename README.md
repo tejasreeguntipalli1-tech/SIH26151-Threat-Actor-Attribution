@@ -7,6 +7,19 @@
 
 ---
 
+## 🔗 Quick Access & Official Links
+
+| Resource | Link / Path |
+| :--- | :--- |
+| **Official GitHub Repository** | [https://github.com/tejasreeguntipalli1-tech/SIH26151-Threat-Actor-Attribution](https://github.com/tejasreeguntipalli1-tech/SIH26151-Threat-Actor-Attribution) |
+| **Git Clone Link** | `https://github.com/tejasreeguntipalli1-tech/SIH26151-Threat-Actor-Attribution.git` |
+| **Local Application Server** | [http://localhost:5173/](http://localhost:5173/) |
+| **OpenAPI 3.1 Specification** | [`api/openapi.yaml`](api/openapi.yaml) |
+| **Postman API Collection** | [`api/postman/SPECTRA-API.postman_collection.json`](api/postman/SPECTRA-API.postman_collection.json) |
+| **Official SIH 2026 Presentation** | [`SIH2026-IDEA-Presentation-Format (1).pptx`](./SIH2026-IDEA-Presentation-Format%20(1).pptx) |
+
+---
+
 ## 🛡️ Executive Overview
 
 **SPECTRA** is an enterprise-grade digital forensics and threat actor attribution platform engineered for cybercrime investigators, national intelligence agencies, and incident response teams. The platform bridges the critical evidentiary gap between fragmented anonymous dark web personas and verified real-world entity candidates.
@@ -125,7 +138,7 @@ Unlike conventional black-box analytics tools, SPECTRA implements a **two-stage 
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started & Installation
 
 ### Prerequisites
 - **Node.js**: v18.0.0 or higher
